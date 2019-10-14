@@ -21,9 +21,9 @@ interface MyAPI {
 
 
 
-export async function init() {
+export async function init(wasmUrl:string) {
     const imports = {};
-    const wasm = await loader.instantiateStreaming<MyAPI>(fetch('./optimized.wasm'), imports);
+    const wasm = await loader.instantiateStreaming<MyAPI>(fetch(wasmUrl), imports);
     return function compile(cmds: PathCommand[], fmt: string, ppc = 0, eps = 0) {
         const bytesUsed = load(wasm, cmds);
         const result = wasm.compile(bytesUsed, fmt, ppc, eps);
