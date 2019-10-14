@@ -112,6 +112,7 @@ export type Shape = {
 
 function map(wasm: loader.ASUtil & MyAPI, shapesPtr: number) {
     const shapes = new Set<Shape>();
+    const F64 = new Float64Array(wasm.memory.buffer);
     for (const shapePtr of wasm.__getArray(shapesPtr)) {
         const shape: Shape = { fill: [], holes: new Set<Polygon>() };
         for (const polygonPtr of wasm.__getArray(shapePtr)) {
@@ -123,8 +124,12 @@ function map(wasm: loader.ASUtil & MyAPI, shapesPtr: number) {
                 shape.holes.add(arr = []);
             }
             for (const vertexPtr of wasm.__getArray(polygonPtr)) {
-                const vertex = wasm.__getArray(vertexPtr);
-                arr.push([vertex[0], vertex[1]]);
+                // const vertex = wasm.__getArray(vertexPtr);
+                // arr.push([vertex[0], vertex[1]]);
+                arr.push([
+                  F64[(vertexPtr >>> 3) + 0], // x
+                  F64[(vertexPtr >>> 3) + 1]  // y
+                ]);
             }
         }
         shapes.add(shape);

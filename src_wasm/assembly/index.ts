@@ -28,7 +28,19 @@
 // | Z       | u8
 
 
-type Vertex = Array<f64>;
+class Vertex {
+  constructor(public x: f64 = 0, public y: f64 = 0) {}
+}
+
+class BBox {
+  constructor(
+    public xMin: f64 = 0,
+    public yMin: f64 = 0,
+    public xMax: f64 = 0,
+    public yMax: f64 = 0
+  ) {}
+}
+
 type Polygon = Array<Vertex>;
 type Result = Array<Array<Polygon>>;
 
@@ -78,7 +90,7 @@ export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): Result {
       i += SZ;
       y = load<f64>(i);
       i += SZ;
-      polygons[iP] = [[x, y]];
+      polygons[iP] = [new Vertex(x, y)];
       continue;
     }
     polygon = polygons[iP];
@@ -87,7 +99,7 @@ export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): Result {
       i += SZ;
       y = load<f64>(i);
       i += SZ;
-      polygon.push([x, y]);
+      polygon.push(new Vertex(x, y));
       continue;
     }
     if (cmd == 81) { // 'Q'
@@ -104,9 +116,9 @@ export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): Result {
       y = load<f64>(i);
       i += SZ;
       let vs = interpQ(
-        [x0, y0],
-        [x1, y1],
-        [x, y],
+        new Vertex(x0, y0),
+        new Vertex(x1, y1),
+        new Vertex(x,   y),
         ppc
       );
       for (let k = 1, len = vs.length; k < len; ++k) {
@@ -132,10 +144,10 @@ export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): Result {
       y = load<f64>(i);
       i += SZ;
       let vs = interpC(
-        [x0, y0],
-        [x1, y1],
-        [x2, y2],
-        [x, y],
+        new Vertex(x0, y0),
+        new Vertex(x1, y1),
+        new Vertex(x2, y2),
+        new Vertex(x,  y),
         ppc
       );
       for (let k = 1, len = vs.length; k < len; ++k) {
@@ -235,14 +247,15 @@ function linkUp(
 //
 
 function dedup(vs: Polygon, eps: f64): Polygon {
-  const result: Polygon = [vs[0]];
+  const first = vs[0];
+  const result: Polygon = [first];
   let len = vs.length;
-  if (isVertexEqual(vs[len - 1], vs[0], eps)) {
+  if (isVertexEqual(vs[len - 1], first, eps)) {
     --len;
   }
   let i = 1;
   let $v: Vertex;
-  let $1 = vs[0];
+  let $1 = first;
   while (i < len) {
     $v = vs[i];
     if (!isVertexEqual($v, $1, eps)) {
@@ -254,9 +267,10 @@ function dedup(vs: Polygon, eps: f64): Polygon {
   return result;
 }
 
+@inline
 function isVertexEqual(p0: Vertex, p1: Vertex, eps: f64): bool {
-  let dx = p0[0] - p1[0];
-  let dy = p0[1] - p1[1];
+  let dx = p0.x - p1.x;
+  let dy = p0.y - p1.y;
   return dx == 0 && dy == 0 // fast check
     || (dx * dx + dy * dy <= eps * eps);
 }
@@ -268,7 +282,7 @@ function isVertexEqual(p0: Vertex, p1: Vertex, eps: f64): bool {
 //
 
 function interpQ(p0: Vertex, p1: Vertex, p2: Vertex, n: u32): Array<Vertex> {
-  const result: Array<Vertex> = [];
+  const result = new Array<Vertex>(n);
   let $0: f64;
   let $1: f64;
   let $2: f64;
@@ -280,10 +294,10 @@ function interpQ(p0: Vertex, p1: Vertex, p2: Vertex, n: u32): Array<Vertex> {
     $0 = $$ * $$;
     $1 = 2 * $$ * t;
     $2 = t * t;
-    result.push([
-      f64($0 * p0[0] + $1 * p1[0] + $2 * p2[0]),
-      f64($0 * p0[1] + $1 * p1[1] + $2 * p2[1])
-    ]);
+    unchecked(result[i] = new Vertex(
+      $0 * p0.x + $1 * p1.x + $2 * p2.x,
+      $0 * p0.y + $1 * p1.y + $2 * p2.y
+    ));
   }
   return result;
 }
@@ -295,7 +309,7 @@ function interpQ(p0: Vertex, p1: Vertex, p2: Vertex, n: u32): Array<Vertex> {
 //
 
 function interpC(p0: Vertex, p1: Vertex, p2: Vertex, p3: Vertex, n: u32): Array<Vertex> {
-  const result: Array<Vertex> = [];
+  const result = new Array<Vertex>(n);
   let $0: f64;
   let $1: f64;
   let $2: f64;
@@ -313,10 +327,10 @@ function interpC(p0: Vertex, p1: Vertex, p2: Vertex, p3: Vertex, n: u32): Array<
     $4 = $3 * t;            // t ^3      .. coeff#3
     $5 = 3 * $1 * t;        //          ... coeff#1
     $6 = 3 * $0 * $3;       //          ... coeff#2
-    result.push([
-      f64($2 * p0[0] + $5 * p1[0] + $6 * p2[0] + $4 * p3[0]),
-      f64($2 * p0[1] + $5 * p1[1] + $6 * p2[1] + $4 * p3[1])
-    ]);
+    unchecked(result[i] = new Vertex(
+      $2 * p0.x + $5 * p1.x + $6 * p2.x + $4 * p3.x,
+      $2 * p0.y + $5 * p1.y + $6 * p2.y + $4 * p3.y
+    ));
   }
   return result;
 }
@@ -330,7 +344,7 @@ function interpC(p0: Vertex, p1: Vertex, p2: Vertex, p3: Vertex, n: u32): Array<
 
 function isHole_oddeven(target: Polygon, polygons: Polygon[]): bool {
   const p0 = pickAPoint(target);
-  const $p1: Vertex = [100, p0[1]];
+  const $p1 = new Vertex(100, p0.y);
   let c = 0;
   let $polygon: Polygon;
   let $v0: Vertex;
@@ -357,7 +371,7 @@ function isHole_oddeven(target: Polygon, polygons: Polygon[]): bool {
 
 function isHole_nonzero(target: Polygon, polygons: Polygon[]): bool {
   const p0: Vertex = pickAPoint(target);
-  const $p1: Vertex = [100, p0[1]];
+  const $p1 = new Vertex(100, p0.y);
   let $v1: Vertex;
   let $v0: Vertex;
   let c = 0;
@@ -382,15 +396,15 @@ function isHole_nonzero(target: Polygon, polygons: Polygon[]): bool {
 //
 
 function pickAPoint(vs: Polygon): Vertex {
-  let max = vs[0][0];
+  let $len = vs.length;
+  let $v = vs[0];
+  let max = $v.x;
   let i = 0;
   let j = 1;
-  let $len = vs.length;
-  let $v: Vertex = vs[0];
   while (j < $len) {
     $v = vs[j];
-    if ($v[0] > max) {
-      max = $v[0];
+    if ($v.x > max) {
+      max = $v.x;
       i = j;
     }
     ++j;
@@ -403,10 +417,10 @@ function pickAPoint(vs: Polygon): Vertex {
   // then ($1 + $2 + curr)/3 ~= tri centroid
   const $1 = tinystep(curr, next, 0.001);
   const $2 = tinystep(curr, prev, 0.001);
-  return [
-    ($1[0] + $2[0] + curr[0]) * (1.0 / 3),
-    ($1[1] + $2[1] + curr[1]) * (1.0 / 3)
-  ];
+  return new Vertex(
+    ($1.x + $2.x + curr.x) * (1.0 / 3),
+    ($1.y + $2.y + curr.y) * (1.0 / 3)
+  );
 }
 
 
@@ -420,13 +434,15 @@ function tinystep(
   v1: Vertex,
   e: f64
 ): Vertex {
-  let dx = v1[0] - v0[0];
-  let dy = v1[1] - v0[1];
+  const v0x = v0.x;
+  const v0y = v0.y;
+  const dx = v1.x - v0x;
+  const dy = v1.y - v0y;
   const d = Math.sqrt(dx * dx + dy * dy);
-  return [
-    dx / d * e + v0[0],
-    dy / d * e + v0[1]
-  ];
+  return new Vertex(
+    dx / d * e + v0x,
+    dy / d * e + v0y
+  );
 }
 
 
@@ -466,7 +482,7 @@ function windingOfTwoLines(
   // const $2y = c[1] - a[1];
   // cross
   // return $1x * $2y - $1y * $2x < 0 ? -1 : +1;
-  return (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0]) < 0 ? -1 : 1;
+  return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x) < 0 ? -1 : 1;
 }
 
 
@@ -475,11 +491,8 @@ function windingOfTwoLines(
 // Is point inside polygon
 //
 
-function isPointInsidePolygon(
-  p: Vertex,
-  vs: Polygon
-): bool {
-  const $p1: Vertex = [100, p[1]];
+function isPointInsidePolygon(p: Vertex, vs: Polygon): bool {
+  const $p1 = new Vertex(100, p.y);
   let c = 0; // nonzero winding rule count
   for (let i = 0, len = vs.length - 1; i <= len; ++i) {
     let $v0 = vs[i];
@@ -488,7 +501,7 @@ function isPointInsidePolygon(
       c += windingOfTwoLines(p, $v0, $v1);
     }
   }
-  return c % 2 != 0; // nonzero = inside
+  return (c & 1) != 0; // nonzero = inside
 }
 
 
@@ -497,19 +510,21 @@ function isPointInsidePolygon(
 // BBox of polygon
 //
 
-function boundingBoxOf(polygon: Polygon): Array<f64> {
+function boundingBoxOf(polygon: Polygon): BBox {
   let xMin = +Infinity;
   let yMin = +Infinity;
   let xMax = -Infinity;
   let yMax = -Infinity;
   for (let i = 0, len = polygon.length; i < len; ++i) {
     let $v = polygon[i];
-    if ($v[0] < xMin) { xMin = $v[0] }
-    else if ($v[0] > xMax) { xMax = $v[0] }
-    if ($v[1] < yMin) { yMin = $v[1] }
-    else if ($v[1] > yMax) { yMax = $v[1] }
+    let vx = $v.x;
+    let vy = $v.y;
+    xMin = Math.min(vx, xMin);
+    xMax = Math.max(vx, xMax);
+    yMin = Math.min(vy, yMin);
+    yMax = Math.max(vy, yMax);
   }
-  return [xMin, yMin, xMax, yMax];
+  return new BBox(xMin, yMin, xMax, yMax);
 }
 
 
@@ -529,10 +544,10 @@ function isPolygonInsidePolygon(
   let bboxA = boundingBoxOf(A);
   let bboxB = boundingBoxOf(B);
   if (
-       bboxA[0] < bboxB[0] && bboxA[2] < bboxB[0]
-    || bboxA[0] > bboxB[2] && bboxA[2] > bboxB[2]
-    || bboxA[1] < bboxB[1] && bboxA[3] < bboxB[1]
-    || bboxA[1] > bboxB[3] && bboxA[3] > bboxB[3]
+       bboxA.xMin < bboxB.xMin && bboxA.xMax < bboxB.xMin
+    || bboxA.xMin > bboxB.xMax && bboxA.xMax > bboxB.xMax
+    || bboxA.yMin < bboxB.yMin && bboxA.yMax < bboxB.yMin
+    || bboxA.yMin > bboxB.yMax && bboxA.yMax > bboxB.yMax
   ) {
     return false;
   }
