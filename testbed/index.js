@@ -4,7 +4,7 @@ const state = {};
 (async function () {
 
     // Compile fn
-    state.compile = await compile_wa.init();
+    state.compile = await compile_wa.init('./optimized.wasm');
 
     // Font to test
     state.fontUrl = '../font/NotoSerifDisplay-Thin.ttf';
