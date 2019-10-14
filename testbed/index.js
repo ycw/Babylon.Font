@@ -44,11 +44,7 @@ function createScene(engine) {
     //
 
     const text = 'Babylon.Font\nwebassembly\nimpl. done';
-<<<<<<< HEAD
     const depth = 0.1;
-=======
-    const depth = 1;
->>>>>>> 90799ae860bcc56a87bf05cbc96c435a648a5080
     const ppc = 1;
     const eps = 0.001;
     const tn = createText(state.otFont, text, depth, ppc, eps);
