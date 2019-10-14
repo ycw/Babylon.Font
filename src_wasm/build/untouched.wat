@@ -9,8 +9,6 @@
  (type $FUNCSIG$viii (func (param i32 i32 i32)))
  (type $FUNCSIG$iiiid (func (param i32 i32 i32 f64) (result i32)))
  (type $FUNCSIG$iiiii (func (param i32 i32 i32 i32) (result i32)))
- (type $FUNCSIG$ddd (func (param f64 f64) (result f64)))
- (type $FUNCSIG$ddi (func (param f64 i32) (result f64)))
  (type $FUNCSIG$dii (func (param i32 i32) (result f64)))
  (type $FUNCSIG$iiiiii (func (param i32 i32 i32 i32 i32) (result i32)))
  (type $FUNCSIG$iid (func (param i32 f64) (result i32)))
@@ -3944,1178 +3942,7 @@
   call $~lib/rt/pure/__release
   local.get $4
  )
- (func $~lib/math/NativeMath.scalbn (; 37 ;) (type $FUNCSIG$ddi) (param $0 f64) (param $1 i32) (result f64)
-  (local $2 f64)
-  (local $3 i32)
-  (local $4 i32)
-  local.get $0
-  local.set $2
-  local.get $1
-  i32.const 1023
-  i32.gt_s
-  if
-   local.get $2
-   f64.const 8988465674311579538646525e283
-   f64.mul
-   local.set $2
-   local.get $1
-   i32.const 1023
-   i32.sub
-   local.set $1
-   local.get $1
-   i32.const 1023
-   i32.gt_s
-   if
-    local.get $2
-    f64.const 8988465674311579538646525e283
-    f64.mul
-    local.set $2
-    local.get $1
-    i32.const 1023
-    i32.sub
-    local.tee $3
-    i32.const 1023
-    local.tee $4
-    local.get $3
-    local.get $4
-    i32.lt_s
-    select
-    local.set $1
-   end
-  else
-   local.get $1
-   i32.const -1022
-   i32.lt_s
-   if
-    local.get $2
-    f64.const 2.2250738585072014e-308
-    f64.const 9007199254740992
-    f64.mul
-    f64.mul
-    local.set $2
-    local.get $1
-    i32.const 1022
-    i32.const 53
-    i32.sub
-    i32.add
-    local.set $1
-    local.get $1
-    i32.const -1022
-    i32.lt_s
-    if
-     local.get $2
-     f64.const 2.2250738585072014e-308
-     f64.const 9007199254740992
-     f64.mul
-     f64.mul
-     local.set $2
-     local.get $1
-     i32.const 1022
-     i32.add
-     i32.const 53
-     i32.sub
-     local.tee $3
-     i32.const -1022
-     local.tee $4
-     local.get $3
-     local.get $4
-     i32.gt_s
-     select
-     local.set $1
-    end
-   end
-  end
-  local.get $2
-  i64.const 1023
-  local.get $1
-  i64.extend_i32_s
-  i64.add
-  i64.const 52
-  i64.shl
-  f64.reinterpret_i64
-  f64.mul
- )
- (func $~lib/math/NativeMath.pow (; 38 ;) (type $FUNCSIG$ddd) (param $0 f64) (param $1 f64) (result f64)
-  (local $2 i64)
-  (local $3 i32)
-  (local $4 i32)
-  (local $5 i32)
-  (local $6 i32)
-  (local $7 i32)
-  (local $8 i32)
-  (local $9 i32)
-  (local $10 i32)
-  (local $11 i32)
-  (local $12 i32)
-  (local $13 i32)
-  (local $14 i32)
-  (local $15 f64)
-  (local $16 f64)
-  (local $17 f64)
-  (local $18 f64)
-  (local $19 f64)
-  (local $20 f64)
-  (local $21 f64)
-  (local $22 f64)
-  (local $23 f64)
-  (local $24 f64)
-  (local $25 f64)
-  (local $26 f64)
-  (local $27 f64)
-  (local $28 i32)
-  (local $29 i32)
-  (local $30 f64)
-  (local $31 f64)
-  (local $32 f64)
-  (local $33 f64)
-  (local $34 f64)
-  (local $35 f64)
-  (local $36 f64)
-  (local $37 f64)
-  (local $38 f64)
-  (local $39 f64)
-  (local $40 f64)
-  (local $41 i32)
-  local.get $0
-  i64.reinterpret_f64
-  local.set $2
-  local.get $2
-  i64.const 32
-  i64.shr_u
-  i32.wrap_i64
-  local.set $3
-  local.get $2
-  i32.wrap_i64
-  local.set $4
-  local.get $1
-  i64.reinterpret_f64
-  local.set $2
-  local.get $2
-  i64.const 32
-  i64.shr_u
-  i32.wrap_i64
-  local.set $5
-  local.get $2
-  i32.wrap_i64
-  local.set $6
-  local.get $3
-  i32.const 2147483647
-  i32.and
-  local.set $7
-  local.get $5
-  i32.const 2147483647
-  i32.and
-  local.set $8
-  local.get $8
-  local.get $6
-  i32.or
-  i32.const 0
-  i32.eq
-  if
-   f64.const 1
-   return
-  end
-  local.get $7
-  i32.const 2146435072
-  i32.gt_s
-  if (result i32)
-   i32.const 1
-  else
-   local.get $7
-   i32.const 2146435072
-   i32.eq
-   if (result i32)
-    local.get $4
-    i32.const 0
-    i32.ne
-   else
-    i32.const 0
-   end
-  end
-  if (result i32)
-   i32.const 1
-  else
-   local.get $8
-   i32.const 2146435072
-   i32.gt_s
-  end
-  if (result i32)
-   i32.const 1
-  else
-   local.get $8
-   i32.const 2146435072
-   i32.eq
-   if (result i32)
-    local.get $6
-    i32.const 0
-    i32.ne
-   else
-    i32.const 0
-   end
-  end
-  if
-   local.get $0
-   local.get $1
-   f64.add
-   return
-  end
-  i32.const 0
-  local.set $9
-  local.get $3
-  i32.const 0
-  i32.lt_s
-  if
-   local.get $8
-   i32.const 1128267776
-   i32.ge_s
-   if
-    i32.const 2
-    local.set $9
-   else
-    local.get $8
-    i32.const 1072693248
-    i32.ge_s
-    if
-     local.get $8
-     i32.const 20
-     i32.shr_s
-     i32.const 1023
-     i32.sub
-     local.set $10
-     local.get $10
-     i32.const 20
-     i32.gt_s
-     local.set $11
-     i32.const 52
-     i32.const 20
-     local.get $11
-     select
-     local.get $10
-     i32.sub
-     local.set $12
-     local.get $6
-     local.get $8
-     local.get $11
-     select
-     local.set $13
-     local.get $13
-     local.get $12
-     i32.shr_s
-     local.set $14
-     local.get $14
-     local.get $12
-     i32.shl
-     local.get $13
-     i32.eq
-     if
-      i32.const 2
-      local.get $14
-      i32.const 1
-      i32.and
-      i32.sub
-      local.set $9
-     end
-    end
-   end
-  end
-  local.get $6
-  i32.const 0
-  i32.eq
-  if
-   local.get $8
-   i32.const 2146435072
-   i32.eq
-   if
-    local.get $7
-    i32.const 1072693248
-    i32.sub
-    local.get $4
-    i32.or
-    i32.const 0
-    i32.eq
-    if
-     f64.const nan:0x8000000000000
-     return
-    else
-     local.get $7
-     i32.const 1072693248
-     i32.ge_s
-     if
-      local.get $5
-      i32.const 0
-      i32.ge_s
-      if (result f64)
-       local.get $1
-      else
-       f64.const 0
-      end
-      return
-     else
-      local.get $5
-      i32.const 0
-      i32.ge_s
-      if (result f64)
-       f64.const 0
-      else
-       local.get $1
-       f64.neg
-      end
-      return
-     end
-     unreachable
-    end
-    unreachable
-   end
-   local.get $8
-   i32.const 1072693248
-   i32.eq
-   if
-    local.get $5
-    i32.const 0
-    i32.ge_s
-    if
-     local.get $0
-     return
-    end
-    f64.const 1
-    local.get $0
-    f64.div
-    return
-   end
-   local.get $5
-   i32.const 1073741824
-   i32.eq
-   if
-    local.get $0
-    local.get $0
-    f64.mul
-    return
-   end
-   local.get $5
-   i32.const 1071644672
-   i32.eq
-   if
-    local.get $3
-    i32.const 0
-    i32.ge_s
-    if
-     local.get $0
-     f64.sqrt
-     return
-    end
-   end
-  end
-  local.get $0
-  f64.abs
-  local.set $15
-  local.get $4
-  i32.const 0
-  i32.eq
-  if
-   local.get $7
-   i32.const 0
-   i32.eq
-   if (result i32)
-    i32.const 1
-   else
-    local.get $7
-    i32.const 2146435072
-    i32.eq
-   end
-   if (result i32)
-    i32.const 1
-   else
-    local.get $7
-    i32.const 1072693248
-    i32.eq
-   end
-   if
-    local.get $15
-    local.set $16
-    local.get $5
-    i32.const 0
-    i32.lt_s
-    if
-     f64.const 1
-     local.get $16
-     f64.div
-     local.set $16
-    end
-    local.get $3
-    i32.const 0
-    i32.lt_s
-    if
-     local.get $7
-     i32.const 1072693248
-     i32.sub
-     local.get $9
-     i32.or
-     i32.const 0
-     i32.eq
-     if
-      local.get $16
-      local.get $16
-      f64.sub
-      local.set $17
-      local.get $17
-      local.get $17
-      f64.div
-      local.set $16
-     else
-      local.get $9
-      i32.const 1
-      i32.eq
-      if
-       local.get $16
-       f64.neg
-       local.set $16
-      end
-     end
-    end
-    local.get $16
-    return
-   end
-  end
-  f64.const 1
-  local.set $18
-  local.get $3
-  i32.const 0
-  i32.lt_s
-  if
-   local.get $9
-   i32.const 0
-   i32.eq
-   if
-    local.get $0
-    local.get $0
-    f64.sub
-    local.set $17
-    local.get $17
-    local.get $17
-    f64.div
-    return
-   end
-   local.get $9
-   i32.const 1
-   i32.eq
-   if
-    f64.const -1
-    local.set $18
-   end
-  end
-  local.get $8
-  i32.const 1105199104
-  i32.gt_s
-  if
-   local.get $8
-   i32.const 1139802112
-   i32.gt_s
-   if
-    local.get $7
-    i32.const 1072693247
-    i32.le_s
-    if
-     local.get $5
-     i32.const 0
-     i32.lt_s
-     if (result f64)
-      f64.const 1.e+300
-      f64.const 1.e+300
-      f64.mul
-     else
-      f64.const 1e-300
-      f64.const 1e-300
-      f64.mul
-     end
-     return
-    end
-    local.get $7
-    i32.const 1072693248
-    i32.ge_s
-    if
-     local.get $5
-     i32.const 0
-     i32.gt_s
-     if (result f64)
-      f64.const 1.e+300
-      f64.const 1.e+300
-      f64.mul
-     else
-      f64.const 1e-300
-      f64.const 1e-300
-      f64.mul
-     end
-     return
-    end
-   end
-   local.get $7
-   i32.const 1072693247
-   i32.lt_s
-   if
-    local.get $5
-    i32.const 0
-    i32.lt_s
-    if (result f64)
-     local.get $18
-     f64.const 1.e+300
-     f64.mul
-     f64.const 1.e+300
-     f64.mul
-    else
-     local.get $18
-     f64.const 1e-300
-     f64.mul
-     f64.const 1e-300
-     f64.mul
-    end
-    return
-   end
-   local.get $7
-   i32.const 1072693248
-   i32.gt_s
-   if
-    local.get $5
-    i32.const 0
-    i32.gt_s
-    if (result f64)
-     local.get $18
-     f64.const 1.e+300
-     f64.mul
-     f64.const 1.e+300
-     f64.mul
-    else
-     local.get $18
-     f64.const 1e-300
-     f64.mul
-     f64.const 1e-300
-     f64.mul
-    end
-    return
-   end
-   local.get $15
-   f64.const 1
-   f64.sub
-   local.set $24
-   local.get $24
-   local.get $24
-   f64.mul
-   f64.const 0.5
-   local.get $24
-   f64.const 0.3333333333333333
-   local.get $24
-   f64.const 0.25
-   f64.mul
-   f64.sub
-   f64.mul
-   f64.sub
-   f64.mul
-   local.set $27
-   f64.const 1.4426950216293335
-   local.get $24
-   f64.mul
-   local.set $25
-   local.get $24
-   f64.const 1.9259629911266175e-08
-   f64.mul
-   local.get $27
-   f64.const 1.4426950408889634
-   f64.mul
-   f64.sub
-   local.set $26
-   local.get $25
-   local.get $26
-   f64.add
-   local.set $19
-   local.get $19
-   i64.reinterpret_f64
-   i64.const -4294967296
-   i64.and
-   f64.reinterpret_i64
-   local.set $19
-   local.get $26
-   local.get $19
-   local.get $25
-   f64.sub
-   f64.sub
-   local.set $20
-  else
-   i32.const 0
-   local.set $29
-   local.get $7
-   i32.const 1048576
-   i32.lt_s
-   if
-    local.get $15
-    f64.const 9007199254740992
-    f64.mul
-    local.set $15
-    local.get $29
-    i32.const 53
-    i32.sub
-    local.set $29
-    local.get $15
-    i64.reinterpret_f64
-    i64.const 32
-    i64.shr_u
-    i32.wrap_i64
-    local.set $7
-   end
-   local.get $29
-   local.get $7
-   i32.const 20
-   i32.shr_s
-   i32.const 1023
-   i32.sub
-   i32.add
-   local.set $29
-   local.get $7
-   i32.const 1048575
-   i32.and
-   local.set $28
-   local.get $28
-   i32.const 1072693248
-   i32.or
-   local.set $7
-   local.get $28
-   i32.const 235662
-   i32.le_s
-   if
-    i32.const 0
-    local.set $10
-   else
-    local.get $28
-    i32.const 767610
-    i32.lt_s
-    if
-     i32.const 1
-     local.set $10
-    else
-     i32.const 0
-     local.set $10
-     local.get $29
-     i32.const 1
-     i32.add
-     local.set $29
-     local.get $7
-     i32.const 1048576
-     i32.sub
-     local.set $7
-    end
-   end
-   local.get $15
-   i64.reinterpret_f64
-   i64.const 4294967295
-   i64.and
-   local.get $7
-   i64.extend_i32_s
-   i64.const 32
-   i64.shl
-   i64.or
-   f64.reinterpret_i64
-   local.set $15
-   f64.const 1.5
-   f64.const 1
-   local.get $10
-   select
-   local.set $35
-   local.get $15
-   local.get $35
-   f64.sub
-   local.set $25
-   f64.const 1
-   local.get $15
-   local.get $35
-   f64.add
-   f64.div
-   local.set $26
-   local.get $25
-   local.get $26
-   f64.mul
-   local.set $17
-   local.get $17
-   local.set $31
-   local.get $31
-   i64.reinterpret_f64
-   i64.const -4294967296
-   i64.and
-   f64.reinterpret_i64
-   local.set $31
-   local.get $7
-   i32.const 1
-   i32.shr_s
-   i32.const 536870912
-   i32.or
-   i32.const 524288
-   i32.add
-   local.get $10
-   i32.const 18
-   i32.shl
-   i32.add
-   i64.extend_i32_s
-   i64.const 32
-   i64.shl
-   f64.reinterpret_i64
-   local.set $33
-   local.get $15
-   local.get $33
-   local.get $35
-   f64.sub
-   f64.sub
-   local.set $34
-   local.get $26
-   local.get $25
-   local.get $31
-   local.get $33
-   f64.mul
-   f64.sub
-   local.get $31
-   local.get $34
-   f64.mul
-   f64.sub
-   f64.mul
-   local.set $32
-   local.get $17
-   local.get $17
-   f64.mul
-   local.set $30
-   local.get $30
-   local.get $30
-   f64.mul
-   f64.const 0.5999999999999946
-   local.get $30
-   f64.const 0.4285714285785502
-   local.get $30
-   f64.const 0.33333332981837743
-   local.get $30
-   f64.const 0.272728123808534
-   local.get $30
-   f64.const 0.23066074577556175
-   local.get $30
-   f64.const 0.20697501780033842
-   f64.mul
-   f64.add
-   f64.mul
-   f64.add
-   f64.mul
-   f64.add
-   f64.mul
-   f64.add
-   f64.mul
-   f64.add
-   f64.mul
-   local.set $23
-   local.get $23
-   local.get $32
-   local.get $31
-   local.get $17
-   f64.add
-   f64.mul
-   f64.add
-   local.set $23
-   local.get $31
-   local.get $31
-   f64.mul
-   local.set $30
-   f64.const 3
-   local.get $30
-   f64.add
-   local.get $23
-   f64.add
-   local.set $33
-   local.get $33
-   i64.reinterpret_f64
-   i64.const -4294967296
-   i64.and
-   f64.reinterpret_i64
-   local.set $33
-   local.get $23
-   local.get $33
-   f64.const 3
-   f64.sub
-   local.get $30
-   f64.sub
-   f64.sub
-   local.set $34
-   local.get $31
-   local.get $33
-   f64.mul
-   local.set $25
-   local.get $32
-   local.get $33
-   f64.mul
-   local.get $34
-   local.get $17
-   f64.mul
-   f64.add
-   local.set $26
-   local.get $25
-   local.get $26
-   f64.add
-   local.set $21
-   local.get $21
-   i64.reinterpret_f64
-   i64.const -4294967296
-   i64.and
-   f64.reinterpret_i64
-   local.set $21
-   local.get $26
-   local.get $21
-   local.get $25
-   f64.sub
-   f64.sub
-   local.set $22
-   f64.const 0.9617967009544373
-   local.get $21
-   f64.mul
-   local.set $36
-   f64.const 1.350039202129749e-08
-   f64.const 0
-   local.get $10
-   select
-   local.set $37
-   f64.const -7.028461650952758e-09
-   local.get $21
-   f64.mul
-   local.get $22
-   f64.const 0.9617966939259756
-   f64.mul
-   f64.add
-   local.get $37
-   f64.add
-   local.set $38
-   local.get $29
-   f64.convert_i32_s
-   local.set $24
-   f64.const 0.5849624872207642
-   f64.const 0
-   local.get $10
-   select
-   local.set $39
-   local.get $36
-   local.get $38
-   f64.add
-   local.get $39
-   f64.add
-   local.get $24
-   f64.add
-   local.set $19
-   local.get $19
-   i64.reinterpret_f64
-   i64.const -4294967296
-   i64.and
-   f64.reinterpret_i64
-   local.set $19
-   local.get $38
-   local.get $19
-   local.get $24
-   f64.sub
-   local.get $39
-   f64.sub
-   local.get $36
-   f64.sub
-   f64.sub
-   local.set $20
-  end
-  local.get $1
-  local.set $40
-  local.get $40
-  i64.reinterpret_f64
-  i64.const -4294967296
-  i64.and
-  f64.reinterpret_i64
-  local.set $40
-  local.get $1
-  local.get $40
-  f64.sub
-  local.get $19
-  f64.mul
-  local.get $1
-  local.get $20
-  f64.mul
-  f64.add
-  local.set $22
-  local.get $40
-  local.get $19
-  f64.mul
-  local.set $21
-  local.get $22
-  local.get $21
-  f64.add
-  local.set $16
-  local.get $16
-  i64.reinterpret_f64
-  local.set $2
-  local.get $2
-  i64.const 32
-  i64.shr_u
-  i32.wrap_i64
-  local.set $28
-  local.get $2
-  i32.wrap_i64
-  local.set $41
-  local.get $28
-  i32.const 1083179008
-  i32.ge_s
-  if
-   local.get $28
-   i32.const 1083179008
-   i32.sub
-   local.get $41
-   i32.or
-   i32.const 0
-   i32.ne
-   if
-    local.get $18
-    f64.const 1.e+300
-    f64.mul
-    f64.const 1.e+300
-    f64.mul
-    return
-   end
-   local.get $22
-   f64.const 8.008566259537294e-17
-   f64.add
-   local.get $16
-   local.get $21
-   f64.sub
-   f64.gt
-   if
-    local.get $18
-    f64.const 1.e+300
-    f64.mul
-    f64.const 1.e+300
-    f64.mul
-    return
-   end
-  else
-   local.get $28
-   i32.const 2147483647
-   i32.and
-   i32.const 1083231232
-   i32.ge_s
-   if
-    local.get $28
-    i32.const -1064252416
-    i32.sub
-    local.get $41
-    i32.or
-    i32.const 0
-    i32.ne
-    if
-     local.get $18
-     f64.const 1e-300
-     f64.mul
-     f64.const 1e-300
-     f64.mul
-     return
-    end
-    local.get $22
-    local.get $16
-    local.get $21
-    f64.sub
-    f64.le
-    if
-     local.get $18
-     f64.const 1e-300
-     f64.mul
-     f64.const 1e-300
-     f64.mul
-     return
-    end
-   end
-  end
-  local.get $28
-  i32.const 2147483647
-  i32.and
-  local.set $41
-  local.get $41
-  i32.const 20
-  i32.shr_s
-  i32.const 1023
-  i32.sub
-  local.set $10
-  i32.const 0
-  local.set $29
-  local.get $41
-  i32.const 1071644672
-  i32.gt_s
-  if
-   local.get $28
-   i32.const 1048576
-   local.get $10
-   i32.const 1
-   i32.add
-   i32.shr_s
-   i32.add
-   local.set $29
-   local.get $29
-   i32.const 2147483647
-   i32.and
-   i32.const 20
-   i32.shr_s
-   i32.const 1023
-   i32.sub
-   local.set $10
-   f64.const 0
-   local.set $24
-   local.get $29
-   i32.const 1048575
-   local.get $10
-   i32.shr_s
-   i32.const -1
-   i32.xor
-   i32.and
-   i64.extend_i32_s
-   i64.const 32
-   i64.shl
-   f64.reinterpret_i64
-   local.set $24
-   local.get $29
-   i32.const 1048575
-   i32.and
-   i32.const 1048576
-   i32.or
-   i32.const 20
-   local.get $10
-   i32.sub
-   i32.shr_s
-   local.set $29
-   local.get $28
-   i32.const 0
-   i32.lt_s
-   if
-    i32.const 0
-    local.get $29
-    i32.sub
-    local.set $29
-   end
-   local.get $21
-   local.get $24
-   f64.sub
-   local.set $21
-  end
-  local.get $22
-  local.get $21
-  f64.add
-  local.set $24
-  local.get $24
-  i64.reinterpret_f64
-  i64.const -4294967296
-  i64.and
-  f64.reinterpret_i64
-  local.set $24
-  local.get $24
-  f64.const 0.6931471824645996
-  f64.mul
-  local.set $25
-  local.get $22
-  local.get $24
-  local.get $21
-  f64.sub
-  f64.sub
-  f64.const 0.6931471805599453
-  f64.mul
-  local.get $24
-  f64.const -1.904654299957768e-09
-  f64.mul
-  f64.add
-  local.set $26
-  local.get $25
-  local.get $26
-  f64.add
-  local.set $16
-  local.get $26
-  local.get $16
-  local.get $25
-  f64.sub
-  f64.sub
-  local.set $27
-  local.get $16
-  local.get $16
-  f64.mul
-  local.set $24
-  local.get $16
-  local.get $24
-  f64.const 0.16666666666666602
-  local.get $24
-  f64.const -2.7777777777015593e-03
-  local.get $24
-  f64.const 6.613756321437934e-05
-  local.get $24
-  f64.const -1.6533902205465252e-06
-  local.get $24
-  f64.const 4.1381367970572385e-08
-  f64.mul
-  f64.add
-  f64.mul
-  f64.add
-  f64.mul
-  f64.add
-  f64.mul
-  f64.add
-  f64.mul
-  f64.sub
-  local.set $19
-  local.get $16
-  local.get $19
-  f64.mul
-  local.get $19
-  f64.const 2
-  f64.sub
-  f64.div
-  local.get $27
-  local.get $16
-  local.get $27
-  f64.mul
-  f64.add
-  f64.sub
-  local.set $23
-  f64.const 1
-  local.get $23
-  local.get $16
-  f64.sub
-  f64.sub
-  local.set $16
-  local.get $16
-  i64.reinterpret_f64
-  i64.const 32
-  i64.shr_u
-  i32.wrap_i64
-  local.set $28
-  local.get $28
-  local.get $29
-  i32.const 20
-  i32.shl
-  i32.add
-  local.set $28
-  local.get $28
-  i32.const 20
-  i32.shr_s
-  i32.const 0
-  i32.le_s
-  if
-   local.get $16
-   local.get $29
-   call $~lib/math/NativeMath.scalbn
-   local.set $16
-  else
-   local.get $16
-   i64.reinterpret_f64
-   i64.const 4294967295
-   i64.and
-   local.get $28
-   i64.extend_i32_s
-   i64.const 32
-   i64.shl
-   i64.or
-   f64.reinterpret_i64
-   local.set $16
-  end
-  local.get $18
-  local.get $16
-  f64.mul
- )
- (func $~lib/array/Array<f64>#__unchecked_get (; 39 ;) (type $FUNCSIG$dii) (param $0 i32) (param $1 i32) (result f64)
+ (func $~lib/array/Array<f64>#__unchecked_get (; 37 ;) (type $FUNCSIG$dii) (param $0 i32) (param $1 i32) (result f64)
   local.get $0
   i32.load offset=4
   local.get $1
@@ -5124,7 +3951,7 @@
   i32.add
   f64.load
  )
- (func $~lib/array/Array<f64>#__get (; 40 ;) (type $FUNCSIG$dii) (param $0 i32) (param $1 i32) (result f64)
+ (func $~lib/array/Array<f64>#__get (; 38 ;) (type $FUNCSIG$dii) (param $0 i32) (param $1 i32) (result f64)
   (local $2 f64)
   local.get $1
   local.get $0
@@ -5144,7 +3971,7 @@
   local.set $2
   local.get $2
  )
- (func $assembly/index/interpQ (; 41 ;) (type $FUNCSIG$iiiii) (param $0 i32) (param $1 i32) (param $2 i32) (param $3 i32) (result i32)
+ (func $assembly/index/interpQ (; 39 ;) (type $FUNCSIG$iiiii) (param $0 i32) (param $1 i32) (param $2 i32) (param $3 i32) (result i32)
   (local $4 i32)
   (local $5 i32)
   (local $6 f64)
@@ -5153,8 +3980,9 @@
   (local $9 f64)
   (local $10 f64)
   (local $11 i32)
-  (local $12 i32)
+  (local $12 f64)
   (local $13 i32)
+  (local $14 i32)
   local.get $0
   call $~lib/rt/pure/__retain
   drop
@@ -5173,51 +4001,44 @@
   local.tee $5
   call $~lib/rt/pure/__retain
   local.set $4
-  f64.const nan:0x8000000000000
-  local.set $6
-  f64.const nan:0x8000000000000
-  local.set $7
-  f64.const nan:0x8000000000000
-  local.set $8
-  f64.const nan:0x8000000000000
-  local.set $9
-  f64.const 0
+  f64.const 1
+  local.get $3
+  i32.const 1
+  i32.sub
+  f64.convert_i32_u
+  f64.div
   local.set $10
-  i32.const 0
-  local.set $11
   block $break|0
+   i32.const 0
+   local.set $11
    loop $loop|0
     local.get $11
     local.get $3
-    i32.const 255
-    i32.and
     i32.lt_u
     i32.eqz
     br_if $break|0
     local.get $11
     f64.convert_i32_u
-    local.get $3
-    f64.convert_i32_u
-    f64.const 1
-    f64.sub
-    f64.div
-    local.set $10
-    f64.const 1
     local.get $10
+    f64.mul
+    local.set $12
+    f64.const 1
+    local.get $12
     f64.sub
-    local.tee $9
-    f64.const 2
-    call $~lib/math/NativeMath.pow
+    local.set $9
+    local.get $9
+    local.get $9
+    f64.mul
     local.set $6
     f64.const 2
     local.get $9
     f64.mul
-    local.get $10
+    local.get $12
     f64.mul
     local.set $7
-    local.get $10
-    f64.const 2
-    call $~lib/math/NativeMath.pow
+    local.get $12
+    local.get $12
+    f64.mul
     local.set $8
     local.get $4
     i32.const 2
@@ -5225,11 +4046,11 @@
     i32.const 3
     i32.const 0
     call $~lib/rt/__allocArray
-    local.set $12
-    local.get $12
-    i32.load offset=4
     local.set $13
     local.get $13
+    i32.load offset=4
+    local.set $14
+    local.get $14
     local.get $6
     local.get $0
     i32.const 0
@@ -5248,7 +4069,7 @@
     f64.mul
     f64.add
     f64.store
-    local.get $13
+    local.get $14
     local.get $6
     local.get $0
     i32.const 1
@@ -5267,7 +4088,7 @@
     f64.mul
     f64.add
     f64.store offset=8
-    local.get $12
+    local.get $13
     call $~lib/array/Array<~lib/array/Array<f64>>#push
     drop
     local.get $11
@@ -5279,7 +4100,7 @@
    unreachable
   end
   local.get $4
-  local.set $13
+  local.set $11
   local.get $5
   call $~lib/rt/pure/__release
   local.get $0
@@ -5288,13 +4109,13 @@
   call $~lib/rt/pure/__release
   local.get $2
   call $~lib/rt/pure/__release
-  local.get $13
+  local.get $11
  )
- (func $~lib/array/Array<~lib/array/Array<f64>>#get:length (; 42 ;) (type $FUNCSIG$ii) (param $0 i32) (result i32)
+ (func $~lib/array/Array<~lib/array/Array<f64>>#get:length (; 40 ;) (type $FUNCSIG$ii) (param $0 i32) (result i32)
   local.get $0
   i32.load offset=12
  )
- (func $~lib/array/Array<~lib/array/Array<f64>>#__unchecked_get (; 43 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
+ (func $~lib/array/Array<~lib/array/Array<f64>>#__unchecked_get (; 41 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
   local.get $0
   i32.load offset=4
   local.get $1
@@ -5304,7 +4125,7 @@
   i32.load
   call $~lib/rt/pure/__retain
  )
- (func $~lib/array/Array<~lib/array/Array<f64>>#__get (; 44 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
+ (func $~lib/array/Array<~lib/array/Array<f64>>#__get (; 42 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
   local.get $1
   local.get $0
@@ -5336,7 +4157,7 @@
   end
   local.get $2
  )
- (func $assembly/index/interpC (; 45 ;) (type $FUNCSIG$iiiiii) (param $0 i32) (param $1 i32) (param $2 i32) (param $3 i32) (param $4 i32) (result i32)
+ (func $assembly/index/interpC (; 43 ;) (type $FUNCSIG$iiiiii) (param $0 i32) (param $1 i32) (param $2 i32) (param $3 i32) (param $4 i32) (result i32)
   (local $5 i32)
   (local $6 i32)
   (local $7 f64)
@@ -5346,10 +4167,11 @@
   (local $11 f64)
   (local $12 f64)
   (local $13 f64)
-  (local $14 i32)
-  (local $15 f64)
-  (local $16 i32)
+  (local $14 f64)
+  (local $15 i32)
+  (local $16 f64)
   (local $17 i32)
+  (local $18 i32)
   local.get $0
   call $~lib/rt/pure/__retain
   drop
@@ -5371,65 +4193,51 @@
   local.tee $6
   call $~lib/rt/pure/__retain
   local.set $5
-  f64.const nan:0x8000000000000
-  local.set $7
-  f64.const nan:0x8000000000000
-  local.set $8
-  f64.const nan:0x8000000000000
-  local.set $9
-  f64.const nan:0x8000000000000
-  local.set $10
-  f64.const nan:0x8000000000000
-  local.set $11
-  f64.const nan:0x8000000000000
-  local.set $12
-  f64.const nan:0x8000000000000
-  local.set $13
-  i32.const 0
+  f64.const 1
+  local.get $4
+  i32.const 1
+  i32.sub
+  f64.convert_i32_u
+  f64.div
   local.set $14
-  f64.const 0
-  local.set $15
   block $break|0
+   i32.const 0
+   local.set $15
    loop $loop|0
-    local.get $14
+    local.get $15
     local.get $4
-    i32.const 255
-    i32.and
     i32.lt_u
     i32.eqz
     br_if $break|0
-    local.get $14
-    f64.convert_i32_u
-    local.get $4
-    f64.convert_i32_u
-    f64.const 1
-    f64.sub
-    f64.div
-    local.set $15
-    f64.const 1
     local.get $15
+    f64.convert_i32_u
+    local.get $14
+    f64.mul
+    local.set $16
+    f64.const 1
+    local.get $16
     f64.sub
     local.set $7
     local.get $7
-    f64.const 2
-    call $~lib/math/NativeMath.pow
+    local.get $7
+    f64.mul
     local.set $8
     local.get $8
     local.get $7
     f64.mul
     local.set $9
-    local.get $15
-    f64.const 2
-    call $~lib/math/NativeMath.pow
+    local.get $16
+    local.get $16
+    f64.mul
     local.set $10
     local.get $10
-    local.get $15
+    local.get $16
     f64.mul
     local.set $11
     f64.const 3
     local.get $8
     f64.mul
-    local.get $15
+    local.get $16
     f64.mul
     local.set $12
     f64.const 3
@@ -5444,11 +4252,11 @@
     i32.const 3
     i32.const 0
     call $~lib/rt/__allocArray
-    local.set $16
-    local.get $16
-    i32.load offset=4
     local.set $17
     local.get $17
+    i32.load offset=4
+    local.set $18
+    local.get $18
     local.get $9
     local.get $0
     i32.const 0
@@ -5473,7 +4281,7 @@
     f64.mul
     f64.add
     f64.store
-    local.get $17
+    local.get $18
     local.get $9
     local.get $0
     i32.const 1
@@ -5498,19 +4306,19 @@
     f64.mul
     f64.add
     f64.store offset=8
-    local.get $16
+    local.get $17
     call $~lib/array/Array<~lib/array/Array<f64>>#push
     drop
-    local.get $14
+    local.get $15
     i32.const 1
     i32.add
-    local.set $14
+    local.set $15
     br $loop|0
    end
    unreachable
   end
   local.get $5
-  local.set $17
+  local.set $15
   local.get $6
   call $~lib/rt/pure/__release
   local.get $0
@@ -5521,10 +4329,12 @@
   call $~lib/rt/pure/__release
   local.get $3
   call $~lib/rt/pure/__release
-  local.get $17
+  local.get $15
  )
- (func $assembly/index/isVertexEqual (; 46 ;) (type $FUNCSIG$iiid) (param $0 i32) (param $1 i32) (param $2 f64) (result i32)
-  (local $3 i32)
+ (func $assembly/index/isVertexEqual (; 44 ;) (type $FUNCSIG$iiid) (param $0 i32) (param $1 i32) (param $2 f64) (result i32)
+  (local $3 f64)
+  (local $4 f64)
+  (local $5 i32)
   local.get $0
   call $~lib/rt/pure/__retain
   drop
@@ -5537,14 +4347,22 @@
   local.get $1
   i32.const 0
   call $~lib/array/Array<f64>#__get
+  f64.sub
+  local.set $3
+  local.get $0
+  i32.const 1
+  call $~lib/array/Array<f64>#__get
+  local.get $1
+  i32.const 1
+  call $~lib/array/Array<f64>#__get
+  f64.sub
+  local.set $4
+  local.get $3
+  f64.const 0
   f64.eq
   if (result i32)
-   local.get $0
-   i32.const 1
-   call $~lib/array/Array<f64>#__get
-   local.get $1
-   i32.const 1
-   call $~lib/array/Array<f64>#__get
+   local.get $4
+   f64.const 0
    f64.eq
   else
    i32.const 0
@@ -5552,38 +4370,26 @@
   if (result i32)
    i32.const 1
   else
-   local.get $0
-   i32.const 0
-   call $~lib/array/Array<f64>#__get
-   local.get $1
-   i32.const 0
-   call $~lib/array/Array<f64>#__get
-   f64.sub
-   f64.const 2
-   call $~lib/math/NativeMath.pow
-   local.get $0
-   i32.const 1
-   call $~lib/array/Array<f64>#__get
-   local.get $1
-   i32.const 1
-   call $~lib/array/Array<f64>#__get
-   f64.sub
-   f64.const 2
-   call $~lib/math/NativeMath.pow
+   local.get $3
+   local.get $3
+   f64.mul
+   local.get $4
+   local.get $4
+   f64.mul
    f64.add
    local.get $2
-   f64.const 2
-   call $~lib/math/NativeMath.pow
+   local.get $2
+   f64.mul
    f64.le
   end
-  local.set $3
+  local.set $5
   local.get $0
   call $~lib/rt/pure/__release
   local.get $1
   call $~lib/rt/pure/__release
-  local.get $3
+  local.get $5
  )
- (func $assembly/index/dedup (; 47 ;) (type $FUNCSIG$iid) (param $0 i32) (param $1 f64) (result i32)
+ (func $assembly/index/dedup (; 45 ;) (type $FUNCSIG$iid) (param $0 i32) (param $1 f64) (result i32)
   (local $2 i32)
   (local $3 i32)
   (local $4 i32)
@@ -5617,8 +4423,10 @@
   call $~lib/rt/pure/__retain
   local.set $3
   local.get $0
-  local.get $0
   call $~lib/array/Array<~lib/array/Array<f64>>#get:length
+  local.set $2
+  local.get $0
+  local.get $2
   i32.const 1
   i32.sub
   call $~lib/array/Array<~lib/array/Array<f64>>#__get
@@ -5630,14 +4438,9 @@
   local.get $1
   call $assembly/index/isVertexEqual
   if
-   local.get $0
-   call $~lib/array/Array<~lib/array/Array<f64>>#get:length
+   local.get $2
    i32.const 1
    i32.sub
-   local.set $2
-  else
-   local.get $0
-   call $~lib/array/Array<~lib/array/Array<f64>>#get:length
    local.set $2
   end
   i32.const 1
@@ -5652,7 +4455,7 @@
    loop $continue|0
     local.get $7
     local.get $2
-    i32.lt_u
+    i32.lt_s
     i32.eqz
     br_if $break|0
     local.get $0
@@ -5712,14 +4515,16 @@
   call $~lib/rt/pure/__release
   local.get $10
  )
- (func $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#get:length (; 48 ;) (type $FUNCSIG$ii) (param $0 i32) (result i32)
+ (func $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#get:length (; 46 ;) (type $FUNCSIG$ii) (param $0 i32) (result i32)
   local.get $0
   i32.load offset=12
  )
- (func $assembly/index/tinystep (; 49 ;) (type $FUNCSIG$iiid) (param $0 i32) (param $1 i32) (param $2 f64) (result i32)
+ (func $assembly/index/tinystep (; 47 ;) (type $FUNCSIG$iiid) (param $0 i32) (param $1 i32) (param $2 f64) (result i32)
   (local $3 f64)
-  (local $4 i32)
-  (local $5 i32)
+  (local $4 f64)
+  (local $5 f64)
+  (local $6 i32)
+  (local $7 i32)
   local.get $0
   call $~lib/rt/pure/__retain
   drop
@@ -5727,45 +4532,44 @@
   call $~lib/rt/pure/__retain
   drop
   local.get $1
-  i32.const 1
-  call $~lib/array/Array<f64>#__get
-  local.get $0
-  i32.const 1
-  call $~lib/array/Array<f64>#__get
-  f64.sub
-  f64.const 2
-  call $~lib/math/NativeMath.pow
-  local.get $1
   i32.const 0
   call $~lib/array/Array<f64>#__get
   local.get $0
   i32.const 0
   call $~lib/array/Array<f64>#__get
   f64.sub
-  f64.const 2
-  call $~lib/math/NativeMath.pow
-  f64.add
-  f64.const 0.5
-  call $~lib/math/NativeMath.pow
   local.set $3
+  local.get $1
+  i32.const 1
+  call $~lib/array/Array<f64>#__get
+  local.get $0
+  i32.const 1
+  call $~lib/array/Array<f64>#__get
+  f64.sub
+  local.set $4
+  local.get $3
+  local.get $3
+  f64.mul
+  local.get $4
+  local.get $4
+  f64.mul
+  f64.add
+  local.set $5
+  local.get $5
+  f64.sqrt
+  local.set $5
   i32.const 2
   i32.const 3
   i32.const 3
   i32.const 0
   call $~lib/rt/__allocArray
-  local.set $4
-  local.get $4
+  local.set $6
+  local.get $6
   i32.load offset=4
-  local.set $5
-  local.get $5
-  local.get $1
-  i32.const 0
-  call $~lib/array/Array<f64>#__get
-  local.get $0
-  i32.const 0
-  call $~lib/array/Array<f64>#__get
-  f64.sub
+  local.set $7
+  local.get $7
   local.get $3
+  local.get $5
   f64.div
   local.get $2
   f64.mul
@@ -5774,15 +4578,9 @@
   call $~lib/array/Array<f64>#__get
   f64.add
   f64.store
+  local.get $7
+  local.get $4
   local.get $5
-  local.get $1
-  i32.const 1
-  call $~lib/array/Array<f64>#__get
-  local.get $0
-  i32.const 1
-  call $~lib/array/Array<f64>#__get
-  f64.sub
-  local.get $3
   f64.div
   local.get $2
   f64.mul
@@ -5791,16 +4589,16 @@
   call $~lib/array/Array<f64>#__get
   f64.add
   f64.store offset=8
-  local.get $4
+  local.get $6
   call $~lib/rt/pure/__retain
-  local.set $5
+  local.set $7
   local.get $0
   call $~lib/rt/pure/__release
   local.get $1
   call $~lib/rt/pure/__release
-  local.get $5
+  local.get $7
  )
- (func $assembly/index/pickAPoint (; 50 ;) (type $FUNCSIG$ii) (param $0 i32) (result i32)
+ (func $assembly/index/pickAPoint (; 48 ;) (type $FUNCSIG$ii) (param $0 i32) (result i32)
   (local $1 i32)
   (local $2 f64)
   (local $3 i32)
@@ -5927,8 +4725,8 @@
   i32.const 0
   call $~lib/array/Array<f64>#__get
   f64.add
-  f64.const 3
-  f64.div
+  f64.const 0.3333333333333333
+  f64.mul
   f64.store
   local.get $13
   local.get $10
@@ -5942,8 +4740,8 @@
   i32.const 1
   call $~lib/array/Array<f64>#__get
   f64.add
-  f64.const 3
-  f64.div
+  f64.const 0.3333333333333333
+  f64.mul
   f64.store offset=8
   local.get $12
   call $~lib/rt/pure/__retain
@@ -5966,112 +4764,7 @@
   call $~lib/rt/pure/__release
   local.get $13
  )
- (func $assembly/index/windingOfTwoLines (; 51 ;) (type $FUNCSIG$iiii) (param $0 i32) (param $1 i32) (param $2 i32) (result i32)
-  (local $3 i32)
-  local.get $0
-  call $~lib/rt/pure/__retain
-  drop
-  local.get $1
-  call $~lib/rt/pure/__retain
-  drop
-  local.get $2
-  call $~lib/rt/pure/__retain
-  drop
-  local.get $1
-  i32.const 0
-  call $~lib/array/Array<f64>#__get
-  local.get $0
-  i32.const 0
-  call $~lib/array/Array<f64>#__get
-  f64.sub
-  local.get $2
-  i32.const 1
-  call $~lib/array/Array<f64>#__get
-  local.get $0
-  i32.const 1
-  call $~lib/array/Array<f64>#__get
-  f64.sub
-  f64.mul
-  local.get $1
-  i32.const 1
-  call $~lib/array/Array<f64>#__get
-  local.get $0
-  i32.const 1
-  call $~lib/array/Array<f64>#__get
-  f64.sub
-  local.get $2
-  i32.const 0
-  call $~lib/array/Array<f64>#__get
-  local.get $0
-  i32.const 0
-  call $~lib/array/Array<f64>#__get
-  f64.sub
-  f64.mul
-  f64.sub
-  f64.const 0
-  f64.lt
-  if (result i32)
-   i32.const -1
-  else
-   i32.const 1
-  end
-  local.set $3
-  local.get $0
-  call $~lib/rt/pure/__release
-  local.get $1
-  call $~lib/rt/pure/__release
-  local.get $2
-  call $~lib/rt/pure/__release
-  local.get $3
- )
- (func $assembly/index/isLinesIntersect (; 52 ;) (type $FUNCSIG$iiiii) (param $0 i32) (param $1 i32) (param $2 i32) (param $3 i32) (result i32)
-  (local $4 i32)
-  local.get $0
-  call $~lib/rt/pure/__retain
-  drop
-  local.get $1
-  call $~lib/rt/pure/__retain
-  drop
-  local.get $2
-  call $~lib/rt/pure/__retain
-  drop
-  local.get $3
-  call $~lib/rt/pure/__retain
-  drop
-  local.get $0
-  local.get $1
-  local.get $2
-  call $assembly/index/windingOfTwoLines
-  local.get $0
-  local.get $1
-  local.get $3
-  call $assembly/index/windingOfTwoLines
-  i32.ne
-  if (result i32)
-   local.get $2
-   local.get $3
-   local.get $0
-   call $assembly/index/windingOfTwoLines
-   local.get $2
-   local.get $3
-   local.get $1
-   call $assembly/index/windingOfTwoLines
-   i32.ne
-  else
-   i32.const 0
-  end
-  local.set $4
-  local.get $0
-  call $~lib/rt/pure/__release
-  local.get $1
-  call $~lib/rt/pure/__release
-  local.get $2
-  call $~lib/rt/pure/__release
-  local.get $3
-  call $~lib/rt/pure/__release
-  local.get $4
- )
- (func $assembly/index/isHole_oddeven (; 53 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
+ (func $assembly/index/isHole_oddeven (; 49 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
   (local $3 i32)
   (local $4 i32)
@@ -6081,6 +4774,15 @@
   (local $8 i32)
   (local $9 i32)
   (local $10 i32)
+  (local $11 i32)
+  (local $12 i32)
+  (local $13 i32)
+  (local $14 i32)
+  (local $15 i32)
+  (local $16 i32)
+  (local $17 i32)
+  (local $18 i32)
+  (local $19 i32)
   local.get $0
   call $~lib/rt/pure/__retain
   drop
@@ -6121,74 +4823,320 @@
   block $break|0
    i32.const 0
    local.set $8
+   local.get $1
+   call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#get:length
+   local.set $9
    loop $loop|0
     local.get $8
-    local.get $1
-    call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#get:length
+    local.get $9
     i32.lt_s
     i32.eqz
     br_if $break|0
     local.get $1
     local.get $8
     call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#__get
-    local.set $9
+    local.set $10
     local.get $5
     call $~lib/rt/pure/__release
-    local.get $9
+    local.get $10
     local.set $5
     block $break|1
      i32.const 0
-     local.set $9
+     local.set $10
+     local.get $5
+     call $~lib/array/Array<~lib/array/Array<f64>>#get:length
+     i32.const 1
+     i32.sub
+     local.set $11
      loop $loop|1
-      local.get $9
-      local.get $5
-      call $~lib/array/Array<~lib/array/Array<f64>>#get:length
-      i32.lt_s
+      local.get $10
+      local.get $11
+      i32.le_s
       i32.eqz
       br_if $break|1
       local.get $5
-      local.get $9
+      local.get $10
       call $~lib/array/Array<~lib/array/Array<f64>>#__get
-      local.set $10
+      local.set $12
       local.get $6
       call $~lib/rt/pure/__release
-      local.get $10
+      local.get $12
       local.set $6
       local.get $5
-      local.get $9
-      local.get $5
-      call $~lib/array/Array<~lib/array/Array<f64>>#get:length
-      i32.const 1
-      i32.sub
+      local.get $10
+      local.get $11
       i32.eq
       if (result i32)
        i32.const 0
       else
-       local.get $9
+       local.get $10
        i32.const 1
        i32.add
       end
       call $~lib/array/Array<~lib/array/Array<f64>>#__get
-      local.set $10
+      local.set $12
       local.get $7
       call $~lib/rt/pure/__release
-      local.get $10
+      local.get $12
       local.set $7
       local.get $2
+      call $~lib/rt/pure/__retain
+      local.set $15
       local.get $4
+      call $~lib/rt/pure/__retain
+      local.set $14
       local.get $6
+      call $~lib/rt/pure/__retain
+      local.set $13
       local.get $7
-      call $assembly/index/isLinesIntersect
+      call $~lib/rt/pure/__retain
+      local.set $12
+      local.get $15
+      call $~lib/rt/pure/__retain
+      local.set $18
+      local.get $14
+      call $~lib/rt/pure/__retain
+      local.set $17
+      local.get $13
+      call $~lib/rt/pure/__retain
+      local.set $16
+      local.get $17
+      i32.const 0
+      call $~lib/array/Array<f64>#__get
+      local.get $18
+      i32.const 0
+      call $~lib/array/Array<f64>#__get
+      f64.sub
+      local.get $16
+      i32.const 1
+      call $~lib/array/Array<f64>#__get
+      local.get $18
+      i32.const 1
+      call $~lib/array/Array<f64>#__get
+      f64.sub
+      f64.mul
+      local.get $17
+      i32.const 1
+      call $~lib/array/Array<f64>#__get
+      local.get $18
+      i32.const 1
+      call $~lib/array/Array<f64>#__get
+      f64.sub
+      local.get $16
+      i32.const 0
+      call $~lib/array/Array<f64>#__get
+      local.get $18
+      i32.const 0
+      call $~lib/array/Array<f64>#__get
+      f64.sub
+      f64.mul
+      f64.sub
+      f64.const 0
+      f64.lt
+      if (result i32)
+       i32.const -1
+      else
+       i32.const 1
+      end
+      local.set $19
+      local.get $16
+      call $~lib/rt/pure/__release
+      local.get $17
+      call $~lib/rt/pure/__release
+      local.get $18
+      call $~lib/rt/pure/__release
+      local.get $19
+      local.get $15
+      call $~lib/rt/pure/__retain
+      local.set $17
+      local.get $14
+      call $~lib/rt/pure/__retain
+      local.set $16
+      local.get $12
+      call $~lib/rt/pure/__retain
+      local.set $19
+      local.get $16
+      i32.const 0
+      call $~lib/array/Array<f64>#__get
+      local.get $17
+      i32.const 0
+      call $~lib/array/Array<f64>#__get
+      f64.sub
+      local.get $19
+      i32.const 1
+      call $~lib/array/Array<f64>#__get
+      local.get $17
+      i32.const 1
+      call $~lib/array/Array<f64>#__get
+      f64.sub
+      f64.mul
+      local.get $16
+      i32.const 1
+      call $~lib/array/Array<f64>#__get
+      local.get $17
+      i32.const 1
+      call $~lib/array/Array<f64>#__get
+      f64.sub
+      local.get $19
+      i32.const 0
+      call $~lib/array/Array<f64>#__get
+      local.get $17
+      i32.const 0
+      call $~lib/array/Array<f64>#__get
+      f64.sub
+      f64.mul
+      f64.sub
+      f64.const 0
+      f64.lt
+      if (result i32)
+       i32.const -1
+      else
+       i32.const 1
+      end
+      local.set $18
+      local.get $19
+      call $~lib/rt/pure/__release
+      local.get $16
+      call $~lib/rt/pure/__release
+      local.get $17
+      call $~lib/rt/pure/__release
+      local.get $18
+      i32.ne
+      if (result i32)
+       local.get $13
+       call $~lib/rt/pure/__retain
+       local.set $16
+       local.get $12
+       call $~lib/rt/pure/__retain
+       local.set $19
+       local.get $15
+       call $~lib/rt/pure/__retain
+       local.set $18
+       local.get $19
+       i32.const 0
+       call $~lib/array/Array<f64>#__get
+       local.get $16
+       i32.const 0
+       call $~lib/array/Array<f64>#__get
+       f64.sub
+       local.get $18
+       i32.const 1
+       call $~lib/array/Array<f64>#__get
+       local.get $16
+       i32.const 1
+       call $~lib/array/Array<f64>#__get
+       f64.sub
+       f64.mul
+       local.get $19
+       i32.const 1
+       call $~lib/array/Array<f64>#__get
+       local.get $16
+       i32.const 1
+       call $~lib/array/Array<f64>#__get
+       f64.sub
+       local.get $18
+       i32.const 0
+       call $~lib/array/Array<f64>#__get
+       local.get $16
+       i32.const 0
+       call $~lib/array/Array<f64>#__get
+       f64.sub
+       f64.mul
+       f64.sub
+       f64.const 0
+       f64.lt
+       if (result i32)
+        i32.const -1
+       else
+        i32.const 1
+       end
+       local.set $17
+       local.get $18
+       call $~lib/rt/pure/__release
+       local.get $19
+       call $~lib/rt/pure/__release
+       local.get $16
+       call $~lib/rt/pure/__release
+       local.get $17
+       local.get $13
+       call $~lib/rt/pure/__retain
+       local.set $19
+       local.get $12
+       call $~lib/rt/pure/__retain
+       local.set $18
+       local.get $14
+       call $~lib/rt/pure/__retain
+       local.set $17
+       local.get $18
+       i32.const 0
+       call $~lib/array/Array<f64>#__get
+       local.get $19
+       i32.const 0
+       call $~lib/array/Array<f64>#__get
+       f64.sub
+       local.get $17
+       i32.const 1
+       call $~lib/array/Array<f64>#__get
+       local.get $19
+       i32.const 1
+       call $~lib/array/Array<f64>#__get
+       f64.sub
+       f64.mul
+       local.get $18
+       i32.const 1
+       call $~lib/array/Array<f64>#__get
+       local.get $19
+       i32.const 1
+       call $~lib/array/Array<f64>#__get
+       f64.sub
+       local.get $17
+       i32.const 0
+       call $~lib/array/Array<f64>#__get
+       local.get $19
+       i32.const 0
+       call $~lib/array/Array<f64>#__get
+       f64.sub
+       f64.mul
+       f64.sub
+       f64.const 0
+       f64.lt
+       if (result i32)
+        i32.const -1
+       else
+        i32.const 1
+       end
+       local.set $16
+       local.get $17
+       call $~lib/rt/pure/__release
+       local.get $18
+       call $~lib/rt/pure/__release
+       local.get $19
+       call $~lib/rt/pure/__release
+       local.get $16
+       i32.ne
+      else
+       i32.const 0
+      end
+      local.set $19
+      local.get $12
+      call $~lib/rt/pure/__release
+      local.get $13
+      call $~lib/rt/pure/__release
+      local.get $14
+      call $~lib/rt/pure/__release
+      local.get $15
+      call $~lib/rt/pure/__release
+      local.get $19
       if
        local.get $3
        i32.const 1
        i32.add
        local.set $3
       end
-      local.get $9
+      local.get $10
       i32.const 1
       i32.add
-      local.set $9
+      local.set $10
       br $loop|1
      end
      unreachable
@@ -6202,11 +5150,11 @@
    unreachable
   end
   local.get $3
-  i32.const 2
-  i32.rem_s
+  i32.const 1
+  i32.and
   i32.const 0
   i32.eq
-  local.set $8
+  local.set $9
   local.get $2
   call $~lib/rt/pure/__release
   local.get $4
@@ -6221,9 +5169,9 @@
   call $~lib/rt/pure/__release
   local.get $1
   call $~lib/rt/pure/__release
-  local.get $8
+  local.get $9
  )
- (func $assembly/index/isHole_nonzero (; 54 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
+ (func $assembly/index/isHole_nonzero (; 50 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
   (local $3 i32)
   (local $4 i32)
@@ -6233,6 +5181,15 @@
   (local $8 i32)
   (local $9 i32)
   (local $10 i32)
+  (local $11 i32)
+  (local $12 i32)
+  (local $13 i32)
+  (local $14 i32)
+  (local $15 i32)
+  (local $16 i32)
+  (local $17 i32)
+  (local $18 i32)
+  (local $19 i32)
   local.get $0
   call $~lib/rt/pure/__retain
   drop
@@ -6273,77 +5230,374 @@
   block $break|0
    i32.const 0
    local.set $8
+   local.get $1
+   call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#get:length
+   local.set $9
    loop $loop|0
     local.get $8
-    local.get $1
-    call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#get:length
+    local.get $9
     i32.lt_s
     i32.eqz
     br_if $break|0
     local.get $1
     local.get $8
     call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#__get
-    local.set $9
+    local.set $10
     local.get $7
     call $~lib/rt/pure/__release
-    local.get $9
+    local.get $10
     local.set $7
     block $break|1
      i32.const 0
-     local.set $9
+     local.set $10
+     local.get $7
+     call $~lib/array/Array<~lib/array/Array<f64>>#get:length
+     i32.const 1
+     i32.sub
+     local.set $11
      loop $loop|1
-      local.get $9
-      local.get $7
-      call $~lib/array/Array<~lib/array/Array<f64>>#get:length
-      i32.lt_s
+      local.get $10
+      local.get $11
+      i32.le_s
       i32.eqz
       br_if $break|1
       local.get $7
-      local.get $9
+      local.get $10
       call $~lib/array/Array<~lib/array/Array<f64>>#__get
-      local.set $10
+      local.set $12
       local.get $5
       call $~lib/rt/pure/__release
-      local.get $10
+      local.get $12
       local.set $5
       local.get $7
-      local.get $9
-      local.get $7
-      call $~lib/array/Array<~lib/array/Array<f64>>#get:length
-      i32.const 1
-      i32.sub
+      local.get $10
+      local.get $11
       i32.eq
       if (result i32)
        i32.const 0
       else
-       local.get $9
+       local.get $10
        i32.const 1
        i32.add
       end
       call $~lib/array/Array<~lib/array/Array<f64>>#__get
-      local.set $10
+      local.set $12
       local.get $3
       call $~lib/rt/pure/__release
-      local.get $10
+      local.get $12
       local.set $3
       local.get $2
+      call $~lib/rt/pure/__retain
+      local.set $15
       local.get $4
+      call $~lib/rt/pure/__retain
+      local.set $14
       local.get $5
+      call $~lib/rt/pure/__retain
+      local.set $13
       local.get $3
-      call $assembly/index/isLinesIntersect
+      call $~lib/rt/pure/__retain
+      local.set $12
+      local.get $15
+      call $~lib/rt/pure/__retain
+      local.set $18
+      local.get $14
+      call $~lib/rt/pure/__retain
+      local.set $17
+      local.get $13
+      call $~lib/rt/pure/__retain
+      local.set $16
+      local.get $17
+      i32.const 0
+      call $~lib/array/Array<f64>#__get
+      local.get $18
+      i32.const 0
+      call $~lib/array/Array<f64>#__get
+      f64.sub
+      local.get $16
+      i32.const 1
+      call $~lib/array/Array<f64>#__get
+      local.get $18
+      i32.const 1
+      call $~lib/array/Array<f64>#__get
+      f64.sub
+      f64.mul
+      local.get $17
+      i32.const 1
+      call $~lib/array/Array<f64>#__get
+      local.get $18
+      i32.const 1
+      call $~lib/array/Array<f64>#__get
+      f64.sub
+      local.get $16
+      i32.const 0
+      call $~lib/array/Array<f64>#__get
+      local.get $18
+      i32.const 0
+      call $~lib/array/Array<f64>#__get
+      f64.sub
+      f64.mul
+      f64.sub
+      f64.const 0
+      f64.lt
+      if (result i32)
+       i32.const -1
+      else
+       i32.const 1
+      end
+      local.set $19
+      local.get $16
+      call $~lib/rt/pure/__release
+      local.get $17
+      call $~lib/rt/pure/__release
+      local.get $18
+      call $~lib/rt/pure/__release
+      local.get $19
+      local.get $15
+      call $~lib/rt/pure/__retain
+      local.set $17
+      local.get $14
+      call $~lib/rt/pure/__retain
+      local.set $16
+      local.get $12
+      call $~lib/rt/pure/__retain
+      local.set $19
+      local.get $16
+      i32.const 0
+      call $~lib/array/Array<f64>#__get
+      local.get $17
+      i32.const 0
+      call $~lib/array/Array<f64>#__get
+      f64.sub
+      local.get $19
+      i32.const 1
+      call $~lib/array/Array<f64>#__get
+      local.get $17
+      i32.const 1
+      call $~lib/array/Array<f64>#__get
+      f64.sub
+      f64.mul
+      local.get $16
+      i32.const 1
+      call $~lib/array/Array<f64>#__get
+      local.get $17
+      i32.const 1
+      call $~lib/array/Array<f64>#__get
+      f64.sub
+      local.get $19
+      i32.const 0
+      call $~lib/array/Array<f64>#__get
+      local.get $17
+      i32.const 0
+      call $~lib/array/Array<f64>#__get
+      f64.sub
+      f64.mul
+      f64.sub
+      f64.const 0
+      f64.lt
+      if (result i32)
+       i32.const -1
+      else
+       i32.const 1
+      end
+      local.set $18
+      local.get $19
+      call $~lib/rt/pure/__release
+      local.get $16
+      call $~lib/rt/pure/__release
+      local.get $17
+      call $~lib/rt/pure/__release
+      local.get $18
+      i32.ne
+      if (result i32)
+       local.get $13
+       call $~lib/rt/pure/__retain
+       local.set $16
+       local.get $12
+       call $~lib/rt/pure/__retain
+       local.set $19
+       local.get $15
+       call $~lib/rt/pure/__retain
+       local.set $18
+       local.get $19
+       i32.const 0
+       call $~lib/array/Array<f64>#__get
+       local.get $16
+       i32.const 0
+       call $~lib/array/Array<f64>#__get
+       f64.sub
+       local.get $18
+       i32.const 1
+       call $~lib/array/Array<f64>#__get
+       local.get $16
+       i32.const 1
+       call $~lib/array/Array<f64>#__get
+       f64.sub
+       f64.mul
+       local.get $19
+       i32.const 1
+       call $~lib/array/Array<f64>#__get
+       local.get $16
+       i32.const 1
+       call $~lib/array/Array<f64>#__get
+       f64.sub
+       local.get $18
+       i32.const 0
+       call $~lib/array/Array<f64>#__get
+       local.get $16
+       i32.const 0
+       call $~lib/array/Array<f64>#__get
+       f64.sub
+       f64.mul
+       f64.sub
+       f64.const 0
+       f64.lt
+       if (result i32)
+        i32.const -1
+       else
+        i32.const 1
+       end
+       local.set $17
+       local.get $18
+       call $~lib/rt/pure/__release
+       local.get $19
+       call $~lib/rt/pure/__release
+       local.get $16
+       call $~lib/rt/pure/__release
+       local.get $17
+       local.get $13
+       call $~lib/rt/pure/__retain
+       local.set $19
+       local.get $12
+       call $~lib/rt/pure/__retain
+       local.set $18
+       local.get $14
+       call $~lib/rt/pure/__retain
+       local.set $17
+       local.get $18
+       i32.const 0
+       call $~lib/array/Array<f64>#__get
+       local.get $19
+       i32.const 0
+       call $~lib/array/Array<f64>#__get
+       f64.sub
+       local.get $17
+       i32.const 1
+       call $~lib/array/Array<f64>#__get
+       local.get $19
+       i32.const 1
+       call $~lib/array/Array<f64>#__get
+       f64.sub
+       f64.mul
+       local.get $18
+       i32.const 1
+       call $~lib/array/Array<f64>#__get
+       local.get $19
+       i32.const 1
+       call $~lib/array/Array<f64>#__get
+       f64.sub
+       local.get $17
+       i32.const 0
+       call $~lib/array/Array<f64>#__get
+       local.get $19
+       i32.const 0
+       call $~lib/array/Array<f64>#__get
+       f64.sub
+       f64.mul
+       f64.sub
+       f64.const 0
+       f64.lt
+       if (result i32)
+        i32.const -1
+       else
+        i32.const 1
+       end
+       local.set $16
+       local.get $17
+       call $~lib/rt/pure/__release
+       local.get $18
+       call $~lib/rt/pure/__release
+       local.get $19
+       call $~lib/rt/pure/__release
+       local.get $16
+       i32.ne
+      else
+       i32.const 0
+      end
+      local.set $19
+      local.get $12
+      call $~lib/rt/pure/__release
+      local.get $13
+      call $~lib/rt/pure/__release
+      local.get $14
+      call $~lib/rt/pure/__release
+      local.get $15
+      call $~lib/rt/pure/__release
+      local.get $19
       if
        local.get $6
        local.get $2
+       call $~lib/rt/pure/__retain
+       local.set $18
        local.get $5
+       call $~lib/rt/pure/__retain
+       local.set $17
        local.get $3
-       call $assembly/index/windingOfTwoLines
+       call $~lib/rt/pure/__retain
+       local.set $16
+       local.get $17
+       i32.const 0
+       call $~lib/array/Array<f64>#__get
+       local.get $18
+       i32.const 0
+       call $~lib/array/Array<f64>#__get
+       f64.sub
+       local.get $16
+       i32.const 1
+       call $~lib/array/Array<f64>#__get
+       local.get $18
+       i32.const 1
+       call $~lib/array/Array<f64>#__get
+       f64.sub
+       f64.mul
+       local.get $17
+       i32.const 1
+       call $~lib/array/Array<f64>#__get
+       local.get $18
+       i32.const 1
+       call $~lib/array/Array<f64>#__get
+       f64.sub
+       local.get $16
+       i32.const 0
+       call $~lib/array/Array<f64>#__get
+       local.get $18
+       i32.const 0
+       call $~lib/array/Array<f64>#__get
+       f64.sub
+       f64.mul
+       f64.sub
+       f64.const 0
+       f64.lt
+       if (result i32)
+        i32.const -1
+       else
+        i32.const 1
+       end
+       local.set $15
+       local.get $16
+       call $~lib/rt/pure/__release
+       local.get $17
+       call $~lib/rt/pure/__release
+       local.get $18
+       call $~lib/rt/pure/__release
+       local.get $15
        i32.add
        local.set $6
       end
-      local.get $9
+      local.get $10
       i32.const 1
       i32.add
-      local.set $9
+      local.set $10
       br $loop|1
      end
      unreachable
@@ -6357,11 +5611,11 @@
    unreachable
   end
   local.get $6
-  i32.const 2
-  i32.rem_s
+  i32.const 1
+  i32.and
   i32.const 0
   i32.eq
-  local.set $8
+  local.set $9
   local.get $2
   call $~lib/rt/pure/__release
   local.get $4
@@ -6376,9 +5630,9 @@
   call $~lib/rt/pure/__release
   local.get $1
   call $~lib/rt/pure/__release
-  local.get $8
+  local.get $9
  )
- (func $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#push (; 55 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
+ (func $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#push (; 51 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
   (local $3 i32)
   (local $4 i32)
@@ -6414,7 +5668,7 @@
   call $~lib/rt/pure/__release
   local.get $4
  )
- (func $assembly/index/boundingBoxOf (; 56 ;) (type $FUNCSIG$ii) (param $0 i32) (result i32)
+ (func $assembly/index/boundingBoxOf (; 52 ;) (type $FUNCSIG$ii) (param $0 i32) (result i32)
   (local $1 f64)
   (local $2 f64)
   (local $3 f64)
@@ -6435,76 +5689,74 @@
   f64.const inf
   f64.neg
   local.set $4
-  i32.const 0
-  local.set $5
   block $break|0
    i32.const 0
+   local.set $5
+   local.get $0
+   call $~lib/array/Array<~lib/array/Array<f64>>#get:length
    local.set $6
    loop $loop|0
+    local.get $5
     local.get $6
-    local.get $0
-    call $~lib/array/Array<~lib/array/Array<f64>>#get:length
     i32.lt_s
     i32.eqz
     br_if $break|0
     local.get $0
-    local.get $6
+    local.get $5
     call $~lib/array/Array<~lib/array/Array<f64>>#__get
     local.set $7
-    local.get $5
-    call $~lib/rt/pure/__release
     local.get $7
-    local.set $5
-    local.get $5
     i32.const 0
     call $~lib/array/Array<f64>#__get
     local.get $1
     f64.lt
     if
-     local.get $5
+     local.get $7
      i32.const 0
      call $~lib/array/Array<f64>#__get
      local.set $1
     else
-     local.get $5
+     local.get $7
      i32.const 0
      call $~lib/array/Array<f64>#__get
      local.get $3
      f64.gt
      if
-      local.get $5
+      local.get $7
       i32.const 0
       call $~lib/array/Array<f64>#__get
       local.set $3
      end
     end
-    local.get $5
+    local.get $7
     i32.const 1
     call $~lib/array/Array<f64>#__get
     local.get $2
     f64.lt
     if
-     local.get $5
+     local.get $7
      i32.const 1
      call $~lib/array/Array<f64>#__get
      local.set $2
     else
-     local.get $5
+     local.get $7
      i32.const 1
      call $~lib/array/Array<f64>#__get
      local.get $4
      f64.gt
      if
-      local.get $5
+      local.get $7
       i32.const 1
       call $~lib/array/Array<f64>#__get
       local.set $4
      end
     end
-    local.get $6
+    local.get $5
     i32.const 1
     i32.add
-    local.set $6
+    local.set $5
+    local.get $7
+    call $~lib/rt/pure/__release
     br $loop|0
    end
    unreachable
@@ -6514,38 +5766,44 @@
   i32.const 3
   i32.const 0
   call $~lib/rt/__allocArray
+  local.set $7
+  local.get $7
+  i32.load offset=4
   local.set $6
   local.get $6
-  i32.load offset=4
-  local.set $7
-  local.get $7
   local.get $1
   f64.store
-  local.get $7
+  local.get $6
   local.get $2
   f64.store offset=8
-  local.get $7
+  local.get $6
   local.get $3
   f64.store offset=16
-  local.get $7
+  local.get $6
   local.get $4
   f64.store offset=24
-  local.get $6
+  local.get $7
   call $~lib/rt/pure/__retain
-  local.set $7
-  local.get $5
-  call $~lib/rt/pure/__release
+  local.set $6
   local.get $0
   call $~lib/rt/pure/__release
-  local.get $7
+  local.get $6
  )
- (func $assembly/index/isPointInsidePolygon (; 57 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
+ (func $assembly/index/isPointInsidePolygon (; 53 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
   (local $3 i32)
   (local $4 i32)
   (local $5 i32)
   (local $6 i32)
   (local $7 i32)
+  (local $8 i32)
+  (local $9 i32)
+  (local $10 i32)
+  (local $11 i32)
+  (local $12 i32)
+  (local $13 i32)
+  (local $14 i32)
+  (local $15 i32)
   local.get $0
   call $~lib/rt/pure/__retain
   drop
@@ -6574,66 +5832,353 @@
   local.set $3
   i32.const 0
   local.set $2
-  i32.const 0
-  local.set $4
-  i32.const 0
-  local.set $5
   block $break|0
    i32.const 0
-   local.set $6
+   local.set $4
+   local.get $1
+   call $~lib/array/Array<~lib/array/Array<f64>>#get:length
+   i32.const 1
+   i32.sub
+   local.set $5
    loop $loop|0
-    local.get $6
-    local.get $1
-    call $~lib/array/Array<~lib/array/Array<f64>>#get:length
-    i32.lt_s
+    local.get $4
+    local.get $5
+    i32.le_s
     i32.eqz
     br_if $break|0
     local.get $1
-    local.get $6
+    local.get $4
     call $~lib/array/Array<~lib/array/Array<f64>>#__get
-    local.set $7
+    local.set $6
+    local.get $1
+    local.get $4
     local.get $5
-    call $~lib/rt/pure/__release
-    local.get $7
-    local.set $5
-    local.get $1
-    local.get $6
-    local.get $1
-    call $~lib/array/Array<~lib/array/Array<f64>>#get:length
-    i32.const 1
-    i32.sub
     i32.eq
     if (result i32)
      i32.const 0
     else
-     local.get $6
+     local.get $4
      i32.const 1
      i32.add
     end
     call $~lib/array/Array<~lib/array/Array<f64>>#__get
     local.set $7
-    local.get $4
-    call $~lib/rt/pure/__release
-    local.get $7
-    local.set $4
     local.get $0
+    call $~lib/rt/pure/__retain
+    local.set $11
     local.get $3
-    local.get $5
-    local.get $4
-    call $assembly/index/isLinesIntersect
+    call $~lib/rt/pure/__retain
+    local.set $10
+    local.get $6
+    call $~lib/rt/pure/__retain
+    local.set $9
+    local.get $7
+    call $~lib/rt/pure/__retain
+    local.set $8
+    local.get $11
+    call $~lib/rt/pure/__retain
+    local.set $14
+    local.get $10
+    call $~lib/rt/pure/__retain
+    local.set $13
+    local.get $9
+    call $~lib/rt/pure/__retain
+    local.set $12
+    local.get $13
+    i32.const 0
+    call $~lib/array/Array<f64>#__get
+    local.get $14
+    i32.const 0
+    call $~lib/array/Array<f64>#__get
+    f64.sub
+    local.get $12
+    i32.const 1
+    call $~lib/array/Array<f64>#__get
+    local.get $14
+    i32.const 1
+    call $~lib/array/Array<f64>#__get
+    f64.sub
+    f64.mul
+    local.get $13
+    i32.const 1
+    call $~lib/array/Array<f64>#__get
+    local.get $14
+    i32.const 1
+    call $~lib/array/Array<f64>#__get
+    f64.sub
+    local.get $12
+    i32.const 0
+    call $~lib/array/Array<f64>#__get
+    local.get $14
+    i32.const 0
+    call $~lib/array/Array<f64>#__get
+    f64.sub
+    f64.mul
+    f64.sub
+    f64.const 0
+    f64.lt
+    if (result i32)
+     i32.const -1
+    else
+     i32.const 1
+    end
+    local.set $15
+    local.get $12
+    call $~lib/rt/pure/__release
+    local.get $13
+    call $~lib/rt/pure/__release
+    local.get $14
+    call $~lib/rt/pure/__release
+    local.get $15
+    local.get $11
+    call $~lib/rt/pure/__retain
+    local.set $13
+    local.get $10
+    call $~lib/rt/pure/__retain
+    local.set $12
+    local.get $8
+    call $~lib/rt/pure/__retain
+    local.set $15
+    local.get $12
+    i32.const 0
+    call $~lib/array/Array<f64>#__get
+    local.get $13
+    i32.const 0
+    call $~lib/array/Array<f64>#__get
+    f64.sub
+    local.get $15
+    i32.const 1
+    call $~lib/array/Array<f64>#__get
+    local.get $13
+    i32.const 1
+    call $~lib/array/Array<f64>#__get
+    f64.sub
+    f64.mul
+    local.get $12
+    i32.const 1
+    call $~lib/array/Array<f64>#__get
+    local.get $13
+    i32.const 1
+    call $~lib/array/Array<f64>#__get
+    f64.sub
+    local.get $15
+    i32.const 0
+    call $~lib/array/Array<f64>#__get
+    local.get $13
+    i32.const 0
+    call $~lib/array/Array<f64>#__get
+    f64.sub
+    f64.mul
+    f64.sub
+    f64.const 0
+    f64.lt
+    if (result i32)
+     i32.const -1
+    else
+     i32.const 1
+    end
+    local.set $14
+    local.get $15
+    call $~lib/rt/pure/__release
+    local.get $12
+    call $~lib/rt/pure/__release
+    local.get $13
+    call $~lib/rt/pure/__release
+    local.get $14
+    i32.ne
+    if (result i32)
+     local.get $9
+     call $~lib/rt/pure/__retain
+     local.set $12
+     local.get $8
+     call $~lib/rt/pure/__retain
+     local.set $15
+     local.get $11
+     call $~lib/rt/pure/__retain
+     local.set $14
+     local.get $15
+     i32.const 0
+     call $~lib/array/Array<f64>#__get
+     local.get $12
+     i32.const 0
+     call $~lib/array/Array<f64>#__get
+     f64.sub
+     local.get $14
+     i32.const 1
+     call $~lib/array/Array<f64>#__get
+     local.get $12
+     i32.const 1
+     call $~lib/array/Array<f64>#__get
+     f64.sub
+     f64.mul
+     local.get $15
+     i32.const 1
+     call $~lib/array/Array<f64>#__get
+     local.get $12
+     i32.const 1
+     call $~lib/array/Array<f64>#__get
+     f64.sub
+     local.get $14
+     i32.const 0
+     call $~lib/array/Array<f64>#__get
+     local.get $12
+     i32.const 0
+     call $~lib/array/Array<f64>#__get
+     f64.sub
+     f64.mul
+     f64.sub
+     f64.const 0
+     f64.lt
+     if (result i32)
+      i32.const -1
+     else
+      i32.const 1
+     end
+     local.set $13
+     local.get $14
+     call $~lib/rt/pure/__release
+     local.get $15
+     call $~lib/rt/pure/__release
+     local.get $12
+     call $~lib/rt/pure/__release
+     local.get $13
+     local.get $9
+     call $~lib/rt/pure/__retain
+     local.set $15
+     local.get $8
+     call $~lib/rt/pure/__retain
+     local.set $14
+     local.get $10
+     call $~lib/rt/pure/__retain
+     local.set $13
+     local.get $14
+     i32.const 0
+     call $~lib/array/Array<f64>#__get
+     local.get $15
+     i32.const 0
+     call $~lib/array/Array<f64>#__get
+     f64.sub
+     local.get $13
+     i32.const 1
+     call $~lib/array/Array<f64>#__get
+     local.get $15
+     i32.const 1
+     call $~lib/array/Array<f64>#__get
+     f64.sub
+     f64.mul
+     local.get $14
+     i32.const 1
+     call $~lib/array/Array<f64>#__get
+     local.get $15
+     i32.const 1
+     call $~lib/array/Array<f64>#__get
+     f64.sub
+     local.get $13
+     i32.const 0
+     call $~lib/array/Array<f64>#__get
+     local.get $15
+     i32.const 0
+     call $~lib/array/Array<f64>#__get
+     f64.sub
+     f64.mul
+     f64.sub
+     f64.const 0
+     f64.lt
+     if (result i32)
+      i32.const -1
+     else
+      i32.const 1
+     end
+     local.set $12
+     local.get $13
+     call $~lib/rt/pure/__release
+     local.get $14
+     call $~lib/rt/pure/__release
+     local.get $15
+     call $~lib/rt/pure/__release
+     local.get $12
+     i32.ne
+    else
+     i32.const 0
+    end
+    local.set $15
+    local.get $8
+    call $~lib/rt/pure/__release
+    local.get $9
+    call $~lib/rt/pure/__release
+    local.get $10
+    call $~lib/rt/pure/__release
+    local.get $11
+    call $~lib/rt/pure/__release
+    local.get $15
     if
      local.get $2
      local.get $0
-     local.get $5
-     local.get $4
-     call $assembly/index/windingOfTwoLines
+     call $~lib/rt/pure/__retain
+     local.set $14
+     local.get $6
+     call $~lib/rt/pure/__retain
+     local.set $13
+     local.get $7
+     call $~lib/rt/pure/__retain
+     local.set $12
+     local.get $13
+     i32.const 0
+     call $~lib/array/Array<f64>#__get
+     local.get $14
+     i32.const 0
+     call $~lib/array/Array<f64>#__get
+     f64.sub
+     local.get $12
+     i32.const 1
+     call $~lib/array/Array<f64>#__get
+     local.get $14
+     i32.const 1
+     call $~lib/array/Array<f64>#__get
+     f64.sub
+     f64.mul
+     local.get $13
+     i32.const 1
+     call $~lib/array/Array<f64>#__get
+     local.get $14
+     i32.const 1
+     call $~lib/array/Array<f64>#__get
+     f64.sub
+     local.get $12
+     i32.const 0
+     call $~lib/array/Array<f64>#__get
+     local.get $14
+     i32.const 0
+     call $~lib/array/Array<f64>#__get
+     f64.sub
+     f64.mul
+     f64.sub
+     f64.const 0
+     f64.lt
+     if (result i32)
+      i32.const -1
+     else
+      i32.const 1
+     end
+     local.set $11
+     local.get $12
+     call $~lib/rt/pure/__release
+     local.get $13
+     call $~lib/rt/pure/__release
+     local.get $14
+     call $~lib/rt/pure/__release
+     local.get $11
      i32.add
      local.set $2
     end
-    local.get $6
+    local.get $4
     i32.const 1
     i32.add
-    local.set $6
+    local.set $4
+    local.get $6
+    call $~lib/rt/pure/__release
+    local.get $7
+    call $~lib/rt/pure/__release
     br $loop|0
    end
    unreachable
@@ -6643,20 +6188,16 @@
   i32.rem_s
   i32.const 0
   i32.ne
-  local.set $6
+  local.set $7
   local.get $3
-  call $~lib/rt/pure/__release
-  local.get $4
-  call $~lib/rt/pure/__release
-  local.get $5
   call $~lib/rt/pure/__release
   local.get $0
   call $~lib/rt/pure/__release
   local.get $1
   call $~lib/rt/pure/__release
-  local.get $6
+  local.get $7
  )
- (func $assembly/index/isPolygonInsidePolygon (; 58 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
+ (func $assembly/index/isPolygonInsidePolygon (; 54 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
   (local $3 i32)
   (local $4 i32)
@@ -6666,6 +6207,15 @@
   (local $8 i32)
   (local $9 i32)
   (local $10 i32)
+  (local $11 i32)
+  (local $12 i32)
+  (local $13 i32)
+  (local $14 i32)
+  (local $15 i32)
+  (local $16 i32)
+  (local $17 i32)
+  (local $18 i32)
+  (local $19 i32)
   local.get $0
   call $~lib/rt/pure/__retain
   drop
@@ -6779,23 +6329,24 @@
   block $break|0
    i32.const 0
    local.set $4
+   local.get $0
+   call $~lib/array/Array<~lib/array/Array<f64>>#get:length
+   i32.const 1
+   i32.sub
+   local.set $5
    loop $loop|0
     local.get $4
-    local.get $0
-    call $~lib/array/Array<~lib/array/Array<f64>>#get:length
-    i32.lt_s
+    local.get $5
+    i32.le_s
     i32.eqz
     br_if $break|0
     local.get $0
     local.get $4
     call $~lib/array/Array<~lib/array/Array<f64>>#__get
-    local.set $5
+    local.set $6
     local.get $0
     local.get $4
-    local.get $0
-    call $~lib/array/Array<~lib/array/Array<f64>>#get:length
-    i32.const 1
-    i32.sub
+    local.get $5
     i32.eq
     if (result i32)
      i32.const 0
@@ -6805,45 +6356,289 @@
      i32.add
     end
     call $~lib/array/Array<~lib/array/Array<f64>>#__get
-    local.set $6
+    local.set $7
     block $break|1
      i32.const 0
-     local.set $7
+     local.set $8
+     local.get $1
+     call $~lib/array/Array<~lib/array/Array<f64>>#get:length
+     i32.const 1
+     i32.sub
+     local.set $9
      loop $loop|1
-      local.get $7
-      local.get $1
-      call $~lib/array/Array<~lib/array/Array<f64>>#get:length
-      i32.lt_s
+      local.get $8
+      local.get $9
+      i32.le_s
       i32.eqz
       br_if $break|1
       local.get $1
-      local.get $7
+      local.get $8
       call $~lib/array/Array<~lib/array/Array<f64>>#__get
-      local.set $8
+      local.set $10
       local.get $1
-      local.get $7
-      local.get $1
-      call $~lib/array/Array<~lib/array/Array<f64>>#get:length
-      i32.const 1
-      i32.sub
+      local.get $8
+      local.get $9
       i32.eq
       if (result i32)
        i32.const 0
       else
-       local.get $7
+       local.get $8
        i32.const 1
        i32.add
       end
       call $~lib/array/Array<~lib/array/Array<f64>>#__get
-      local.set $9
-      local.get $5
+      local.set $11
       local.get $6
-      local.get $8
-      local.get $9
-      call $assembly/index/isLinesIntersect
+      call $~lib/rt/pure/__retain
+      local.set $15
+      local.get $7
+      call $~lib/rt/pure/__retain
+      local.set $14
+      local.get $10
+      call $~lib/rt/pure/__retain
+      local.set $13
+      local.get $11
+      call $~lib/rt/pure/__retain
+      local.set $12
+      local.get $15
+      call $~lib/rt/pure/__retain
+      local.set $18
+      local.get $14
+      call $~lib/rt/pure/__retain
+      local.set $17
+      local.get $13
+      call $~lib/rt/pure/__retain
+      local.set $16
+      local.get $17
+      i32.const 0
+      call $~lib/array/Array<f64>#__get
+      local.get $18
+      i32.const 0
+      call $~lib/array/Array<f64>#__get
+      f64.sub
+      local.get $16
+      i32.const 1
+      call $~lib/array/Array<f64>#__get
+      local.get $18
+      i32.const 1
+      call $~lib/array/Array<f64>#__get
+      f64.sub
+      f64.mul
+      local.get $17
+      i32.const 1
+      call $~lib/array/Array<f64>#__get
+      local.get $18
+      i32.const 1
+      call $~lib/array/Array<f64>#__get
+      f64.sub
+      local.get $16
+      i32.const 0
+      call $~lib/array/Array<f64>#__get
+      local.get $18
+      i32.const 0
+      call $~lib/array/Array<f64>#__get
+      f64.sub
+      f64.mul
+      f64.sub
+      f64.const 0
+      f64.lt
+      if (result i32)
+       i32.const -1
+      else
+       i32.const 1
+      end
+      local.set $19
+      local.get $16
+      call $~lib/rt/pure/__release
+      local.get $17
+      call $~lib/rt/pure/__release
+      local.get $18
+      call $~lib/rt/pure/__release
+      local.get $19
+      local.get $15
+      call $~lib/rt/pure/__retain
+      local.set $17
+      local.get $14
+      call $~lib/rt/pure/__retain
+      local.set $16
+      local.get $12
+      call $~lib/rt/pure/__retain
+      local.set $19
+      local.get $16
+      i32.const 0
+      call $~lib/array/Array<f64>#__get
+      local.get $17
+      i32.const 0
+      call $~lib/array/Array<f64>#__get
+      f64.sub
+      local.get $19
+      i32.const 1
+      call $~lib/array/Array<f64>#__get
+      local.get $17
+      i32.const 1
+      call $~lib/array/Array<f64>#__get
+      f64.sub
+      f64.mul
+      local.get $16
+      i32.const 1
+      call $~lib/array/Array<f64>#__get
+      local.get $17
+      i32.const 1
+      call $~lib/array/Array<f64>#__get
+      f64.sub
+      local.get $19
+      i32.const 0
+      call $~lib/array/Array<f64>#__get
+      local.get $17
+      i32.const 0
+      call $~lib/array/Array<f64>#__get
+      f64.sub
+      f64.mul
+      f64.sub
+      f64.const 0
+      f64.lt
+      if (result i32)
+       i32.const -1
+      else
+       i32.const 1
+      end
+      local.set $18
+      local.get $19
+      call $~lib/rt/pure/__release
+      local.get $16
+      call $~lib/rt/pure/__release
+      local.get $17
+      call $~lib/rt/pure/__release
+      local.get $18
+      i32.ne
+      if (result i32)
+       local.get $13
+       call $~lib/rt/pure/__retain
+       local.set $16
+       local.get $12
+       call $~lib/rt/pure/__retain
+       local.set $19
+       local.get $15
+       call $~lib/rt/pure/__retain
+       local.set $18
+       local.get $19
+       i32.const 0
+       call $~lib/array/Array<f64>#__get
+       local.get $16
+       i32.const 0
+       call $~lib/array/Array<f64>#__get
+       f64.sub
+       local.get $18
+       i32.const 1
+       call $~lib/array/Array<f64>#__get
+       local.get $16
+       i32.const 1
+       call $~lib/array/Array<f64>#__get
+       f64.sub
+       f64.mul
+       local.get $19
+       i32.const 1
+       call $~lib/array/Array<f64>#__get
+       local.get $16
+       i32.const 1
+       call $~lib/array/Array<f64>#__get
+       f64.sub
+       local.get $18
+       i32.const 0
+       call $~lib/array/Array<f64>#__get
+       local.get $16
+       i32.const 0
+       call $~lib/array/Array<f64>#__get
+       f64.sub
+       f64.mul
+       f64.sub
+       f64.const 0
+       f64.lt
+       if (result i32)
+        i32.const -1
+       else
+        i32.const 1
+       end
+       local.set $17
+       local.get $18
+       call $~lib/rt/pure/__release
+       local.get $19
+       call $~lib/rt/pure/__release
+       local.get $16
+       call $~lib/rt/pure/__release
+       local.get $17
+       local.get $13
+       call $~lib/rt/pure/__retain
+       local.set $19
+       local.get $12
+       call $~lib/rt/pure/__retain
+       local.set $18
+       local.get $14
+       call $~lib/rt/pure/__retain
+       local.set $17
+       local.get $18
+       i32.const 0
+       call $~lib/array/Array<f64>#__get
+       local.get $19
+       i32.const 0
+       call $~lib/array/Array<f64>#__get
+       f64.sub
+       local.get $17
+       i32.const 1
+       call $~lib/array/Array<f64>#__get
+       local.get $19
+       i32.const 1
+       call $~lib/array/Array<f64>#__get
+       f64.sub
+       f64.mul
+       local.get $18
+       i32.const 1
+       call $~lib/array/Array<f64>#__get
+       local.get $19
+       i32.const 1
+       call $~lib/array/Array<f64>#__get
+       f64.sub
+       local.get $17
+       i32.const 0
+       call $~lib/array/Array<f64>#__get
+       local.get $19
+       i32.const 0
+       call $~lib/array/Array<f64>#__get
+       f64.sub
+       f64.mul
+       f64.sub
+       f64.const 0
+       f64.lt
+       if (result i32)
+        i32.const -1
+       else
+        i32.const 1
+       end
+       local.set $16
+       local.get $17
+       call $~lib/rt/pure/__release
+       local.get $18
+       call $~lib/rt/pure/__release
+       local.get $19
+       call $~lib/rt/pure/__release
+       local.get $16
+       i32.ne
+      else
+       i32.const 0
+      end
+      local.set $19
+      local.get $12
+      call $~lib/rt/pure/__release
+      local.get $13
+      call $~lib/rt/pure/__release
+      local.get $14
+      call $~lib/rt/pure/__release
+      local.get $15
+      call $~lib/rt/pure/__release
+      local.get $19
       if
        i32.const 0
-       local.set $10
+       local.set $15
        local.get $0
        call $~lib/rt/pure/__release
        local.get $1
@@ -6852,24 +6647,24 @@
        call $~lib/rt/pure/__release
        local.get $3
        call $~lib/rt/pure/__release
-       local.get $5
-       call $~lib/rt/pure/__release
        local.get $6
        call $~lib/rt/pure/__release
-       local.get $8
-       call $~lib/rt/pure/__release
-       local.get $9
+       local.get $7
        call $~lib/rt/pure/__release
        local.get $10
+       call $~lib/rt/pure/__release
+       local.get $11
+       call $~lib/rt/pure/__release
+       local.get $15
        return
       end
-      local.get $7
+      local.get $8
       i32.const 1
       i32.add
-      local.set $7
-      local.get $8
+      local.set $8
+      local.get $10
       call $~lib/rt/pure/__release
-      local.get $9
+      local.get $11
       call $~lib/rt/pure/__release
       br $loop|1
      end
@@ -6879,9 +6674,9 @@
     i32.const 1
     i32.add
     local.set $4
-    local.get $5
-    call $~lib/rt/pure/__release
     local.get $6
+    call $~lib/rt/pure/__release
+    local.get $7
     call $~lib/rt/pure/__release
     br $loop|0
    end
@@ -6890,23 +6685,23 @@
   local.get $0
   i32.const 0
   call $~lib/array/Array<~lib/array/Array<f64>>#__get
-  local.tee $6
+  local.tee $7
   local.get $1
   call $assembly/index/isPointInsidePolygon
-  local.set $5
+  local.set $6
   local.get $2
   call $~lib/rt/pure/__release
   local.get $3
   call $~lib/rt/pure/__release
-  local.get $6
+  local.get $7
   call $~lib/rt/pure/__release
   local.get $0
   call $~lib/rt/pure/__release
   local.get $1
   call $~lib/rt/pure/__release
-  local.get $5
+  local.get $6
  )
- (func $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#indexOf (; 59 ;) (type $FUNCSIG$iiii) (param $0 i32) (param $1 i32) (param $2 i32) (result i32)
+ (func $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#indexOf (; 55 ;) (type $FUNCSIG$iiii) (param $0 i32) (param $1 i32) (param $2 i32) (result i32)
   (local $3 i32)
   (local $4 i32)
   (local $5 i32)
@@ -6991,7 +6786,7 @@
   call $~lib/rt/pure/__release
   local.get $4
  )
- (func $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#splice (; 60 ;) (type $FUNCSIG$iiii) (param $0 i32) (param $1 i32) (param $2 i32) (result i32)
+ (func $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#splice (; 56 ;) (type $FUNCSIG$iiii) (param $0 i32) (param $1 i32) (param $2 i32) (result i32)
   (local $3 i32)
   (local $4 i32)
   (local $5 i32)
@@ -7122,7 +6917,7 @@
   i32.store offset=12
   local.get $6
  )
- (func $~lib/array/Array<~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>>#push (; 61 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
+ (func $~lib/array/Array<~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>>#push (; 57 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
   (local $3 i32)
   (local $4 i32)
@@ -7158,7 +6953,7 @@
   call $~lib/rt/pure/__release
   local.get $4
  )
- (func $assembly/index/linkUp (; 62 ;) (type $FUNCSIG$iiii) (param $0 i32) (param $1 i32) (param $2 i32) (result i32)
+ (func $assembly/index/linkUp (; 58 ;) (type $FUNCSIG$iiii) (param $0 i32) (param $1 i32) (param $2 i32) (result i32)
   (local $3 i32)
   (local $4 i32)
   (local $5 i32)
@@ -7168,6 +6963,8 @@
   (local $9 i32)
   (local $10 i32)
   (local $11 i32)
+  (local $12 i32)
+  (local $13 i32)
   local.get $0
   call $~lib/rt/pure/__retain
   drop
@@ -7184,20 +6981,22 @@
   block $break|0
    i32.const 0
    local.set $5
+   local.get $0
+   call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#get:length
+   local.set $6
    loop $loop|0
     local.get $5
-    local.get $0
-    call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#get:length
+    local.get $6
     i32.lt_s
     i32.eqz
     br_if $break|0
     local.get $0
     local.get $5
     call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#__get
-    local.set $6
+    local.set $7
     local.get $4
     call $~lib/rt/pure/__release
-    local.get $6
+    local.get $7
     local.set $4
     i32.const 0
     i32.const 2
@@ -7205,27 +7004,29 @@
     i32.const 16952
     call $~lib/rt/__allocArray
     call $~lib/rt/pure/__retain
-    local.tee $7
+    local.tee $8
     call $~lib/rt/pure/__retain
-    local.set $6
+    local.set $7
     block $break|1
      i32.const 0
-     local.set $8
+     local.set $9
+     local.get $1
+     call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#get:length
+     local.set $10
      loop $loop|1
-      local.get $8
-      local.get $1
-      call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#get:length
+      local.get $9
+      local.get $10
       i32.lt_s
       i32.eqz
       br_if $break|1
       block $continue|1
        local.get $1
-       local.get $8
+       local.get $9
        call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#__get
-       local.set $9
+       local.set $11
        local.get $3
        call $~lib/rt/pure/__release
-       local.get $9
+       local.get $11
        local.set $3
        local.get $3
        local.get $4
@@ -7235,67 +7036,67 @@
         br $continue|1
        end
        i32.const 0
-       local.set $9
+       local.set $11
        block $break|2
         i32.const 0
-        local.set $10
+        local.set $12
         loop $loop|2
-         local.get $10
-         local.get $6
+         local.get $12
+         local.get $7
          call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#get:length
          i32.lt_s
          i32.eqz
          br_if $break|2
-         local.get $6
-         local.get $10
+         local.get $7
+         local.get $12
          call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#__get
-         local.set $11
+         local.set $13
          local.get $3
-         local.get $11
+         local.get $13
          call $assembly/index/isPolygonInsidePolygon
          if
           i32.const 1
-          local.set $9
-          local.get $11
+          local.set $11
+          local.get $13
           call $~lib/rt/pure/__release
           br $break|2
          end
-         local.get $11
+         local.get $13
          local.get $3
          call $assembly/index/isPolygonInsidePolygon
          if
-          local.get $6
-          local.get $6
-          local.get $11
+          local.get $7
+          local.get $7
+          local.get $13
           i32.const 0
           call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#indexOf
           i32.const 1
           call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#splice
           call $~lib/rt/pure/__release
          end
-         local.get $10
+         local.get $12
          i32.const 1
          i32.add
-         local.set $10
-         local.get $11
+         local.set $12
+         local.get $13
          call $~lib/rt/pure/__release
          br $loop|2
         end
         unreachable
        end
-       local.get $9
+       local.get $11
        i32.eqz
        if
-        local.get $6
+        local.get $7
         local.get $3
         call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#push
         drop
        end
       end
-      local.get $8
+      local.get $9
       i32.const 1
       i32.add
-      local.set $8
+      local.set $9
       br $loop|1
      end
      unreachable
@@ -7305,64 +7106,66 @@
     i32.const 5
     i32.const 0
     call $~lib/rt/__allocArray
-    local.set $9
-    local.get $9
+    local.set $11
+    local.get $11
     i32.load offset=4
-    local.set $8
-    local.get $8
+    local.set $10
+    local.get $10
     local.get $4
     call $~lib/rt/pure/__retain
     i32.store
-    local.get $9
+    local.get $11
     call $~lib/rt/pure/__retain
-    local.set $8
+    local.set $10
     block $break|3
      i32.const 0
+     local.set $11
+     local.get $7
+     call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#get:length
      local.set $9
      loop $loop|3
+      local.get $11
       local.get $9
-      local.get $6
-      call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#get:length
       i32.lt_s
       i32.eqz
       br_if $break|3
-      local.get $8
-      local.get $6
-      local.get $9
+      local.get $10
+      local.get $7
+      local.get $11
       call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#__get
-      local.tee $11
+      local.tee $13
       call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#push
       drop
-      local.get $9
+      local.get $11
       i32.const 1
       i32.add
-      local.set $9
-      local.get $11
+      local.set $11
+      local.get $13
       call $~lib/rt/pure/__release
       br $loop|3
      end
      unreachable
     end
     local.get $2
-    local.get $8
+    local.get $10
     call $~lib/array/Array<~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>>#push
     drop
     local.get $5
     i32.const 1
     i32.add
     local.set $5
+    local.get $8
+    call $~lib/rt/pure/__release
     local.get $7
     call $~lib/rt/pure/__release
-    local.get $6
-    call $~lib/rt/pure/__release
-    local.get $8
+    local.get $10
     call $~lib/rt/pure/__release
     br $loop|0
    end
    unreachable
   end
   local.get $2
-  local.set $8
+  local.set $10
   local.get $3
   call $~lib/rt/pure/__release
   local.get $4
@@ -7371,9 +7174,9 @@
   call $~lib/rt/pure/__release
   local.get $1
   call $~lib/rt/pure/__release
-  local.get $8
+  local.get $10
  )
- (func $assembly/index/compile (; 63 ;) (type $FUNCSIG$iiiid) (param $0 i32) (param $1 i32) (param $2 i32) (param $3 f64) (result i32)
+ (func $assembly/index/compile (; 59 ;) (type $FUNCSIG$iiiid) (param $0 i32) (param $1 i32) (param $2 i32) (param $3 f64) (result i32)
   (local $4 i32)
   (local $5 i32)
   (local $6 i32)
@@ -7412,6 +7215,8 @@
   local.set $6
   i32.const 0
   local.set $7
+  i32.const 0
+  local.set $17
   block $break|0
    loop $continue|0
     local.get $6
@@ -7451,33 +7256,41 @@
      i32.const 4
      i32.const 0
      call $~lib/rt/__allocArray
-     local.set $17
-     local.get $17
-     i32.load offset=4
      local.set $18
      local.get $18
+     i32.load offset=4
+     local.set $19
+     local.get $19
      i32.const 2
      i32.const 3
      i32.const 3
      i32.const 0
      call $~lib/rt/__allocArray
-     local.set $19
-     local.get $19
-     i32.load offset=4
      local.set $20
      local.get $20
+     i32.load offset=4
+     local.set $21
+     local.get $21
      local.get $15
      f64.store
-     local.get $20
+     local.get $21
      local.get $16
      f64.store offset=8
-     local.get $19
+     local.get $20
      call $~lib/rt/pure/__retain
      i32.store
-     local.get $17
+     local.get $18
      call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#__set
      br $continue|0
     end
+    local.get $4
+    local.get $7
+    call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#__get
+    local.set $20
+    local.get $17
+    call $~lib/rt/pure/__release
+    local.get $20
+    local.set $17
     local.get $8
     i32.const 76
     i32.eq
@@ -7496,30 +7309,25 @@
      global.get $assembly/index/SZ
      i32.add
      local.set $6
-     local.get $4
-     local.get $7
-     call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#__get
-     local.tee $18
+     local.get $17
      i32.const 2
      i32.const 3
      i32.const 3
      i32.const 0
      call $~lib/rt/__allocArray
-     local.set $17
-     local.get $17
-     i32.load offset=4
      local.set $20
      local.get $20
+     i32.load offset=4
+     local.set $19
+     local.get $19
      local.get $15
      f64.store
-     local.get $20
+     local.get $19
      local.get $16
      f64.store offset=8
-     local.get $17
+     local.get $20
      call $~lib/array/Array<~lib/array/Array<f64>>#push
      drop
-     local.get $18
-     call $~lib/rt/pure/__release
      br $continue|0
     end
     local.get $8
@@ -7573,8 +7381,8 @@
      i32.const 3
      i32.const 0
      call $~lib/rt/__allocArray
-     local.set $18
-     local.get $18
+     local.set $19
+     local.get $19
      i32.load offset=4
      local.set $20
      local.get $20
@@ -7583,7 +7391,7 @@
      local.get $20
      local.get $10
      f64.store offset=8
-     local.get $18
+     local.get $19
      i32.const 2
      i32.const 3
      i32.const 3
@@ -7592,11 +7400,11 @@
      local.set $20
      local.get $20
      i32.load offset=4
-     local.set $18
-     local.get $18
+     local.set $19
+     local.get $19
      local.get $11
      f64.store
-     local.get $18
+     local.get $19
      local.get $12
      f64.store offset=8
      local.get $20
@@ -7605,8 +7413,8 @@
      i32.const 3
      i32.const 0
      call $~lib/rt/__allocArray
-     local.set $18
-     local.get $18
+     local.set $19
+     local.get $19
      i32.load offset=4
      local.set $20
      local.get $20
@@ -7615,37 +7423,36 @@
      local.get $20
      local.get $16
      f64.store offset=8
-     local.get $18
+     local.get $19
      local.get $2
+     i32.const 255
+     i32.and
      call $assembly/index/interpQ
      local.set $20
      block $break|1
       i32.const 1
+      local.set $19
+      local.get $20
+      call $~lib/array/Array<~lib/array/Array<f64>>#get:length
       local.set $18
       loop $loop|1
+       local.get $19
        local.get $18
-       local.get $20
-       call $~lib/array/Array<~lib/array/Array<f64>>#get:length
        i32.lt_s
        i32.eqz
        br_if $break|1
-       local.get $4
-       local.get $7
-       call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#__get
-       local.tee $17
+       local.get $17
        local.get $20
-       local.get $18
+       local.get $19
        call $~lib/array/Array<~lib/array/Array<f64>>#__get
-       local.tee $19
+       local.tee $21
        call $~lib/array/Array<~lib/array/Array<f64>>#push
        drop
-       local.get $18
+       local.get $19
        i32.const 1
        i32.add
-       local.set $18
-       local.get $17
-       call $~lib/rt/pure/__release
-       local.get $19
+       local.set $19
+       local.get $21
        call $~lib/rt/pure/__release
        br $loop|1
       end
@@ -7723,11 +7530,11 @@
      local.set $20
      local.get $20
      i32.load offset=4
-     local.set $19
-     local.get $19
+     local.set $21
+     local.get $21
      local.get $9
      f64.store
-     local.get $19
+     local.get $21
      local.get $10
      f64.store offset=8
      local.get $20
@@ -7736,8 +7543,8 @@
      i32.const 3
      i32.const 0
      call $~lib/rt/__allocArray
-     local.set $19
-     local.get $19
+     local.set $21
+     local.get $21
      i32.load offset=4
      local.set $20
      local.get $20
@@ -7746,7 +7553,7 @@
      local.get $20
      local.get $12
      f64.store offset=8
-     local.get $19
+     local.get $21
      i32.const 2
      i32.const 3
      i32.const 3
@@ -7755,11 +7562,11 @@
      local.set $20
      local.get $20
      i32.load offset=4
-     local.set $19
-     local.get $19
+     local.set $21
+     local.get $21
      local.get $13
      f64.store
-     local.get $19
+     local.get $21
      local.get $14
      f64.store offset=8
      local.get $20
@@ -7768,8 +7575,8 @@
      i32.const 3
      i32.const 0
      call $~lib/rt/__allocArray
-     local.set $19
-     local.get $19
+     local.set $21
+     local.get $21
      i32.load offset=4
      local.set $20
      local.get $20
@@ -7778,37 +7585,36 @@
      local.get $20
      local.get $16
      f64.store offset=8
-     local.get $19
+     local.get $21
      local.get $2
+     i32.const 255
+     i32.and
      call $assembly/index/interpC
      local.set $20
      block $break|2
       i32.const 1
-      local.set $19
+      local.set $21
+      local.get $20
+      call $~lib/array/Array<~lib/array/Array<f64>>#get:length
+      local.set $18
       loop $loop|2
-       local.get $19
-       local.get $20
-       call $~lib/array/Array<~lib/array/Array<f64>>#get:length
+       local.get $21
+       local.get $18
        i32.lt_s
        i32.eqz
        br_if $break|2
-       local.get $4
-       local.get $7
-       call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#__get
-       local.tee $17
+       local.get $17
        local.get $20
-       local.get $19
+       local.get $21
        call $~lib/array/Array<~lib/array/Array<f64>>#__get
-       local.tee $18
+       local.tee $19
        call $~lib/array/Array<~lib/array/Array<f64>>#push
        drop
-       local.get $19
+       local.get $21
        i32.const 1
        i32.add
-       local.set $19
-       local.get $17
-       call $~lib/rt/pure/__release
-       local.get $18
+       local.set $21
+       local.get $19
        call $~lib/rt/pure/__release
        br $loop|2
       end
@@ -7824,21 +7630,16 @@
     if
      local.get $4
      local.get $7
-     local.get $4
-     local.get $7
-     call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#__get
-     local.tee $20
+     local.get $17
      local.get $3
      call $assembly/index/dedup
-     local.tee $18
+     local.tee $20
      call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#__set
      local.get $7
      i32.const 1
      i32.add
      local.set $7
      local.get $20
-     call $~lib/rt/pure/__release
-     local.get $18
      call $~lib/rt/pure/__release
      br $continue|0
     end
@@ -7852,63 +7653,63 @@
   i32.const 16904
   call $~lib/rt/__allocArray
   call $~lib/rt/pure/__retain
-  local.tee $20
+  local.tee $19
   call $~lib/rt/pure/__retain
-  local.set $18
+  local.set $20
   i32.const 0
   i32.const 2
   i32.const 5
   i32.const 16920
   call $~lib/rt/__allocArray
   call $~lib/rt/pure/__retain
-  local.tee $19
+  local.tee $21
   call $~lib/rt/pure/__retain
-  local.set $17
-  i32.const 0
-  local.set $21
+  local.set $18
   block $break|3
    i32.const 0
    local.set $22
+   local.get $4
+   call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#get:length
+   local.set $23
    loop $loop|3
     local.get $22
-    local.get $4
-    call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#get:length
+    local.get $23
     i32.lt_s
     i32.eqz
     br_if $break|3
     local.get $4
     local.get $22
     call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#__get
-    local.set $23
-    local.get $21
+    local.set $24
+    local.get $17
     call $~lib/rt/pure/__release
-    local.get $23
-    local.set $21
+    local.get $24
+    local.set $17
     local.get $1
     i32.const 255
     i32.and
     i32.const 1
     i32.eq
     if
-     local.get $21
+     local.get $17
      local.get $4
      call $assembly/index/isHole_oddeven
-     local.set $23
+     local.set $24
     else
-     local.get $21
+     local.get $17
      local.get $4
      call $assembly/index/isHole_nonzero
-     local.set $23
+     local.set $24
     end
-    local.get $23
+    local.get $24
     if
+     local.get $18
      local.get $17
-     local.get $21
      call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#push
      drop
     else
-     local.get $18
-     local.get $21
+     local.get $20
+     local.get $17
      call $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#push
      drop
     end
@@ -7926,38 +7727,38 @@
   i32.const 16936
   call $~lib/rt/__allocArray
   call $~lib/rt/pure/__retain
-  local.tee $22
+  local.tee $23
   call $~lib/rt/pure/__retain
-  local.set $23
+  local.set $24
+  local.get $20
   local.get $18
-  local.get $17
-  local.get $23
+  local.get $24
   call $assembly/index/linkUp
   call $~lib/rt/pure/__release
-  local.get $23
-  local.set $24
+  local.get $24
+  local.set $22
   local.get $5
   call $~lib/rt/pure/__release
   local.get $4
   call $~lib/rt/pure/__release
-  local.get $20
-  call $~lib/rt/pure/__release
-  local.get $18
+  local.get $17
   call $~lib/rt/pure/__release
   local.get $19
   call $~lib/rt/pure/__release
-  local.get $17
+  local.get $20
   call $~lib/rt/pure/__release
   local.get $21
   call $~lib/rt/pure/__release
-  local.get $22
+  local.get $18
   call $~lib/rt/pure/__release
-  local.get $24
+  local.get $23
+  call $~lib/rt/pure/__release
+  local.get $22
  )
- (func $~lib/array/Array<f64>#__visit_impl (; 64 ;) (type $FUNCSIG$vii) (param $0 i32) (param $1 i32)
+ (func $~lib/array/Array<f64>#__visit_impl (; 60 ;) (type $FUNCSIG$vii) (param $0 i32) (param $1 i32)
   nop
  )
- (func $~lib/rt/pure/__visit (; 65 ;) (type $FUNCSIG$vii) (param $0 i32) (param $1 i32)
+ (func $~lib/rt/pure/__visit (; 61 ;) (type $FUNCSIG$vii) (param $0 i32) (param $1 i32)
   (local $2 i32)
   (local $3 i32)
   local.get $0
@@ -8087,7 +7888,7 @@
    end
   end
  )
- (func $~lib/array/Array<~lib/array/Array<f64>>#__visit_impl (; 66 ;) (type $FUNCSIG$vii) (param $0 i32) (param $1 i32)
+ (func $~lib/array/Array<~lib/array/Array<f64>>#__visit_impl (; 62 ;) (type $FUNCSIG$vii) (param $0 i32) (param $1 i32)
   (local $2 i32)
   (local $3 i32)
   (local $4 i32)
@@ -8126,7 +7927,7 @@
    unreachable
   end
  )
- (func $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#__visit_impl (; 67 ;) (type $FUNCSIG$vii) (param $0 i32) (param $1 i32)
+ (func $~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>#__visit_impl (; 63 ;) (type $FUNCSIG$vii) (param $0 i32) (param $1 i32)
   (local $2 i32)
   (local $3 i32)
   (local $4 i32)
@@ -8165,7 +7966,7 @@
    unreachable
   end
  )
- (func $~lib/array/Array<~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>>#__visit_impl (; 68 ;) (type $FUNCSIG$vii) (param $0 i32) (param $1 i32)
+ (func $~lib/array/Array<~lib/array/Array<~lib/array/Array<~lib/array/Array<f64>>>>#__visit_impl (; 64 ;) (type $FUNCSIG$vii) (param $0 i32) (param $1 i32)
   (local $2 i32)
   (local $3 i32)
   (local $4 i32)
@@ -8204,10 +8005,10 @@
    unreachable
   end
  )
- (func $~lib/array/Array<i32>#__visit_impl (; 69 ;) (type $FUNCSIG$vii) (param $0 i32) (param $1 i32)
+ (func $~lib/array/Array<i32>#__visit_impl (; 65 ;) (type $FUNCSIG$vii) (param $0 i32) (param $1 i32)
   nop
  )
- (func $~lib/rt/__visit_members (; 70 ;) (type $FUNCSIG$vii) (param $0 i32) (param $1 i32)
+ (func $~lib/rt/__visit_members (; 66 ;) (type $FUNCSIG$vii) (param $0 i32) (param $1 i32)
   (local $2 i32)
   block $block$4$break
    block $switch$1$default
@@ -8265,6 +8066,6 @@
   end
   return
  )
- (func $null (; 71 ;) (type $FUNCSIG$v)
+ (func $null (; 67 ;) (type $FUNCSIG$v)
  )
 )

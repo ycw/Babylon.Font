@@ -1,26 +1,26 @@
 //
-// Compile opentypejs.PathCommand into shapes data 
-// which is ready to map to library dependent struct 
-// e.g. `BABYLON.Vector3(x, 0, -y)` 
+// Compile opentypejs.PathCommand into shapes data
+// which is ready to map to library dependent struct
+// e.g. `BABYLON.Vector3(x, 0, -y)`
 //
 
 // # Sample Output
-// (Array of shapes) 
+// (Array of shapes)
 // [
 //   [ fill, hole, hole ]  # "fill" has 2 "holes" inside
 //   [ fill ]              # "fill" has 0 "holes"
-// ] 
+// ]
 // where
 //   fill = [[x, y], [x, y], ...]
 //   hole = ditto
 
 // # Note
-// + Memory Base occupies 16384 bytes 
-//   roughly contain 250 "flatten" PathCommands for 'C' 
+// + Memory Base occupies 16384 bytes
+//   roughly contain 250 "flatten" PathCommands for 'C'
 
 // # Flatten PathCommands in Linear Memory Structure
 // | Command | Structure
-// |---------|---------- 
+// |---------|----------
 // | M       | u8, f64, f64
 // | L       | u8, f64, f64
 // | Q       | u8, f64, f64, f64, f64, f64, f64
@@ -37,7 +37,7 @@ const SZ = 8; // f64 sz in byte
 
 
 //
-// "bring-in" fns (just some debug utilities) 
+// "bring-in" fns (just some debug utilities)
 // Pipe wasm stuff to js console
 // Comment out when build
 //
@@ -48,7 +48,7 @@ const SZ = 8; // f64 sz in byte
 
 
 //
-// Compile loadedIn opentype PathCommand data (already in memory base sector) 
+// Compile loadedIn opentype PathCommand data (already in memory base sector)
 // {bytesUsed} flatten commands bytes used (must < --memoryBase value)
 // {fmt} outlineFormat; 1:'cff' non1:'truetype'
 // {ppc} pointPerCurve; 0~255
@@ -68,6 +68,7 @@ export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): Result {
   let x1: f64, y1: f64;
   let x2: f64, y2: f64;
   let x: f64, y: f64;
+  let polygon: Polygon;
 
   while (i < bytesUsed) {
     cmd = load<u8>(i);
@@ -80,12 +81,13 @@ export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): Result {
       polygons[iP] = [[x, y]];
       continue;
     }
+    polygon = polygons[iP];
     if (cmd == 76) { // L
       x = load<f64>(i);
       i += SZ;
       y = load<f64>(i);
       i += SZ;
-      polygons[iP].push([x, y]);
+      polygon.push([x, y]);
       continue;
     }
     if (cmd == 81) { // 'Q'
@@ -107,8 +109,8 @@ export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): Result {
         [x, y],
         ppc
       );
-      for (let k = 1; k < vs.length; ++k) {
-        polygons[iP].push(vs[k]);
+      for (let k = 1, len = vs.length; k < len; ++k) {
+        polygon.push(vs[k]);
       }
       continue;
     }
@@ -136,14 +138,14 @@ export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): Result {
         [x, y],
         ppc
       );
-      for (let k = 1; k < vs.length; ++k) {
-        polygons[iP].push(vs[k]);
+      for (let k = 1, len = vs.length; k < len; ++k) {
+        polygon.push(vs[k]);
       }
       continue;
     }
     if (cmd == 90) { // 'Z'
-      polygons[iP] = dedup(polygons[iP], eps);
-      iP += 1;
+      polygons[iP] = dedup(polygon, eps);
+      ++iP;
       continue;
     }
   }
@@ -155,23 +157,18 @@ export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): Result {
 
   const fills: Array<Polygon> = [];
   const holes: Array<Polygon> = [];
-  let polygon: Polygon;
-  {
-    for (let i = 0; i < polygons.length; ++i) {
-      polygon = polygons[i];
-      let isHole: bool;
-      if (fmt == 1) { // cff
-        isHole = isHole_oddeven(polygon, polygons);
-      }
-      else { // truetype or unknown
-        isHole = isHole_nonzero(polygon, polygons);
-      }
-      if (isHole) {
-        holes.push(polygon);
-      }
-      else {
-        fills.push(polygon);
-      }
+  for (let i = 0, len = polygons.length; i < len; ++i) {
+    polygon = polygons[i];
+    let isHole: bool;
+    if (fmt == 1) { // cff
+      isHole = isHole_oddeven(polygon, polygons);
+    } else { // truetype or unknown
+      isHole = isHole_nonzero(polygon, polygons);
+    }
+    if (isHole) {
+      holes.push(polygon);
+    } else {
+      fills.push(polygon);
     }
   }
 
@@ -197,10 +194,10 @@ function linkUp(
 ): Result {
   let hole: Polygon;
   let fill: Polygon;
-  for (let i = 0; i < fills.length; ++i) {
+  for (let i = 0, ilen = fills.length; i < ilen; ++i) {
     fill = fills[i];
     const $hs: Array<Polygon> = []; // hole stash
-    for (let j = 0; j < holes.length; ++j) {
+    for (let j = 0, jlen = holes.length; j < jlen; ++j) {
       hole = holes[j];
       if (!isPolygonInsidePolygon(hole, fill)) {
         continue;
@@ -223,7 +220,7 @@ function linkUp(
       }
     }
     let shape: Array<Polygon> = [fill];
-    for (let i = 0; i < $hs.length; ++i) {
+    for (let i = 0, len = $hs.length; i < len; ++i) {
       shape.push($hs[i]);
     }
     result.push(shape);
@@ -237,24 +234,16 @@ function linkUp(
 // Dedup nearby vertices
 //
 
-function dedup(
-  vs: Polygon,
-  eps: f64
-): Polygon {
-  const result: Polygon = [
-    vs[0]
-  ];
-  let $len: usize;
-  if (isVertexEqual(vs[vs.length - 1], vs[0], eps)) {
-    $len = vs.length - 1;
+function dedup(vs: Polygon, eps: f64): Polygon {
+  const result: Polygon = [vs[0]];
+  let len = vs.length;
+  if (isVertexEqual(vs[len - 1], vs[0], eps)) {
+    --len;
   }
-  else {
-    $len = vs.length;
-  }
-  let i = usize(1);
+  let i = 1;
   let $v: Vertex;
   let $1 = vs[0];
-  while (i < $len) {
+  while (i < len) {
     $v = vs[i];
     if (!isVertexEqual($v, $1, eps)) {
       result.push($v);
@@ -266,34 +255,31 @@ function dedup(
 }
 
 function isVertexEqual(p0: Vertex, p1: Vertex, eps: f64): bool {
-  return p0[0] == p1[0] && p0[1] == p1[1] // fast check
-    || (p0[0] - p1[0]) ** 2 + (p0[1] - p1[1]) ** 2 <= eps ** 2;
+  let dx = p0[0] - p1[0];
+  let dy = p0[1] - p1[1];
+  return dx == 0 && dy == 0 // fast check
+    || (dx * dx + dy * dy <= eps * eps);
 }
 
 
 
 //
 // Interpolate 'Q' command
-// 
+//
 
-function interpQ(
-  p0: Vertex,
-  p1: Vertex,
-  p2: Vertex,
-  n: u8
-): Array<Vertex> {
+function interpQ(p0: Vertex, p1: Vertex, p2: Vertex, n: u32): Array<Vertex> {
   const result: Array<Vertex> = [];
-  let $0 = NaN;
-  let $1 = NaN;
-  let $2 = NaN;
-  let $$ = NaN;
-  let t: f64 = 0;
-  let i: u8 = 0;
-  for (; i < n; ++i) {
-    t = f64(f64(i) / (n - 1.0));
-    $0 = ($$ = 1.0 - t) ** 2.0;
-    $1 = 2.0 * $$ * t;
-    $2 = t ** 2.0;
+  let $0: f64;
+  let $1: f64;
+  let $2: f64;
+  let $$: f64;
+  let iN = 1.0 / (n - 1);
+  for (let i: u32 = 0; i < n; ++i) {
+    let t = f64(i) * iN;
+    $$ = 1 - t;
+    $0 = $$ * $$;
+    $1 = 2 * $$ * t;
+    $2 = t * t;
     result.push([
       f64($0 * p0[0] + $1 * p1[0] + $2 * p2[0]),
       f64($0 * p0[1] + $1 * p1[1] + $2 * p2[1])
@@ -308,26 +294,25 @@ function interpQ(
 // Interpolate 'C' command
 //
 
-function interpC(p0: Vertex, p1: Vertex, p2: Vertex, p3: Vertex, n: u8): Array<Vertex> {
+function interpC(p0: Vertex, p1: Vertex, p2: Vertex, p3: Vertex, n: u32): Array<Vertex> {
   const result: Array<Vertex> = [];
-  let $0 = NaN;
-  let $1 = NaN;
-  let $2 = NaN;
-  let $3 = NaN;
-  let $4 = NaN;
-  let $5 = NaN;
-  let $6 = NaN;
-  let i: u8 = 0;
-  let t: f64 = 0;
-  for (; i < n; ++i) {
-    t = f64(f64(i) / (n - 1.0));
+  let $0: f64;
+  let $1: f64;
+  let $2: f64;
+  let $3: f64;
+  let $4: f64;
+  let $5: f64;
+  let $6: f64;
+  let iN = 1.0 / (n - 1);
+  for (let i: u32 = 0; i < n; ++i) {
+    let t = f64(i) * iN;
     $0 = 1.0 - t;
-    $1 = $0 ** 2;             // (1-t) ^2
-    $2 = $1 * $0;             // (1-t) ^3 ... coeff#0
-    $3 = t ** 2.0;            // t ^2
-    $4 = $3 * t;              // t ^3      .. coeff#3
-    $5 = 3.0 * $1 * t;        //          ... coeff#1
-    $6 = 3.0 * $0 * $3;       //          ... coeff#2
+    $1 = $0 * $0;           // (1-t) ^2
+    $2 = $1 * $0;           // (1-t) ^3 ... coeff#0
+    $3 = t * t;             // t ^2
+    $4 = $3 * t;            // t ^3      .. coeff#3
+    $5 = 3 * $1 * t;        //          ... coeff#1
+    $6 = 3 * $0 * $3;       //          ... coeff#2
     result.push([
       f64($2 * p0[0] + $5 * p1[0] + $6 * p2[0] + $4 * p3[0]),
       f64($2 * p0[1] + $5 * p1[1] + $6 * p2[1] + $4 * p3[1])
@@ -339,7 +324,7 @@ function interpC(p0: Vertex, p1: Vertex, p2: Vertex, p3: Vertex, n: u8): Array<V
 
 
 //
-// Detect hole; by oddeven fillrule (even=hole) 
+// Detect hole; by oddeven fillrule (even=hole)
 // (cff outline)
 //
 
@@ -350,17 +335,17 @@ function isHole_oddeven(target: Polygon, polygons: Polygon[]): bool {
   let $polygon: Polygon;
   let $v0: Vertex;
   let $v1: Vertex;
-  for (let i = 0; i < polygons.length; ++i) {
+  for (let i = 0, ilen = polygons.length; i < ilen; ++i) {
     $polygon = polygons[i];
-    for (let j = 0; j < $polygon.length; ++j) {
+    for (let j = 0, len = $polygon.length - 1; j <= len; ++j) {
       $v0 = $polygon[j];
-      $v1 = $polygon[j == $polygon.length - 1 ? 0 : j + 1];
+      $v1 = $polygon[j == len ? 0 : j + 1];
       if (isLinesIntersect(p0, $p1, $v0, $v1)) {
         ++c;
       }
     }
   }
-  return c % 2 === 0;
+  return (c & 1) == 0;
 }
 
 
@@ -370,27 +355,24 @@ function isHole_oddeven(target: Polygon, polygons: Polygon[]): bool {
 // (truetype outline)
 //
 
-function isHole_nonzero(
-  target: Polygon,
-  polygons: Array<Polygon>
-): bool {
+function isHole_nonzero(target: Polygon, polygons: Polygon[]): bool {
   const p0: Vertex = pickAPoint(target);
   const $p1: Vertex = [100, p0[1]];
   let $v1: Vertex;
   let $v0: Vertex;
   let c = 0;
   let $polygon: Polygon;
-  for (let i = 0; i < polygons.length; ++i) {
+  for (let i = 0, ilen = polygons.length; i < ilen; ++i) {
     $polygon = polygons[i];
-    for (let j = 0; j < $polygon.length; ++j) {
+    for (let j = 0, len = $polygon.length - 1; j <= len; ++j) {
       $v0 = $polygon[j];
-      $v1 = $polygon[j == $polygon.length - 1 ? 0 : j + 1];
+      $v1 = $polygon[j == len ? 0 : j + 1];
       if (isLinesIntersect(p0, $p1, $v0, $v1)) {
         c += windingOfTwoLines(p0, $v0, $v1);
       }
     }
   }
-  return c % 2 === 0;
+  return (c & 1) == 0;
 }
 
 
@@ -399,9 +381,7 @@ function isHole_nonzero(
 // Pick a point in polygon
 //
 
-function pickAPoint(
-  vs: Polygon
-): Vertex {
+function pickAPoint(vs: Polygon): Vertex {
   let max = vs[0][0];
   let i = 0;
   let j = 1;
@@ -419,20 +399,20 @@ function pickAPoint(
   const prev = vs[i ? i - 1 : $len - 1];
   const next = vs[(i + 1) % $len];
   // $1: (next-curr)/|next-curr| * epsilon + curr -> tinystep from curr to next
-  // $2: (prev-curr)/|prev-curr| * epsilon + curr -> tinystep from curr to prev 
-  // then ($1 + $2 + curr)/3 ~= tri centroid 
+  // $2: (prev-curr)/|prev-curr| * epsilon + curr -> tinystep from curr to prev
+  // then ($1 + $2 + curr)/3 ~= tri centroid
   const $1 = tinystep(curr, next, 0.001);
   const $2 = tinystep(curr, prev, 0.001);
   return [
-    ($1[0] + $2[0] + curr[0]) / 3,
-    ($1[1] + $2[1] + curr[1]) / 3
+    ($1[0] + $2[0] + curr[0]) * (1.0 / 3),
+    ($1[1] + $2[1] + curr[1]) * (1.0 / 3)
   ];
 }
 
 
 
 //
-// Find a point from v0 to v1 && very close-to v0 
+// Find a point from v0 to v1 && very close-to v0
 //
 
 function tinystep(
@@ -440,10 +420,12 @@ function tinystep(
   v1: Vertex,
   e: f64
 ): Vertex {
-  const d = ((v1[1] - v0[1]) ** 2 + (v1[0] - v0[0]) ** 2) ** 0.5;
+  let dx = v1[0] - v0[0];
+  let dy = v1[1] - v0[1];
+  const d = Math.sqrt(dx * dx + dy * dy);
   return [
-    f64((v1[0] - v0[0]) / d * e + v0[0]),
-    f64((v1[1] - v0[1]) / d * e + v0[1])
+    dx / d * e + v0[0],
+    dy / d * e + v0[1]
   ];
 }
 
@@ -453,6 +435,7 @@ function tinystep(
 // is Line A intersects Line B
 //
 
+@inline
 function isLinesIntersect(
   a: Vertex, // line seg A endpoint
   b: Vertex, // line seg A endpoint
@@ -469,6 +452,7 @@ function isLinesIntersect(
 // Winding from ab to ac
 //
 
+@inline
 function windingOfTwoLines(
   a: Vertex,
   b: Vertex,
@@ -488,7 +472,7 @@ function windingOfTwoLines(
 
 
 //
-// Is point inside polygon 
+// Is point inside polygon
 //
 
 function isPointInsidePolygon(
@@ -497,16 +481,14 @@ function isPointInsidePolygon(
 ): bool {
   const $p1: Vertex = [100, p[1]];
   let c = 0; // nonzero winding rule count
-  let $v1: Vertex;
-  let $v0: Vertex;
-  for (let i = 0; i < vs.length; ++i) {
-    $v0 = vs[i];
-    $v1 = vs[i == vs.length - 1 ? 0 : i + 1];
+  for (let i = 0, len = vs.length - 1; i <= len; ++i) {
+    let $v0 = vs[i];
+    let $v1 = vs[i == len ? 0 : i + 1];
     if (isLinesIntersect(p, $p1, $v0, $v1)) {
       c += windingOfTwoLines(p, $v0, $v1);
     }
   }
-  return c % 2 != 0; // nonzero = inside 
+  return c % 2 != 0; // nonzero = inside
 }
 
 
@@ -516,13 +498,12 @@ function isPointInsidePolygon(
 //
 
 function boundingBoxOf(polygon: Polygon): Array<f64> {
-  let xMin = Infinity;
-  let yMin = Infinity;
+  let xMin = +Infinity;
+  let yMin = +Infinity;
   let xMax = -Infinity;
   let yMax = -Infinity;
-  let $v: Vertex;
-  for (let i = 0; i < polygon.length; ++i) {
-    $v = polygon[i];
+  for (let i = 0, len = polygon.length; i < len; ++i) {
+    let $v = polygon[i];
     if ($v[0] < xMin) { xMin = $v[0] }
     else if ($v[0] > xMax) { xMax = $v[0] }
     if ($v[1] < yMin) { yMin = $v[1] }
@@ -535,7 +516,7 @@ function boundingBoxOf(polygon: Polygon): Array<f64> {
 
 //
 // Is polygon A inside polygon B
-// (for testing is "hole" in "fill", is "hole" in "hole") 
+// (for testing is "hole" in "fill", is "hole" in "hole")
 //
 
 function isPolygonInsidePolygon(
@@ -547,7 +528,8 @@ function isPolygonInsidePolygon(
   //
   let bboxA = boundingBoxOf(A);
   let bboxB = boundingBoxOf(B);
-  if (bboxA[0] < bboxB[0] && bboxA[2] < bboxB[0]
+  if (
+       bboxA[0] < bboxB[0] && bboxA[2] < bboxB[0]
     || bboxA[0] > bboxB[2] && bboxA[2] > bboxB[2]
     || bboxA[1] < bboxB[1] && bboxA[3] < bboxB[1]
     || bboxA[1] > bboxB[3] && bboxA[3] > bboxB[3]
@@ -559,12 +541,12 @@ function isPolygonInsidePolygon(
   // true if A is not touching B && A has a point inside B
   //
 
-  for (let iA = 0; iA < A.length; ++iA) {
+  for (let iA = 0, alen = A.length - 1; iA <= alen; ++iA) {
     let $vA0 = A[iA];
-    let $vA1 = A[iA == A.length - 1 ? 0 : iA + 1];
-    for (let iB = 0; iB < B.length; ++iB) {
+    let $vA1 = A[iA == alen ? 0 : iA + 1];
+    for (let iB = 0, blen = B.length - 1; iB <= blen; ++iB) {
       let $vB0 = B[iB];
-      let $vB1 = B[iB == B.length - 1 ? 0 : iB + 1];
+      let $vB1 = B[iB == blen ? 0 : iB + 1];
       if (isLinesIntersect($vA0, $vA1, $vB0, $vB1)) {
         return false;
       }
@@ -572,7 +554,3 @@ function isPolygonInsidePolygon(
   }
   return isPointInsidePolygon(A[0], B);
 }
-
-
-
-
