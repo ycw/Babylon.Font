@@ -7,10 +7,8 @@
             "es2015",
             "dom"
         ],
-        "declaration": true,
-        "declarationDir": "../dist"
     },
     "include": [
-        "./compile_wa.ts"
+        "./src/compile_wa.ts"
     ]
 }
