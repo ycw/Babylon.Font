@@ -1,4 +1,4 @@
-import * as loader from 'assemblyscript/lib/loader'
+import * as loader from '../src_wasm/node_modules/assemblyscript/lib/loader'
 
 
 
@@ -21,7 +21,7 @@ interface MyAPI {
 
 
 
-export async function init(wasmUrl:string) {
+export async function init(wasmUrl: string) {
     const imports = {};
     const wasm = await loader.instantiateStreaming<MyAPI>(fetch(wasmUrl), imports);
     return function compile(cmds: PathCommand[], fmt: string, ppc = 0, eps = 0) {
@@ -45,7 +45,7 @@ function load(wasm: loader.ASUtil & MyAPI, cmds: PathCommand[]) {
 
     for (const cmd of cmds) {
         view.setUint8(i, cmd.type.codePointAt(0));
-        // console.log(cmd.type.codePointAt(), cmd.type)
+
         i += 1;
         if (cmd.type == 'M' || cmd.type == 'L') {
             view.setFloat64(i, cmd.x, true);
@@ -101,20 +101,30 @@ function load(wasm: loader.ASUtil & MyAPI, cmds: PathCommand[]) {
 
 
 
+type Vertex = [number, number];
+type Polygon = Vertex[];
+type Shape = {
+    fill: Polygon;
+    holes: Set<Polygon>;
+};
+
+
+
 function map(wasm: loader.ASUtil & MyAPI, shapesPtr: number) {
-    const shapes = new Set();
+    const shapes = new Set<Shape>();
     for (const shapePtr of wasm.__getArray(shapesPtr)) {
-        const shape = { fill: undefined, holes: new Set() };
+        const shape: Shape = { fill: [], holes: new Set<Polygon>() };
         for (const polygonPtr of wasm.__getArray(shapePtr)) {
-            let arr;
-            if (shape.fill === undefined) {
+            let arr: Polygon;
+            if (shape.fill.length === 0) {
                 arr = shape.fill = [];
-            } 
+            }
             else {
                 shape.holes.add(arr = []);
             }
             for (const vertexPtr of wasm.__getArray(polygonPtr)) {
-                arr.push(wasm.__getArray(vertexPtr));
+                const vertex = wasm.__getArray(vertexPtr);
+                arr.push([vertex[0], vertex[1]]);
             }
         }
         shapes.add(shape);
