@@ -8,7 +8,9 @@
     "asbuild:dist": "npm run asbuild:_dist && npm run asbuild:_testbed"
   },
   "dependencies": {
-    "assemblyscript": "github:assemblyscript/assemblyscript",
+    "assemblyscript": "github:assemblyscript/assemblyscript"
+  },
+  "devDependencies": {
     "opentype.js": "github:opentypejs/opentype.js"
   }
 }
