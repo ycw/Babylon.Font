@@ -4,14 +4,14 @@ const state = {};
 (async function () {
 
     // Compile fn
-    state.compile = await compile_wa.init('./optimized.wasm');
+    state.compile = await compile_wa.init('./compile_wa.wasm');
 
     // Font to test
-    state.fontUrl = '../font/NotoSerifDisplay-Thin.ttf';
+    state.fontUrl = './font/NotoSerifDisplay-Thin.ttf';
 
     // Load font data via opentypejs
     state.otFont = await opentypeLoadAsync(state.fontUrl);
-    
+
     // Create Babylon playground to render compiled shapes
     createBabylonEnv();
 
@@ -35,7 +35,7 @@ function createScene(engine) {
     scene.createDefaultLight(true);
 
     // 
-    // API: createText param list
+    // `createText` param list
     // {otFont} opentype.Font
     // {text} a multi text 
     // {depth} extrude depth
@@ -57,7 +57,8 @@ function createScene(engine) {
 
 
 //
-// Minimal multiline text mesh impl
+// Minimal multiline text mesh impl.
+// An example about how to consume the compiled result.
 //
 
 function createText(otFont, text, depth = 0, ppc = 0, eps = 0) {
@@ -67,19 +68,30 @@ function createText(otFont, text, depth = 0, ppc = 0, eps = 0) {
     let xMax = 0;
     for (const row of text.split('\n')) { // each row
         for (const ch of row) { // each ch
+            
+            //
+            // Compile char's opentype.PathCommand to shapes
+            // 
+
             const otPath = otFont.getPath(ch, 0, 0, 1);
             const otFmt = otFont.outlineFormat;
             const shapes = state.compile(otPath.commands, otFmt, ppc, eps); // compile
-            for (const shape of shapes) { // each shape (data is still [x,y] pair)
+            
+            // 
+            // Consume shapes
+            //
+
+            for (const shape of shapes) { // each shape 
                 const mesh = BABYLON.MeshBuilder.ExtrudePolygon('', {
                     shape: shape.fill.map(vec3), // map to bjs vec3
-                    holes: [...shape.holes].map(hole => hole.map(vec3)), //ditto
+                    holes: [...shape.holes].map(hole => hole.map(vec3)), // ditto
                     depth,
                     sideOrientation: BABYLON.Mesh.DOUBLESIDE
                 });
                 mesh.parent = tn;
                 mesh.position.set(x, 0, z);
             }
+
             x += otFont.charToGlyph(ch).advanceWidth / otFont.unitsPerEm;
             xMax = Math.max(xMax, x);
         }
@@ -92,9 +104,21 @@ function createText(otFont, text, depth = 0, ppc = 0, eps = 0) {
     return tn2;
 }
 
+
+
+//
+// Map bytes from linear memroy to library-dependent struct 
+//
+
 function vec3([x, y]) {
     return new BABYLON.Vector3(x, 0, -y);
 }
+
+
+
+//
+// "Promisify" opentype.load 
+//
 
 function opentypeLoadAsync(fontUrl) {
     return new Promise((resolve, reject) => {
@@ -103,5 +127,5 @@ function opentypeLoadAsync(fontUrl) {
             if (font) resolve(font);
             else reject(e);
         });
-    })
+    });
 }
