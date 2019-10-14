@@ -101,9 +101,9 @@ function load(wasm: loader.ASUtil & MyAPI, cmds: PathCommand[]) {
 
 
 
-type Vertex = [number, number];
-type Polygon = Vertex[];
-type Shape = {
+export type Vertex = [number, number];
+export type Polygon = Vertex[];
+export type Shape = {
     fill: Polygon;
     holes: Set<Polygon>;
 };
