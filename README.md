@@ -1,2 +1,2 @@
 # Babylon.Font
-Create font glyph mesh in BabylonJS
+Create text in BabylonJS
