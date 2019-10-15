@@ -34,10 +34,10 @@ function createScene(engine) {
     scene.createDefaultCamera(true, true, true);
     scene.createDefaultLight(true);
 
-    // 
+    //
     // `createText` param list
     // {otFont} opentype.Font
-    // {text} a multi text 
+    // {text} a multi text
     // {depth} extrude depth
     // {ppc} pointPerCurve; =smoothness; step is 0 1 2 3 etc..
     // {eps} dedupEpsilon; =decimate; step is 0, 0.001, 0.002 etc..
@@ -68,23 +68,23 @@ function createText(otFont, text, depth = 0, ppc = 0, eps = 0) {
     let xMax = 0;
     for (const row of text.split('\n')) { // each row
         for (const ch of row) { // each ch
-            
+
             //
             // Compile char's opentype.PathCommand to shapes
-            // 
+            //
 
             const otPath = otFont.getPath(ch, 0, 0, 1);
             const otFmt = otFont.outlineFormat;
             const shapes = state.compile(otPath.commands, otFmt, ppc, eps); // compile
-            
-            // 
+
+            //
             // Consume shapes
             //
 
-            for (const shape of shapes) { // each shape 
+            for (const shape of shapes) { // each shape
                 const mesh = BABYLON.MeshBuilder.ExtrudePolygon('', {
                     shape: shape.fill.map(vec3), // map to bjs vec3
-                    holes: [...shape.holes].map(hole => hole.map(vec3)), // ditto
+                    holes: shape.holes.map(hole => hole.map(vec3)), // ditto
                     depth,
                     sideOrientation: BABYLON.Mesh.DOUBLESIDE
                 });
@@ -107,7 +107,7 @@ function createText(otFont, text, depth = 0, ppc = 0, eps = 0) {
 
 
 //
-// Map bytes from linear memroy to library-dependent struct 
+// Map bytes from linear memroy to library-dependent struct
 //
 
 function vec3([x, y]) {
@@ -117,7 +117,7 @@ function vec3([x, y]) {
 
 
 //
-// "Promisify" opentype.load 
+// "Promisify" opentype.load
 //
 
 function opentypeLoadAsync(fontUrl) {
