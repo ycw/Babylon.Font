@@ -4693,6 +4693,8 @@
   drop
   local.get $0
   call $~lib/array/Array<assembly/index/Vertex>#get:length
+  i32.const 1
+  i32.sub
   local.set $1
   local.get $0
   i32.const 0
@@ -4709,7 +4711,7 @@
    loop $continue|0
     local.get $5
     local.get $1
-    i32.lt_s
+    i32.le_s
     i32.eqz
     br_if $break|0
     local.get $0
@@ -4751,16 +4753,12 @@
    i32.sub
   else
    local.get $1
-   i32.const 1
-   i32.sub
   end
   call $~lib/array/Array<assembly/index/Vertex>#__get
   local.set $7
   local.get $0
   local.get $4
   local.get $1
-  i32.const 1
-  i32.sub
   i32.eq
   if (result i32)
    i32.const 0

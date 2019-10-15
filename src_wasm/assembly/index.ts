@@ -403,12 +403,12 @@ function isHole_nonzero(target: Polygon, polygons: Polygon[]): bool {
 //
 
 function pickAPoint(vs: Polygon): Vertex {
-  let $len = vs.length;
+  let $len = vs.length - 1;
   let $v = vs[0];
   let max = $v.x;
   let i = 0;
   let j = 1;
-  while (j < $len) {
+  while (j <= $len) {
     $v = vs[j];
     if ($v.x > max) {
       max = $v.x;
@@ -417,8 +417,8 @@ function pickAPoint(vs: Polygon): Vertex {
     ++j;
   }
   const curr = vs[i];
-  const prev = vs[i ? i - 1 : $len - 1];
-  const next = vs[i == $len - 1 ? 0 : i + 1]; // kill %
+  const prev = vs[i ? i - 1 : $len];
+  const next = vs[i == $len ? 0 : i + 1]; // kill %
   // $1: (next-curr)/|next-curr| * epsilon + curr -> tinystep from curr to next
   // $2: (prev-curr)/|prev-curr| * epsilon + curr -> tinystep from curr to prev
   // then ($1 + $2 + curr)/3 ~= tri centroid
