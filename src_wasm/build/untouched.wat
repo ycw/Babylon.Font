@@ -41,6 +41,7 @@
  (global $~lib/rt/pure/END (mut i32) (i32.const 0))
  (global $~lib/ASC_SHRINK_LEVEL i32 (i32.const 0))
  (global $assembly/index/SZ i32 (i32.const 8))
+ (global $assembly/index/TINYSTEP f64 (f64.const 0.001))
  (global $~lib/rt/__rtti_base i32 (i32.const 16976))
  (global $~lib/heap/__heap_base i32 (i32.const 17052))
  (export "memory" (memory $0))
