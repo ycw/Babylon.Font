@@ -125,25 +125,28 @@ export type Shape = {
 
 
 function map(wasm: loader.ASUtil & MyAPI, shapesPtr: number) {
-    const shapes: Shape[] = [];
     const F64 = new Float64Array(wasm.memory.buffer);
-    for (const shapePtr of wasm.__getArray(shapesPtr)) {
+    const shapesIn = wasm.__getUint32Array(shapesPtr);
+    const shapesOut = new Array<Shape>(shapesIn.length);
+    for (let i = 0; i < shapesIn.length; i++) {
         const shape: Shape = { fill: [], holes: [] };
-        for (const polygonPtr of wasm.__getArray(shapePtr)) {
+        const polygons = wasm.__getUint32Array(shapesIn[i]);
+        for (const polygonPtr of polygons) {
+            const vertices = wasm.__getUint32Array(polygonPtr);
             let arr: Polygon;
             if (shape.fill.length === 0) {
                 arr = shape.fill = [];
             } else {
                 shape.holes.push(arr = []);
             }
-            for (const vertexPtr of wasm.__getArray(polygonPtr)) {
+            for (const vertexPtr of vertices) {
                 arr.push([
                     F64[(vertexPtr >>> 3) + 0], // x
                     F64[(vertexPtr >>> 3) + 1]  // y
                 ]);
             }
         }
-        shapes.push(shape);
+        shapesOut[i] = shape;
     }
-    return shapes;
+    return shapesOut;
 }
