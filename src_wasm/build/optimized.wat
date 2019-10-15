@@ -4754,6 +4754,7 @@
   (local $11 i32)
   (local $12 i32)
   (local $13 i32)
+  (local $14 i32)
   local.get $0
   call $~lib/rt/pure/__retain
   drop
@@ -4833,11 +4834,17 @@
          call $assembly/index/isPolygonInsidePolygon
          if
           local.get $4
-          local.get $4
           local.get $7
           call $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#indexOf
-          call $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#splice
-          call $~lib/rt/pure/__release
+          local.tee $14
+          i32.const -1
+          i32.ne
+          if
+           local.get $4
+           local.get $14
+           call $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#splice
+           call $~lib/rt/pure/__release
+          end
          end
          local.get $6
          i32.const 1
