@@ -1,17 +1,17 @@
-//  
-// This file is to prove artifact (at build/untouched.wasm) created by 
+//
+// This file is to prove artifact (at build/untouched.wasm) created by
 // `npm run asbuild:untouched` works at runtime.
-// 
+//
 // # Note
-// It may pass `npm run asbuild` phase, but then fail at runtime due to 
-// 1. wrong data structure at "load path commands in linear memory" phase 
+// It may pass `npm run asbuild` phase, but then fail at runtime due to
+// 1. wrong data structure at "load path commands in linear memory" phase
 // 2. wrong data structure at "map result in linear memory back to js object"
-// 
+//
 // # TODO
-// 1. It seems that assemblyscript `load<T>()` must use little endian 
-//    for multibyte data like f64. So I have to set 3nd param of 
+// 1. It seems that assemblyscript `load<T>()` must use little endian
+//    for multibyte data like f64. So I have to set 3nd param of
 //    `dataview.setFloat64(,,_)` to be `true` (?)
-// 
+//
 
 const fs = require('fs');
 const { promisify } = require('util');
@@ -80,35 +80,39 @@ const imports = {
 
   // Test: wasm exported API "compile" (it uses loaded data)
   const result = wasm.compile(bytesUsed, otFontFmt, ppc, eps);
-  
-  // Test: map result (in linear memory) to js object 
+
+  // Test: map result (in linear memory) to js object
   const shapes = map(result);
 
   // Should print a Set of Shape
   console.log(shapes);
 
-  // If pass, it is safe to run `npm run asbuild:dist` 
-  // which will generate optimized outputs in two places 
+  // If pass, it is safe to run `npm run asbuild:dist`
+  // which will generate optimized outputs in two places
   // 1. /dist
-  // 2. /testbed 
+  // 2. /testbed
 }());
 
 
 
 function map(shapesPtr) {
   const shapes = new Set();
+  const F64 = new Float64Array(wasm.memory.buffer);
   for (const shapePtr of wasm.__getArray(shapesPtr)) {
     const shape = { fill: undefined, holes: new Set() };
     shapes.add(shape);
     for (const polygonPtr of wasm.__getArray(shapePtr)) {
-      let polygon;
+      let polygon = [];
       if (shape.fill === undefined) {
-        polygon = shape.fill = [];
+        shape.fill = [];
       } else {
-        shape.holes.add(polygon = []);
+        shape.holes.add(polygon);
       }
       for (const vertexPtr of wasm.__getArray(polygonPtr)) {
-        polygon.push(wasm.__getArray(vertexPtr));
+        polygon.push([
+          F64[(vertexPtr >>> 3) + 0], // x
+          F64[(vertexPtr >>> 3) + 1]  // y
+        ]);
       }
     }
   }
