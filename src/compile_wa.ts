@@ -46,7 +46,7 @@ function load(wasm: loader.ASUtil & MyAPI, cmds: PathCommand[]) {
     const M = 'M'.codePointAt(0);
     const L = 'L'.codePointAt(0);
     const Q = 'Q'.codePointAt(0);
-    const C = 'Q'.codePointAt(0);
+    const C = 'C'.codePointAt(0);
 
     for (const cmd of cmds) {
         let code = cmd.type.codePointAt(0);
