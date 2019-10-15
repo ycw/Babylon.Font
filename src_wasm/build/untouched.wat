@@ -7414,11 +7414,31 @@
      call $assembly/index/dedup
      local.tee $24
      call $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#__set
+     local.get $4
+     local.get $7
+     call $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#__get
+     local.tee $18
+     call $~lib/array/Array<assembly/index/Vertex>#get:length
+     i32.const 3
+     i32.lt_s
+     if
+      local.get $4
+      local.get $7
+      local.get $17
+      f64.const 0
+      call $assembly/index/dedup
+      local.tee $20
+      call $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#__set
+      local.get $20
+      call $~lib/rt/pure/__release
+     end
      local.get $7
      i32.const 1
      i32.add
      local.set $7
      local.get $24
+     call $~lib/rt/pure/__release
+     local.get $18
      call $~lib/rt/pure/__release
      br $continue|0
     end
@@ -7432,9 +7452,9 @@
   i32.const 16928
   call $~lib/rt/__allocArray
   call $~lib/rt/pure/__retain
-  local.tee $18
+  local.tee $24
   call $~lib/rt/pure/__retain
-  local.set $24
+  local.set $18
   i32.const 0
   i32.const 2
   i32.const 5
@@ -7487,7 +7507,7 @@
      call $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#push
      drop
     else
-     local.get $24
+     local.get $18
      local.get $17
      call $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#push
      drop
@@ -7509,7 +7529,7 @@
   local.tee $25
   call $~lib/rt/pure/__retain
   local.set $23
-  local.get $24
+  local.get $18
   local.get $20
   local.get $23
   call $assembly/index/linkUp
@@ -7522,9 +7542,9 @@
   call $~lib/rt/pure/__release
   local.get $17
   call $~lib/rt/pure/__release
-  local.get $18
-  call $~lib/rt/pure/__release
   local.get $24
+  call $~lib/rt/pure/__release
+  local.get $18
   call $~lib/rt/pure/__release
   local.get $19
   call $~lib/rt/pure/__release

@@ -71,14 +71,15 @@ const imports = {
   globalThis.wasm = wasm;
 
   const fontUrl = '../testbed/font/notoserifdisplay-thin.ttf';
-  const ch = 'B';
-  const ppc = 2;
-  const eps = 0.001;
-
   const otFont = await opentype.load(fontUrl);
+
+  const ch = 'h';
+  const ppc = 0;
+  const eps = 0.0712;
+
   const otPath = otFont.getPath(ch, 0, 0, 1);
   const otFontFmt = otFont.outlineFormat;
-
+  
   // Test: load data into linear memory
   const bytesUsed = loadPathToLinearMemory(otPath);
 
