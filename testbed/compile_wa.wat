@@ -4935,15 +4935,15 @@
   (local $5 i32)
   (local $6 i32)
   (local $7 i32)
-  (local $8 i32)
+  (local $8 f64)
   (local $9 f64)
   (local $10 i32)
-  (local $11 f64)
+  (local $11 i32)
   (local $12 i32)
-  (local $13 f64)
+  (local $13 i32)
   (local $14 f64)
   (local $15 f64)
-  (local $16 i32)
+  (local $16 f64)
   (local $17 i32)
   (local $18 i32)
   (local $19 i32)
@@ -4966,150 +4966,154 @@
   i32.const 0
   local.set $2
   loop $continue|0
-   local.get $6
+   local.get $2
    local.get $0
    i32.lt_u
    if
-    local.get $6
+    local.get $2
     i32.load8_u
-    local.set $5
-    local.get $6
+    local.set $4
+    local.get $2
     i32.const 1
     i32.add
-    local.set $6
-    local.get $5
+    local.set $2
+    local.get $4
     i32.const 77
     i32.eq
     if
-     local.get $6
+     local.get $2
+     f64.load
+     local.set $8
+     local.get $2
+     i32.const 8
+     i32.add
+     local.tee $2
      f64.load
      local.set $9
-     local.get $6
+     local.get $2
      i32.const 8
      i32.add
-     local.tee $4
-     f64.load
-     local.set $11
-     local.get $4
-     i32.const 8
-     i32.add
-     local.set $6
+     local.set $2
      i32.const 1
      i32.const 4
      i32.const 0
      call $~lib/rt/__allocArray
      local.tee $4
      i32.load offset=4
+     local.get $8
      local.get $9
-     local.get $11
      call $assembly/index/Vertex#constructor
      local.tee $5
      call $~lib/rt/pure/__retain
      i32.store
      local.get $7
-     local.get $8
+     local.get $6
      local.get $4
      call $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#__set
      local.get $5
      call $~lib/rt/pure/__release
      br $continue|0
     end
-    local.get $7
-    local.get $8
-    call $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#__get
-    local.get $2
-    call $~lib/rt/pure/__release
-    local.set $2
-    local.get $5
+    local.get $4
     i32.const 76
     i32.eq
     if
-     local.get $6
+     local.get $2
+     f64.load
+     local.set $8
+     local.get $2
+     i32.const 8
+     i32.add
+     local.tee $2
      f64.load
      local.set $9
-     local.get $6
-     i32.const 8
-     i32.add
-     local.tee $4
-     i32.const 8
-     i32.add
-     local.set $6
      local.get $2
-     local.get $9
-     local.get $4
-     f64.load
-     call $assembly/index/Vertex#constructor
+     i32.const 8
+     i32.add
+     local.set $2
+     local.get $7
+     local.get $6
+     call $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#__get
      local.tee $4
+     local.get $8
+     local.get $9
+     call $assembly/index/Vertex#constructor
+     local.tee $5
      call $~lib/array/Array<assembly/index/Vertex>#push
      drop
      local.get $4
      call $~lib/rt/pure/__release
+     local.get $5
+     call $~lib/rt/pure/__release
      br $continue|0
     end
-    local.get $5
+    local.get $4
     i32.const 81
     i32.eq
     if
-     local.get $6
+     local.get $2
      f64.load
-     local.get $6
+     local.get $2
      i32.const 8
      i32.add
      local.tee $5
      i32.const 8
      i32.add
-     local.tee $4
+     local.tee $2
      f64.load
-     local.set $11
-     local.get $4
+     local.set $9
+     local.get $2
      i32.const 8
      i32.add
-     local.tee $4
-     f64.load
-     local.set $13
-     local.get $4
-     i32.const 8
-     i32.add
-     local.tee $4
+     local.tee $2
      f64.load
      local.set $14
-     local.get $4
+     local.get $2
      i32.const 8
      i32.add
-     local.tee $4
+     local.tee $2
      f64.load
      local.set $15
-     local.get $4
+     local.get $2
      i32.const 8
      i32.add
-     local.set $6
+     local.tee $2
+     f64.load
+     local.set $16
+     local.get $2
+     i32.const 8
+     i32.add
+     local.set $2
      i32.const 1
      local.set $4
      local.get $5
      f64.load
      call $assembly/index/Vertex#constructor
      local.tee $10
-     local.get $11
-     local.get $13
-     call $assembly/index/Vertex#constructor
-     local.tee $16
+     local.get $9
      local.get $14
-     local.get $15
      call $assembly/index/Vertex#constructor
-     local.tee $17
+     local.tee $11
+     local.get $15
+     local.get $16
+     call $assembly/index/Vertex#constructor
+     local.tee $13
      local.get $12
      i32.const 255
      i32.and
      call $assembly/index/interpQ
      local.tee $5
      i32.load offset=12
-     local.set $18
+     local.set $17
      loop $loop|1
       local.get $4
-      local.get $18
+      local.get $17
       i32.lt_s
       if
-       local.get $2
+       local.get $7
+       local.get $6
+       call $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#__get
+       local.tee $18
        local.get $5
        local.get $4
        call $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#__get
@@ -5120,6 +5124,8 @@
        i32.const 1
        i32.add
        local.set $4
+       local.get $18
+       call $~lib/rt/pure/__release
        local.get $19
        call $~lib/rt/pure/__release
        br $loop|1
@@ -5127,94 +5133,97 @@
      end
      local.get $10
      call $~lib/rt/pure/__release
-     local.get $16
+     local.get $11
      call $~lib/rt/pure/__release
-     local.get $17
+     local.get $13
      call $~lib/rt/pure/__release
      local.get $5
      call $~lib/rt/pure/__release
      br $continue|0
     end
-    local.get $5
+    local.get $4
     i32.const 67
     i32.eq
     if
-     local.get $6
+     local.get $2
      f64.load
-     local.get $6
+     local.get $2
      i32.const 8
      i32.add
      local.tee $5
      i32.const 8
      i32.add
-     local.tee $4
+     local.tee $2
      f64.load
-     local.set $11
-     local.get $4
+     local.set $9
+     local.get $2
      i32.const 8
      i32.add
-     local.tee $4
-     f64.load
-     local.set $13
-     local.get $4
-     i32.const 8
-     i32.add
-     local.tee $4
+     local.tee $2
      f64.load
      local.set $14
-     local.get $4
+     local.get $2
      i32.const 8
      i32.add
-     local.tee $4
+     local.tee $2
      f64.load
      local.set $15
-     local.get $4
+     local.get $2
      i32.const 8
      i32.add
-     local.tee $4
+     local.tee $2
+     f64.load
+     local.set $16
+     local.get $2
+     i32.const 8
+     i32.add
+     local.tee $2
      f64.load
      local.set $21
-     local.get $4
+     local.get $2
      i32.const 8
      i32.add
-     local.tee $4
+     local.tee $2
      f64.load
      local.set $22
-     local.get $4
+     local.get $2
      i32.const 8
      i32.add
-     local.set $6
+     local.set $2
      i32.const 1
      local.set $4
      local.get $5
      f64.load
      call $assembly/index/Vertex#constructor
      local.tee $10
-     local.get $11
-     local.get $13
-     call $assembly/index/Vertex#constructor
-     local.tee $16
+     local.get $9
      local.get $14
-     local.get $15
      call $assembly/index/Vertex#constructor
-     local.tee $17
+     local.tee $11
+     local.get $15
+     local.get $16
+     call $assembly/index/Vertex#constructor
+     local.tee $13
      local.get $21
      local.get $22
      call $assembly/index/Vertex#constructor
-     local.tee $18
+     local.tee $17
      local.get $12
      i32.const 255
      i32.and
      call $assembly/index/interpC
      local.tee $5
      i32.load offset=12
-     local.set $19
+     local.set $18
      loop $loop|2
       local.get $4
-      local.get $19
+      local.get $18
       i32.lt_s
       if
-       local.get $2
+       local.get $7
+       local.get $6
+       call $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#__get
+       local.tee $19
        local.get $5
        local.get $4
        call $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#__get
@@ -5225,6 +5234,8 @@
        i32.const 1
        i32.add
        local.set $4
+       local.get $19
+       call $~lib/rt/pure/__release
        local.get $23
        call $~lib/rt/pure/__release
        br $loop|2
@@ -5232,52 +5243,62 @@
      end
      local.get $10
      call $~lib/rt/pure/__release
-     local.get $16
+     local.get $11
+     call $~lib/rt/pure/__release
+     local.get $13
      call $~lib/rt/pure/__release
      local.get $17
-     call $~lib/rt/pure/__release
-     local.get $18
      call $~lib/rt/pure/__release
      local.get $5
      call $~lib/rt/pure/__release
      br $continue|0
     end
-    local.get $5
+    local.get $4
     i32.const 90
     i32.ne
     br_if $continue|0
     local.get $7
-    local.get $8
-    local.get $2
+    local.get $6
+    local.get $7
+    local.get $6
+    call $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#__get
+    local.tee $4
     local.get $3
     call $assembly/index/dedup
-    local.tee $4
+    local.tee $5
     call $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#__set
     local.get $7
-    local.get $8
+    local.get $6
     call $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#__get
-    local.tee $5
+    local.tee $10
     i32.load offset=12
     i32.const 3
     i32.lt_s
     if
      local.get $7
-     local.get $8
-     local.get $2
+     local.get $6
+     local.get $7
+     local.get $6
+     call $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#__get
+     local.tee $11
      f64.const 0
      call $assembly/index/dedup
-     local.tee $10
+     local.tee $13
      call $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#__set
-     local.get $10
+     local.get $11
+     call $~lib/rt/pure/__release
+     local.get $13
      call $~lib/rt/pure/__release
     end
-    local.get $8
+    local.get $6
     i32.const 1
     i32.add
-    local.set $8
+    local.set $6
     local.get $4
     call $~lib/rt/pure/__release
     local.get $5
+    call $~lib/rt/pure/__release
+    local.get $10
     call $~lib/rt/pure/__release
     br $continue|0
    end
@@ -5295,46 +5316,48 @@
   i32.const 16944
   call $~lib/rt/__allocArray
   call $~lib/rt/pure/__retain
-  local.tee $12
+  local.tee $10
   call $~lib/rt/pure/__retain
-  local.set $8
+  local.set $12
+  i32.const 0
+  local.set $0
   i32.const 0
   local.set $6
   local.get $7
   i32.load offset=12
-  local.set $10
+  local.set $11
   loop $loop|3
    local.get $6
-   local.get $10
+   local.get $11
    i32.lt_s
    if
     local.get $7
     local.get $6
     call $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#__get
-    local.get $2
+    local.get $0
     call $~lib/rt/pure/__release
-    local.set $2
+    local.set $0
     local.get $1
     i32.const 255
     i32.and
     i32.const 1
     i32.eq
     if (result i32)
-     local.get $2
+     local.get $0
      local.get $7
      call $assembly/index/isHole_oddeven
     else
-     local.get $2
+     local.get $0
      local.get $7
      call $assembly/index/isHole_nonzero
     end
     if (result i32)
-     local.get $8
-     local.get $2
+     local.get $12
+     local.get $0
      call $~lib/array/Array<assembly/index/Vertex>#push
     else
      local.get $4
-     local.get $2
+     local.get $0
      call $~lib/array/Array<assembly/index/Vertex>#push
     end
     drop
@@ -5346,34 +5369,34 @@
    end
   end
   local.get $4
-  local.get $8
+  local.get $12
   i32.const 0
   i32.const 6
   i32.const 16960
   call $~lib/rt/__allocArray
   call $~lib/rt/pure/__retain
-  local.tee $0
-  call $~lib/rt/pure/__retain
   local.tee $1
+  call $~lib/rt/pure/__retain
+  local.tee $2
   call $assembly/index/linkUp
   call $~lib/rt/pure/__release
   local.get $20
   call $~lib/rt/pure/__release
   local.get $7
   call $~lib/rt/pure/__release
-  local.get $2
-  call $~lib/rt/pure/__release
   local.get $5
   call $~lib/rt/pure/__release
   local.get $4
   call $~lib/rt/pure/__release
-  local.get $12
+  local.get $10
   call $~lib/rt/pure/__release
-  local.get $8
+  local.get $12
   call $~lib/rt/pure/__release
   local.get $0
   call $~lib/rt/pure/__release
   local.get $1
+  call $~lib/rt/pure/__release
+  local.get $2
  )
  (func $~lib/rt/pure/__visit (; 53 ;) (type $FUNCSIG$vii) (param $0 i32) (param $1 i32)
   local.get $0

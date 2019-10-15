@@ -82,16 +82,6 @@ export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): Result {
   let x2: f64, y2: f64;
   let x: f64, y: f64;
 
-  // polygon = [new Vertex(0, 0), new Vertex(1, 0)];
-  // polygon.push(new Vertex(1, 1));
-  // polygon.push(new Vertex(0, 1));
-  // polygon.push(new Vertex(0, 1));
-  // polygon = dedup(polygon, 0.001);
-  // polygons.push(polygon);
-
-  // return [polygons];
-
-
   while (i < bytesUsed) {
     cmd = load<u8>(i);
     i += 1;
