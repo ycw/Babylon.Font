@@ -33,6 +33,7 @@ type Polygon = Array<Vertex>;
 type Result = Array<Array<Polygon>>;
 
 const SZ = 8; // f64 sz in byte
+const TINYSTEP = 0.001; // see `pickAPoint()`
 
 
 
@@ -265,6 +266,12 @@ function dedup(
   return result;
 }
 
+
+
+//
+// Is vertex0 equals(closeto) vertex1
+//
+
 function isVertexEqual(p0: Vertex, p1: Vertex, eps: f64): bool {
   return p0[0] == p1[0] && p0[1] == p1[1] // fast check
     || (p0[0] - p1[0]) ** 2 + (p0[1] - p1[1]) ** 2 <= eps ** 2;
@@ -421,8 +428,8 @@ function pickAPoint(
   // $1: (next-curr)/|next-curr| * epsilon + curr -> tinystep from curr to next
   // $2: (prev-curr)/|prev-curr| * epsilon + curr -> tinystep from curr to prev 
   // then ($1 + $2 + curr)/3 ~= tri centroid 
-  const $1 = tinystep(curr, next, 0.001);
-  const $2 = tinystep(curr, prev, 0.001);
+  const $1 = tinystep(curr, next, TINYSTEP);
+  const $2 = tinystep(curr, prev, TINYSTEP);
   return [
     ($1[0] + $2[0] + curr[0]) / 3,
     ($1[1] + $2[1] + curr[1]) / 3
