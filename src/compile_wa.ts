@@ -43,56 +43,62 @@ function load(wasm: loader.ASUtil & MyAPI, cmds: PathCommand[]) {
     let x = 0;
     let y = 0;
 
-    for (const cmd of cmds) {
-        view.setUint8(i, cmd.type.codePointAt(0));
+    const M = 'M'.codePointAt(0);
+    const L = 'L'.codePointAt(0);
+    const Q = 'Q'.codePointAt(0);
+    const C = 'Q'.codePointAt(0);
 
-        i += 1;
-        if (cmd.type == 'M' || cmd.type == 'L') {
-            view.setFloat64(i, cmd.x, true);
-            i += SZ;
-            view.setFloat64(i, cmd.y, true);
-            i += SZ;
-            x = cmd.x;
-            y = cmd.y;
-            continue;
-        }
-        if (cmd.type == 'Q') {
-            view.setFloat64(i, x, true);
-            i += SZ;
-            view.setFloat64(i, y, true);
-            i += SZ;
-            view.setFloat64(i, cmd.x1, true);
-            i += SZ;
-            view.setFloat64(i, cmd.y1, true);
-            i += SZ;
-            view.setFloat64(i, cmd.x, true);
-            i += SZ;
-            view.setFloat64(i, cmd.y, true);
-            i += SZ;
-            x = cmd.x;
-            y = cmd.y;
-            continue;
-        }
-        if (cmd.type == 'C') {
-            view.setFloat64(i, x, true);
-            i += SZ;
-            view.setFloat64(i, y, true);
-            i += SZ;
-            view.setFloat64(i, cmd.x1, true);
-            i += SZ;
-            view.setFloat64(i, cmd.y1, true);
-            i += SZ;
-            view.setFloat64(i, cmd.x2, true);
-            i += SZ;
-            view.setFloat64(i, cmd.y2, true);
-            i += SZ;
-            view.setFloat64(i, cmd.x, true);
-            i += SZ;
-            view.setFloat64(i, cmd.y, true);
-            i += SZ;
-            x = cmd.x;
-            y = cmd.y;
-            continue;
+    for (const cmd of cmds) {
+        let code = cmd.type.codePointAt(0);
+        view.setUint8(i, code);
+        i++;
+
+        switch (code) {
+            case M:
+            case L:
+                view.setFloat64(i, cmd.x, true);
+                i += SZ;
+                view.setFloat64(i, cmd.y, true);
+                i += SZ;
+                x = cmd.x;
+                y = cmd.y;
+            break;
+            case Q:
+                view.setFloat64(i, x, true);
+                i += SZ;
+                view.setFloat64(i, y, true);
+                i += SZ;
+                view.setFloat64(i, cmd.x1, true);
+                i += SZ;
+                view.setFloat64(i, cmd.y1, true);
+                i += SZ;
+                view.setFloat64(i, cmd.x, true);
+                i += SZ;
+                view.setFloat64(i, cmd.y, true);
+                i += SZ;
+                x = cmd.x;
+                y = cmd.y;
+            break;
+            case C:
+                view.setFloat64(i, x, true);
+                i += SZ;
+                view.setFloat64(i, y, true);
+                i += SZ;
+                view.setFloat64(i, cmd.x1, true);
+                i += SZ;
+                view.setFloat64(i, cmd.y1, true);
+                i += SZ;
+                view.setFloat64(i, cmd.x2, true);
+                i += SZ;
+                view.setFloat64(i, cmd.y2, true);
+                i += SZ;
+                view.setFloat64(i, cmd.x, true);
+                i += SZ;
+                view.setFloat64(i, cmd.y, true);
+                i += SZ;
+                x = cmd.x;
+                y = cmd.y;
+            break;
         }
         // 'Z' .. noop
     }
@@ -105,29 +111,31 @@ export type Vertex = [number, number];
 export type Polygon = Vertex[];
 export type Shape = {
     fill: Polygon;
-    holes: Set<Polygon>;
+    holes: Polygon[];
 };
 
 
 
 function map(wasm: loader.ASUtil & MyAPI, shapesPtr: number) {
-    const shapes = new Set<Shape>();
+    const shapes: Shape[] = [];
+    const F64 = new Float64Array(wasm.memory.buffer);
     for (const shapePtr of wasm.__getArray(shapesPtr)) {
-        const shape: Shape = { fill: [], holes: new Set<Polygon>() };
+        const shape: Shape = { fill: [], holes: [] };
         for (const polygonPtr of wasm.__getArray(shapePtr)) {
             let arr: Polygon;
             if (shape.fill.length === 0) {
                 arr = shape.fill = [];
-            }
-            else {
-                shape.holes.add(arr = []);
+            } else {
+                shape.holes.push(arr = []);
             }
             for (const vertexPtr of wasm.__getArray(polygonPtr)) {
-                const vertex = wasm.__getArray(vertexPtr);
-                arr.push([vertex[0], vertex[1]]);
+                arr.push([
+                    F64[(vertexPtr >>> 3) + 0], // x
+                    F64[(vertexPtr >>> 3) + 1]  // y
+                ]);
             }
         }
-        shapes.add(shape);
+        shapes.push(shape);
     }
     return shapes;
 }

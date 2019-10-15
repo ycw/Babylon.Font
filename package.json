@@ -4,9 +4,10 @@
   "description": "Create text in BabylonJS",
   "main": "Font.min.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm run build:compile_wa.ts && npm run build:.module.d.ts",
     "build:compile_wa.ts": "npx webpack --config rc/compile_wa.ts.wpkrc.js",
-    "build:.module.d.ts": "tsc -p rc/ambient_declaration.tsconfig.json"
+    "build:.module.d.ts": "tsc -p rc/ambient_declaration.tsconfig.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",

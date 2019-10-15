@@ -5,7 +5,8 @@
     "asbuild": "npm run asbuild:untouched && npm run asbuild:optimized",
     "asbuild:_dist": "asc assembly/index.ts -b ../dist/compile_wa.wasm -t ../dist/compile_wa.wat --sourceMap --validate --optimize --memoryBase 16384",
     "asbuild:_testbed": "asc assembly/index.ts -b ../testbed/compile_wa.wasm -t ../testbed/compile_wa.wat --sourceMap --validate --optimize --memoryBase 16384",
-    "asbuild:dist": "npm run asbuild:_dist && npm run asbuild:_testbed"
+    "asbuild:dist": "npm run asbuild:_dist && npm run asbuild:_testbed",
+    "build": "npm run asbuild && npm run asbuild:dist"
   },
   "dependencies": {
     "assemblyscript": "github:assemblyscript/assemblyscript"
