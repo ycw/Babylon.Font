@@ -28,7 +28,13 @@ interface MyAPI {
 
 
 export async function init(wasmUrl: string): Promise<ICompileFn> {
-    const imports = {};
+    const imports = {
+        env: {
+            abort(_msg, _file, line, column) {
+              console.error("abort called at src_wasm/assembly/index.ts:" + line + ":" + column);
+            }
+          },
+    };
     const wasm = await loader.instantiateStreaming<MyAPI>(fetch(wasmUrl), imports);
     return function compile(cmds: IPathCommand[], fmt: string, ppc = 0, eps = 0) {
         ppc = Math.max(0, Math.min(255, Math.round(ppc)));
@@ -132,7 +138,7 @@ function map(wasm: loader.ASUtil & MyAPI, shapesPtr: number) {
         for (const polygonPtr of wasm.__getArray(shapePtr)) {
             let arr: Polygon;
             if (shape.fill.length === 0) {
-                arr = shape.fill = [];
+                arr = shape.fill;
             } else {
                 shape.holes.push(arr = []);
             }
