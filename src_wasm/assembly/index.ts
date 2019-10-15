@@ -29,7 +29,7 @@
 
 
 class Vertex {
-  constructor(public x: f64 = 0, public y: f64 = 0) {}
+  constructor(public x: f64 = 0, public y: f64 = 0) { }
 }
 
 class BBox {
@@ -38,7 +38,7 @@ class BBox {
     public yMin: f64 = 0,
     public xMax: f64 = 0,
     public yMax: f64 = 0
-  ) {}
+  ) { }
 }
 
 type Polygon = Array<Vertex>;
@@ -119,7 +119,7 @@ export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): Result {
       let vs = interpQ(
         new Vertex(x0, y0),
         new Vertex(x1, y1),
-        new Vertex(x,   y),
+        new Vertex(x, y),
         ppc
       );
       for (let k = 1, len = vs.length; k < len; ++k) {
@@ -148,7 +148,7 @@ export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): Result {
         new Vertex(x0, y0),
         new Vertex(x1, y1),
         new Vertex(x2, y2),
-        new Vertex(x,  y),
+        new Vertex(x, y),
         ppc
       );
       for (let k = 1, len = vs.length; k < len; ++k) {
@@ -393,7 +393,7 @@ function isHole_nonzero(target: Polygon, polygons: Polygon[]): bool {
       }
     }
   }
-  return (c & 1) == 0;
+  return (c & 1) == 0; // kill %
 }
 
 
@@ -418,7 +418,7 @@ function pickAPoint(vs: Polygon): Vertex {
   }
   const curr = vs[i];
   const prev = vs[i ? i - 1 : $len - 1];
-  const next = vs[(i + 1) % $len];
+  const next = vs[i == $len - 1 ? 0 : i + 1]; // kill %
   // $1: (next-curr)/|next-curr| * epsilon + curr -> tinystep from curr to next
   // $2: (prev-curr)/|prev-curr| * epsilon + curr -> tinystep from curr to prev
   // then ($1 + $2 + curr)/3 ~= tri centroid
@@ -508,7 +508,7 @@ function isPointInsidePolygon(p: Vertex, vs: Polygon): bool {
       c += windingOfTwoLines(p, $v0, $v1);
     }
   }
-  return (c & 1) != 0; // nonzero = inside
+  return (c & 1) != 0; // nonzero = inside; kill %
 }
 
 
@@ -551,7 +551,7 @@ function isPolygonInsidePolygon(
   let bboxA = boundingBoxOf(A);
   let bboxB = boundingBoxOf(B);
   if (
-       bboxA.xMin < bboxB.xMin && bboxA.xMax < bboxB.xMin
+    bboxA.xMin < bboxB.xMin && bboxA.xMax < bboxB.xMin
     || bboxA.xMin > bboxB.xMax && bboxA.xMax > bboxB.xMax
     || bboxA.yMin < bboxB.yMin && bboxA.yMax < bboxB.yMin
     || bboxA.yMin > bboxB.yMax && bboxA.yMax > bboxB.yMax
