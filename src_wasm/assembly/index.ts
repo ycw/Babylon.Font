@@ -44,8 +44,8 @@ class BBox {
 type Polygon = Array<Vertex>;
 type Result = Array<Array<Polygon>>;
 
-const SZ = 8; // f64 sz in byte
-const TINYSTEP = 0.001; // see `pickAPoint()`
+const SZ: u8 = 8; // f64 sz in byte
+const TINYSTEP: f64 = 0.001; // see `pickAPoint()`
 
 
 
@@ -158,6 +158,13 @@ export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): Result {
     }
     if (cmd == 90) { // 'Z'
       polygons[iP] = dedup(polygon, eps);
+      //
+      // IF over decimation, 
+      // dedup again w/ most restricted eps value
+      //
+      if (polygons[iP].length < 3) {
+        polygons[iP] = dedup(polygon, 0.0);
+      }
       ++iP;
       continue;
     }
@@ -223,7 +230,9 @@ function linkUp(
           break;
         }
         if (isPolygonInsidePolygon($h, hole)) {
-          $hs.splice($hs.indexOf($h), 1);
+          // TODO //
+          // Here's an unreachable error at rt
+          $hs.splice($hs.indexOf($h), 1); 
           // Dont shortcurcuit; holes in stach
           // maybe also inside current testing hole.
         }
