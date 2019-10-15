@@ -81,7 +81,16 @@ export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): Result {
   let x1: f64, y1: f64;
   let x2: f64, y2: f64;
   let x: f64, y: f64;
-  let polygon: Polygon;
+
+  // polygon = [new Vertex(0, 0), new Vertex(1, 0)];
+  // polygon.push(new Vertex(1, 1));
+  // polygon.push(new Vertex(0, 1));
+  // polygon.push(new Vertex(0, 1));
+  // polygon = dedup(polygon, 0.001);
+  // polygons.push(polygon);
+
+  // return [polygons];
+
 
   while (i < bytesUsed) {
     cmd = load<u8>(i);
@@ -94,13 +103,12 @@ export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): Result {
       polygons[iP] = [{ x, y }];
       continue;
     }
-    polygon = polygons[iP];
     if (cmd == 76) { // L
       x = load<f64>(i);
       i += SZ;
       y = load<f64>(i);
       i += SZ;
-      polygon.push({ x, y });
+      polygons[iP].push(new Vertex(x, y));
       continue;
     }
     if (cmd == 81) { // 'Q'
@@ -123,7 +131,7 @@ export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): Result {
         ppc
       );
       for (let k = 1, len = vs.length; k < len; ++k) {
-        polygon.push(vs[k]);
+        polygons[iP].push(vs[k]);
       }
       continue;
     }
@@ -152,19 +160,22 @@ export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): Result {
         ppc
       );
       for (let k = 1, len = vs.length; k < len; ++k) {
-        polygon.push(vs[k]);
+        polygons[iP].push(vs[k]);
       }
       continue;
     }
     if (cmd == 90) { // 'Z'
-      polygons[iP] = dedup(polygon, eps);
+      polygons[iP] = dedup(polygons[iP], eps);
+
       //
       // IF over decimation,
       // dedup again w/ most restricted eps value
       //
+
       if (polygons[iP].length < 3) {
-        polygons[iP] = dedup(polygon, 0.0);
+        polygons[iP] = dedup(polygons[iP], 0.0);
       }
+
       ++iP;
       continue;
     }
@@ -177,6 +188,7 @@ export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): Result {
 
   const fills: Array<Polygon> = [];
   const holes: Array<Polygon> = [];
+  let polygon: Polygon;
   for (let i = 0, len = polygons.length; i < len; ++i) {
     polygon = polygons[i];
     let isHole: bool;
@@ -222,6 +234,7 @@ function linkUp(
       if (!isPolygonInsidePolygon(hole, fill)) {
         continue;
       }
+
       let isInside = false;
       for (let k = 0; k < $hs.length; ++k) {
         const $h = $hs[k];
