@@ -45,7 +45,7 @@ type Polygon = Array<Vertex>;
 type Result = Array<Array<Polygon>>;
 
 const SZ: u8 = 8; // f64 sz in byte
-const TINYSTEP: f64 = 0.001; // see `pickAPoint()`
+const TINYSTEP = 0.001; // see `pickAPoint()`
 
 
 
@@ -90,7 +90,7 @@ export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): Result {
       i += SZ;
       y = load<f64>(i);
       i += SZ;
-      polygons[iP] = [new Vertex(x, y)];
+      polygons[iP] = [{ x, y }];
       continue;
     }
     if (cmd == 76) { // L
@@ -98,7 +98,7 @@ export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): Result {
       i += SZ;
       y = load<f64>(i);
       i += SZ;
-      polygons[iP].push(new Vertex(x, y));
+      polygons[iP].push({ x, y });
       continue;
     }
     if (cmd == 81) { // 'Q'
@@ -115,9 +115,9 @@ export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): Result {
       y = load<f64>(i);
       i += SZ;
       let vs = interpQ(
-        new Vertex(x0, y0),
-        new Vertex(x1, y1),
-        new Vertex(x, y),
+        x0, y0,
+        x1, y1,
+        x, y,
         ppc
       );
       for (let k = 1, len = vs.length; k < len; ++k) {
@@ -143,10 +143,10 @@ export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): Result {
       y = load<f64>(i);
       i += SZ;
       let vs = interpC(
-        new Vertex(x0, y0),
-        new Vertex(x1, y1),
-        new Vertex(x2, y2),
-        new Vertex(x, y),
+        x0, y0,
+        x1, y1,
+        x2, y2,
+        x, y,
         ppc
       );
       for (let k = 1, len = vs.length; k < len; ++k) {
@@ -158,7 +158,7 @@ export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): Result {
       polygons[iP] = dedup(polygons[iP], eps);
 
       //
-      // IF over decimation, 
+      // IF over decimation,
       // dedup again w/ most restricted eps value
       //
 
@@ -233,7 +233,10 @@ function linkUp(
           break;
         }
         if (isPolygonInsidePolygon($h, hole)) {
-          $hs.splice($hs.indexOf($h), 1);
+          let index = $hs.indexOf($h);
+          if (index !== -1) {
+            $hs.splice(index, 1);
+          }
           // Dont shortcurcuit; holes in stach
           // maybe also inside current testing hole.
         }
@@ -298,7 +301,13 @@ function isVertexEqual(p0: Vertex, p1: Vertex, eps: f64): bool {
 // Interpolate 'Q' command
 //
 
-function interpQ(p0: Vertex, p1: Vertex, p2: Vertex, n: u32): Array<Vertex> {
+@inline
+function interpQ(
+  p0x: f64, p0y: f64,
+  p1x: f64, p1y: f64,
+  p2x: f64, p2y: f64,
+  n: u32
+): Array<Vertex> {
   const result = new Array<Vertex>(n);
   let $0: f64;
   let $1: f64;
@@ -311,10 +320,10 @@ function interpQ(p0: Vertex, p1: Vertex, p2: Vertex, n: u32): Array<Vertex> {
     $0 = $$ * $$;
     $1 = 2 * $$ * t;
     $2 = t * t;
-    unchecked(result[i] = new Vertex(
-      $0 * p0.x + $1 * p1.x + $2 * p2.x,
-      $0 * p0.y + $1 * p1.y + $2 * p2.y
-    ));
+    unchecked(result[i] = {
+      x: $0 * p0x + $1 * p1x + $2 * p2x,
+      y: $0 * p0y + $1 * p1y + $2 * p2y
+    });
   }
   return result;
 }
@@ -325,7 +334,14 @@ function interpQ(p0: Vertex, p1: Vertex, p2: Vertex, n: u32): Array<Vertex> {
 // Interpolate 'C' command
 //
 
-function interpC(p0: Vertex, p1: Vertex, p2: Vertex, p3: Vertex, n: u32): Array<Vertex> {
+@inline
+function interpC(
+  p0x: f64, p0y: f64,
+  p1x: f64, p1y: f64,
+  p2x: f64, p2y: f64,
+  p3x: f64, p3y: f64,
+  n: u32
+): Array<Vertex> {
   const result = new Array<Vertex>(n);
   let $0: f64;
   let $1: f64;
@@ -344,10 +360,10 @@ function interpC(p0: Vertex, p1: Vertex, p2: Vertex, p3: Vertex, n: u32): Array<
     $4 = $3 * t;            // t ^3      .. coeff#3
     $5 = 3 * $1 * t;        //          ... coeff#1
     $6 = 3 * $0 * $3;       //          ... coeff#2
-    unchecked(result[i] = new Vertex(
-      $2 * p0.x + $5 * p1.x + $6 * p2.x + $4 * p3.x,
-      $2 * p0.y + $5 * p1.y + $6 * p2.y + $4 * p3.y
-    ));
+    unchecked(result[i] = {
+      x: $2 * p0x + $5 * p1x + $6 * p2x + $4 * p3x,
+      y: $2 * p0y + $5 * p1y + $6 * p2y + $4 * p3y
+    });
   }
   return result;
 }
@@ -387,7 +403,7 @@ function isHole_oddeven(target: Polygon, polygons: Polygon[]): bool {
 //
 
 function isHole_nonzero(target: Polygon, polygons: Polygon[]): bool {
-  const p0: Vertex = pickAPoint(target);
+  const p0 = pickAPoint(target);
   const $p1 = new Vertex(100, p0.y);
   let $v1: Vertex;
   let $v0: Vertex;
@@ -413,12 +429,12 @@ function isHole_nonzero(target: Polygon, polygons: Polygon[]): bool {
 //
 
 function pickAPoint(vs: Polygon): Vertex {
-  let $len = vs.length;
+  let $len = vs.length - 1;
   let $v = vs[0];
   let max = $v.x;
   let i = 0;
   let j = 1;
-  while (j < $len) {
+  while (j <= $len) {
     $v = vs[j];
     if ($v.x > max) {
       max = $v.x;
@@ -427,8 +443,8 @@ function pickAPoint(vs: Polygon): Vertex {
     ++j;
   }
   const curr = vs[i];
-  const prev = vs[i ? i - 1 : $len - 1];
-  const next = vs[i == $len - 1 ? 0 : i + 1]; // kill %
+  const prev = vs[i ? i - 1 : $len];
+  const next = vs[i == $len ? 0 : i + 1]; // kill %
   // $1: (next-curr)/|next-curr| * epsilon + curr -> tinystep from curr to next
   // $2: (prev-curr)/|prev-curr| * epsilon + curr -> tinystep from curr to prev
   // then ($1 + $2 + curr)/3 ~= tri centroid
@@ -456,10 +472,10 @@ function tinystep(
   const dx = v1.x - v0x;
   const dy = v1.y - v0y;
   const d = Math.sqrt(dx * dx + dy * dy);
-  return new Vertex(
-    dx / d * e + v0x,
-    dy / d * e + v0y
-  );
+  return {
+    x: dx / d * e + v0x,
+    y: dy / d * e + v0y
+  };
 }
 
 
@@ -541,7 +557,7 @@ function boundingBoxOf(polygon: Polygon): BBox {
     yMin = Math.min(vy, yMin);
     yMax = Math.max(vy, yMax);
   }
-  return new BBox(xMin, yMin, xMax, yMax);
+  return { xMin, yMin, xMax, yMax };
 }
 
 
