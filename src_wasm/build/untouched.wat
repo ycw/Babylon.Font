@@ -4758,10 +4758,17 @@
   local.set $7
   local.get $0
   local.get $4
-  i32.const 1
-  i32.add
   local.get $1
-  i32.rem_s
+  i32.const 1
+  i32.sub
+  i32.eq
+  if (result i32)
+   i32.const 0
+  else
+   local.get $4
+   i32.const 1
+   i32.add
+  end
   call $~lib/array/Array<assembly/index/Vertex>#__get
   local.set $8
   local.get $6

@@ -2916,26 +2916,26 @@
   (local $3 i32)
   (local $4 i32)
   (local $5 i32)
-  (local $6 i32)
+  (local $6 f64)
   (local $7 i32)
-  (local $8 f64)
+  (local $8 i32)
   local.get $0
   call $~lib/rt/pure/__retain
   drop
   local.get $0
   i32.load offset=12
-  local.set $2
+  local.set $4
   local.get $0
   i32.const 0
   call $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#__get
   local.tee $5
   f64.load
-  local.set $8
+  local.set $6
   i32.const 1
   local.set $1
   loop $continue|0
    local.get $1
-   local.get $2
+   local.get $4
    i32.lt_s
    if
     local.get $0
@@ -2945,14 +2945,14 @@
     call $~lib/rt/pure/__release
     local.tee $5
     f64.load
-    local.get $8
+    local.get $6
     f64.gt
     if
      local.get $5
      f64.load
-     local.set $8
+     local.set $6
      local.get $1
-     local.set $3
+     local.set $2
     end
     local.get $1
     i32.const 1
@@ -2962,51 +2962,55 @@
    end
   end
   local.get $0
-  local.get $3
+  local.get $2
   call $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#__get
-  local.set $4
+  local.set $1
   local.get $0
-  local.get $3
-  i32.const 1
-  i32.sub
   local.get $2
   i32.const 1
   i32.sub
-  local.get $3
+  local.get $4
+  i32.const 1
+  i32.sub
+  local.tee $3
+  local.get $2
   select
   call $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#__get
-  local.set $1
-  local.get $4
+  local.set $4
+  local.get $1
   local.get $0
-  local.get $3
+  i32.const 0
+  local.get $2
   i32.const 1
   i32.add
   local.get $2
-  i32.rem_s
+  local.get $3
+  i32.eq
+  select
   call $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#__get
-  local.tee $3
-  call $assembly/index/tinystep
-  local.set $7
-  local.get $4
-  local.get $1
+  local.tee $7
   call $assembly/index/tinystep
   local.set $2
-  local.get $7
-  f64.load
+  local.get $1
+  local.get $4
+  call $assembly/index/tinystep
+  local.set $3
   local.get $2
   f64.load
+  local.get $3
+  f64.load
   f64.add
-  local.get $4
+  local.get $1
   f64.load
   f64.add
   f64.const 0.3333333333333333
   f64.mul
-  local.get $7
-  f64.load offset=8
   local.get $2
   f64.load offset=8
+  local.get $3
+  f64.load offset=8
   f64.add
-  local.get $4
+  local.get $1
   f64.load offset=8
   f64.add
   f64.const 0.3333333333333333
@@ -3014,15 +3018,15 @@
   call $assembly/index/Vertex#constructor
   local.get $5
   call $~lib/rt/pure/__release
-  local.get $4
-  call $~lib/rt/pure/__release
   local.get $1
   call $~lib/rt/pure/__release
-  local.get $3
+  local.get $4
   call $~lib/rt/pure/__release
   local.get $7
   call $~lib/rt/pure/__release
   local.get $2
+  call $~lib/rt/pure/__release
+  local.get $3
   call $~lib/rt/pure/__release
   local.get $0
   call $~lib/rt/pure/__release
