@@ -108,7 +108,7 @@ export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): Result {
       i += SZ;
       y = load<f64>(i);
       i += SZ;
-      polygons[iP].push(new Vertex(x, y));
+      polygons[iP].push({ x, y });
       continue;
     }
     if (cmd == 81) { // 'Q'

@@ -2310,21 +2310,7 @@
   end
   local.get $0
  )
- (func $assembly/index/Vertex#constructor (; 34 ;) (type $FUNCSIG$idd) (param $0 f64) (param $1 f64) (result i32)
-  (local $2 i32)
-  i32.const 16
-  i32.const 3
-  call $~lib/rt/tlsf/__alloc
-  call $~lib/rt/pure/__retain
-  local.tee $2
-  local.get $0
-  f64.store
-  local.get $2
-  local.get $1
-  f64.store offset=8
-  local.get $2
- )
- (func $~lib/array/Array<assembly/index/Vertex>#push (; 35 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
+ (func $~lib/array/Array<assembly/index/Vertex>#push (; 34 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
   (local $3 i32)
   local.get $1
@@ -2354,7 +2340,7 @@
   call $~lib/rt/pure/__release
   local.get $2
  )
- (func $~lib/arraybuffer/ArrayBufferView#constructor (; 36 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
+ (func $~lib/arraybuffer/ArrayBufferView#constructor (; 35 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
   (local $3 i32)
   local.get $1
@@ -2418,7 +2404,7 @@
   i32.store offset=8
   local.get $0
  )
- (func $~lib/array/Array<assembly/index/Vertex>#constructor (; 37 ;) (type $FUNCSIG$ii) (param $0 i32) (result i32)
+ (func $~lib/array/Array<assembly/index/Vertex>#constructor (; 36 ;) (type $FUNCSIG$ii) (param $0 i32) (result i32)
   (local $1 i32)
   i32.const 16
   i32.const 4
@@ -2434,7 +2420,7 @@
   i32.store offset=12
   local.get $1
  )
- (func $assembly/index/dedup (; 38 ;) (type $FUNCSIG$iid) (param $0 i32) (param $1 f64) (result i32)
+ (func $assembly/index/dedup (; 37 ;) (type $FUNCSIG$iid) (param $0 i32) (param $1 f64) (result i32)
   (local $2 i32)
   (local $3 i32)
   (local $4 i32)
@@ -2623,7 +2609,7 @@
   call $~lib/rt/pure/__release
   local.get $10
  )
- (func $assembly/index/tinystep (; 39 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
+ (func $assembly/index/tinystep (; 38 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
   (local $2 f64)
   (local $3 f64)
   (local $4 i32)
@@ -2688,6 +2674,20 @@
   call $~lib/rt/pure/__release
   local.get $1
   call $~lib/rt/pure/__release
+ )
+ (func $assembly/index/Vertex#constructor (; 39 ;) (type $FUNCSIG$idd) (param $0 f64) (param $1 f64) (result i32)
+  (local $2 i32)
+  i32.const 16
+  i32.const 3
+  call $~lib/rt/tlsf/__alloc
+  call $~lib/rt/pure/__retain
+  local.tee $2
+  local.get $0
+  f64.store
+  local.get $2
+  local.get $1
+  f64.store offset=8
+  local.get $2
  )
  (func $assembly/index/pickAPoint (; 40 ;) (type $FUNCSIG$ii) (param $0 i32) (result i32)
   (local $1 i32)
@@ -4824,16 +4824,24 @@
      local.get $9
      local.get $11
      call $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#__get
+     local.set $4
+     i32.const 16
+     i32.const 3
+     call $~lib/rt/tlsf/__alloc
+     call $~lib/rt/pure/__retain
      local.tee $2
      local.get $8
+     f64.store
+     local.get $2
      local.get $10
-     call $assembly/index/Vertex#constructor
-     local.tee $4
+     f64.store offset=8
+     local.get $4
+     local.get $2
      call $~lib/array/Array<assembly/index/Vertex>#push
      drop
-     local.get $2
-     call $~lib/rt/pure/__release
      local.get $4
+     call $~lib/rt/pure/__release
+     local.get $2
      call $~lib/rt/pure/__release
      br $continue|0
     end
