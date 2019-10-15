@@ -33,11 +33,15 @@ const imports = {
   index: {
     inspectPolygons(str, polygonsPtr) {
       let i = 0;
+      const view = new Float64Array(wasm.memory.buffer);
       console.log(wasm.__getString(str));
       for (const polygonPtr of wasm.__getArray(polygonsPtr)) {
         console.log('---polygon---', i++)
-        for (const vertexPtr of wasm.__getArray(polygonPtr)) {
-          console.log(wasm.__getArray(vertexPtr));
+        for (const vertexPtr of wasm.__getArray(polygonPtr)) {     
+          console.log(
+            view[(vertexPtr >>> 3) + 0],
+            view[(vertexPtr >>> 3) + 1]
+          )
         }
       }
     },
@@ -68,8 +72,8 @@ const imports = {
 
   const fontUrl = '../testbed/font/notoserifdisplay-thin.ttf';
   const ch = 'B';
-  const ppc = 0;
-  const eps = 0.005;
+  const ppc = 2;
+  const eps = 0.001;
 
   const otFont = await opentype.load(fontUrl);
   const otPath = otFont.getPath(ch, 0, 0, 1);
@@ -104,7 +108,7 @@ function map(shapesPtr) {
     for (const polygonPtr of wasm.__getArray(shapePtr)) {
       let polygon = [];
       if (shape.fill === undefined) {
-        shape.fill = [];
+        shape.fill = polygon;
       } else {
         shape.holes.add(polygon);
       }
