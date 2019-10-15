@@ -1,5 +1,5 @@
 declare module "compile_wa" {
-    interface PathCommand {
+    interface IPathCommand {
         type: string;
         x?: number;
         y?: number;
@@ -8,7 +8,10 @@ declare module "compile_wa" {
         x2?: number;
         y2?: number;
     }
-    export function init(wasmUrl: string): Promise<(cmds: PathCommand[], fmt: string, ppc?: number, eps?: number) => Shape[]>;
+    interface ICompileFn {
+        (cmds: IPathCommand[], fmt: string, ppc?: number, eps?: number): Shape[];
+    }
+    export function init(wasmUrl: string): Promise<ICompileFn>;
     export type Vertex = [number, number];
     export type Polygon = Vertex[];
     export type Shape = {

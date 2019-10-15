@@ -2,7 +2,7 @@ import * as loader from '../src_wasm/node_modules/assemblyscript/lib/loader'
 
 
 
-interface PathCommand {
+interface IPathCommand {
     type: string;
     x?: number;
     y?: number;
@@ -14,17 +14,25 @@ interface PathCommand {
 
 
 
-interface MyAPI {
-    memory: WebAssembly.Memory;
-    compile(bytesUsed: number, fmt: string, ppc: number, eps: number): number;
+interface ICompileFn {
+    (cmds:IPathCommand[], fmt: string, ppc?: number, eps?: number): Shape[];
 }
 
 
 
-export async function init(wasmUrl: string) {
+interface MyAPI {
+    memory: WebAssembly.Memory;
+    compile (bytesUsed: number, fmt: string, ppc: number, eps: number): number;
+}
+
+
+
+export async function init(wasmUrl: string): Promise<ICompileFn> {
     const imports = {};
     const wasm = await loader.instantiateStreaming<MyAPI>(fetch(wasmUrl), imports);
-    return function compile(cmds: PathCommand[], fmt: string, ppc = 0, eps = 0) {
+    return function compile(cmds: IPathCommand[], fmt: string, ppc = 0, eps = 0) {
+        ppc = Math.max(0, Math.min(255, Math.round(ppc)));
+        eps = Math.abs(eps);
         const bytesUsed = load(wasm, cmds);
         const result = wasm.compile(bytesUsed, fmt, ppc, eps);
         return map(wasm, result);
@@ -33,7 +41,7 @@ export async function init(wasmUrl: string) {
 
 
 
-function load(wasm: loader.ASUtil & MyAPI, cmds: PathCommand[]) {
+function load(wasm: loader.ASUtil & MyAPI, cmds: IPathCommand[]) {
 
     const heap = wasm.memory.buffer;
     const view = new DataView(heap);
@@ -62,7 +70,7 @@ function load(wasm: loader.ASUtil & MyAPI, cmds: PathCommand[]) {
                 i += SZ;
                 x = cmd.x;
                 y = cmd.y;
-            break;
+                break;
             case Q:
                 view.setFloat64(i, x, true);
                 i += SZ;
@@ -78,7 +86,7 @@ function load(wasm: loader.ASUtil & MyAPI, cmds: PathCommand[]) {
                 i += SZ;
                 x = cmd.x;
                 y = cmd.y;
-            break;
+                break;
             case C:
                 view.setFloat64(i, x, true);
                 i += SZ;
@@ -98,7 +106,7 @@ function load(wasm: loader.ASUtil & MyAPI, cmds: PathCommand[]) {
                 i += SZ;
                 x = cmd.x;
                 y = cmd.y;
-            break;
+                break;
         }
         // 'Z' .. noop
     }
