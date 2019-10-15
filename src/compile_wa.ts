@@ -15,14 +15,14 @@ interface IPathCommand {
 
 
 interface ICompileFn {
-    (cmds:IPathCommand[], fmt: string, ppc?: number, eps?: number): Shape[];
+    (cmds: IPathCommand[], fmt: string, ppc?: number, eps?: number): Shape[];
 }
 
 
 
 interface MyAPI {
     memory: WebAssembly.Memory;
-    compile (bytesUsed: number, fmt: string, ppc: number, eps: number): number;
+    compile(bytesUsed: number, fmt: string, ppc: number, eps: number): number;
 }
 
 
@@ -31,9 +31,9 @@ export async function init(wasmUrl: string): Promise<ICompileFn> {
     const imports = {
         env: {
             abort(_msg, _file, line, column) {
-              console.error("abort called at src_wasm/assembly/index.ts:" + line + ":" + column);
+                console.error("abort called at assembly/index.ts:" + line + ":" + column);
             }
-          },
+        },
     };
     const wasm = await loader.instantiateStreaming<MyAPI>(fetch(wasmUrl), imports);
     return function compile(cmds: IPathCommand[], fmt: string, ppc = 0, eps = 0) {
