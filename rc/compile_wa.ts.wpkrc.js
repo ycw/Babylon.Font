@@ -1,5 +1,6 @@
 const base = {
     mode: 'production',
+    devtool: 'source-map',
     entry: './src/compile_wa.ts', // rel to package.json (i.e. proj root)
     module: {
         rules: [
