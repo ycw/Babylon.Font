@@ -287,6 +287,7 @@ function dedup(vs: Polygon, eps: f64): Polygon {
 // Is vertex0 equals(closeto) vertex1
 //
 
+// @ts-ignore: asc attribute 
 @inline
 function isVertexEqual(p0: Vertex, p1: Vertex, eps: f64): bool {
   let dx = p0.x - p1.x;
@@ -301,6 +302,7 @@ function isVertexEqual(p0: Vertex, p1: Vertex, eps: f64): bool {
 // Interpolate 'Q' command
 //
 
+// @ts-ignore: asc attribute
 @inline
 function interpQ(
   p0x: f64, p0y: f64,
@@ -334,6 +336,7 @@ function interpQ(
 // Interpolate 'C' command
 //
 
+// @ts-ignore: asc attribute
 @inline
 function interpC(
   p0x: f64, p0y: f64,
@@ -484,6 +487,7 @@ function tinystep(
 // is Line A intersects Line B
 //
 
+// @ts-ignore: asc attribute
 @inline
 function isLinesIntersect(
   a: Vertex, // line seg A endpoint
@@ -501,6 +505,7 @@ function isLinesIntersect(
 // Winding from ab to ac
 //
 
+// @ts-ignore: asc attribute
 @inline
 function windingOfTwoLines(
   a: Vertex,
