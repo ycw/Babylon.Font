@@ -15,8 +15,8 @@
 //   hole = ditto
 
 // # Note
-// + Memory Base occupies 16384 bytes
-//   roughly contain 250 "flatten" PathCommands for 'C'
+// + MemoryBase capacity = 65536 bytes 
+//   ~= 1000 flatten 'C' PathCommands
 
 // # Flatten PathCommands in Linear Memory Structure
 // | Command | Structure
