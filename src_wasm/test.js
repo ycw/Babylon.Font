@@ -1,13 +1,9 @@
 //
-// This file is to prove artifact (at build/untouched.wasm) created by
-// `npm run asbuild:untouched` works at runtime.
+// Test "build/untouched.wasm" 
 //
-// # Note
-// It may pass `npm run asbuild` phase, but then fail at runtime due to
-// 1. wrong data structure at "load path commands in linear memory" phase
-// 2. wrong data structure at "map result in linear memory back to js object"
+
 //
-// # TODO
+// TODO
 // 1. It seems that assemblyscript `load<T>()` must use little endian
 //    for multibyte data like f64. So I have to set 3nd param of
 //    `dataview.setFloat64(,,_)` to be `true` (?)
@@ -18,6 +14,7 @@ const { promisify } = require('util');
 const opentype = require('opentype.js');
 const asLoader = require('assemblyscript/lib/loader');
 const imports = {
+  
   //
   // ---- These are provided by assemblyscript, keep ----
   //
