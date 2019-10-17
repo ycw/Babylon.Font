@@ -41,7 +41,7 @@ export async function init(wasmUrl: string): Promise<ICompileFn> {
     } else {
       const response = await fetch(wasmUrl);
       const buffer = await response.arrayBuffer();
-      wasm = await loader.instantiate<MyAPI>(buffer, imports);
+      wasm = await loader.instantiateBuffer<MyAPI>(buffer, imports);
     }
     return function compile(cmds: IPathCommand[], fmt: string, ppc = 0, eps = 0) {
         ppc = Math.max(0, Math.min(255, Math.round(ppc)));
