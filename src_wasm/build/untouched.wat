@@ -5873,19 +5873,10 @@
   call $assembly/index/boundingBoxOf
   local.set $3
   local.get $2
-  f64.load
+  f64.load offset=16
   local.get $3
   f64.load
   f64.lt
-  if (result i32)
-   local.get $2
-   f64.load offset=16
-   local.get $3
-   f64.load
-   f64.lt
-  else
-   i32.const 0
-  end
   if (result i32)
    i32.const 1
   else
@@ -5894,33 +5885,15 @@
    local.get $3
    f64.load offset=16
    f64.gt
-   if (result i32)
-    local.get $2
-    f64.load offset=16
-    local.get $3
-    f64.load offset=16
-    f64.gt
-   else
-    i32.const 0
-   end
   end
   if (result i32)
    i32.const 1
   else
    local.get $2
-   f64.load offset=8
+   f64.load offset=24
    local.get $3
    f64.load offset=8
    f64.lt
-   if (result i32)
-    local.get $2
-    f64.load offset=24
-    local.get $3
-    f64.load offset=8
-    f64.lt
-   else
-    i32.const 0
-   end
   end
   if (result i32)
    i32.const 1
@@ -5930,15 +5903,6 @@
    local.get $3
    f64.load offset=24
    f64.gt
-   if (result i32)
-    local.get $2
-    f64.load offset=24
-    local.get $3
-    f64.load offset=24
-    f64.gt
-   else
-    i32.const 0
-   end
   end
   if
    i32.const 0
