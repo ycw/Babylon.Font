@@ -87,9 +87,10 @@ const imports = {
   // Test: map result (in linear memory) to js object
   const shapes = map(wasm, result);
 
-  // Test resulting shapes
+  // Test mapped js object
   test(shapes);
 
+  // No Assertion fail = passed
 }());
 
 
@@ -203,12 +204,12 @@ function test(shapes) {
   );
 
   console.assert(
-    shapes[0].holes[0].length >= 3
+    shapes[0].holes[0].length >= 3,
     `it should be at least 3 vertices in holes[0] polygon`
   );
 
   console.assert(
-    shapes[0].holes[1].length >= 3
+    shapes[0].holes[1].length >= 3,
     `it should be at least 3 vertices in holes[1] polygon`
   );
 
