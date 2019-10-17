@@ -582,10 +582,10 @@ function isPolygonInsidePolygon(
   let bboxA = boundingBoxOf(A);
   let bboxB = boundingBoxOf(B);
   if (
-    bboxA.xMin < bboxB.xMin && bboxA.xMax < bboxB.xMin
-    || bboxA.xMin > bboxB.xMax && bboxA.xMax > bboxB.xMax
-    || bboxA.yMin < bboxB.yMin && bboxA.yMax < bboxB.yMin
-    || bboxA.yMin > bboxB.yMax && bboxA.yMax > bboxB.yMax
+    bboxA.xMax < bboxB.xMin 
+    || bboxA.xMin > bboxB.xMax 
+    || bboxA.yMax < bboxB.yMin 
+    || bboxA.yMin > bboxB.yMax
   ) {
     return false;
   }
