@@ -37,7 +37,7 @@ const imports = {
       console.log(wasm.__getString(str));
       for (const polygonPtr of wasm.__getArray(polygonsPtr)) {
         console.log('---polygon---', i++)
-        for (const vertexPtr of wasm.__getArray(polygonPtr)) {     
+        for (const vertexPtr of wasm.__getArray(polygonPtr)) {
           console.log(
             view[(vertexPtr >>> 3) + 0],
             view[(vertexPtr >>> 3) + 1]
@@ -77,7 +77,7 @@ const imports = {
 
   const otPath = otFont.getPath(ch, 0, 0, 1);
   const otFontFmt = otFont.outlineFormat;
-  
+
   // Test: load data into linear memory
   const bytesUsed = loadPathToLinearMemory(wasm, otPath);
 
@@ -87,29 +87,25 @@ const imports = {
   // Test: map result (in linear memory) to js object
   const shapes = map(wasm, result);
 
-  // Should print a Set of Shape
-  console.log(shapes);
+  // Test resulting shapes
+  test(shapes);
 
-  // If pass, it is safe to run `npm run asbuild:dist`
-  // which will generate optimized outputs in two places
-  // 1. /dist
-  // 2. /testbed
 }());
 
 
 
 function map(wasm, shapesPtr) {
-  const shapes = new Set();
+  const shapes = [];
   const F64 = new Float64Array(wasm.memory.buffer);
   for (const shapePtr of wasm.__getArray(shapesPtr)) {
-    const shape = { fill: undefined, holes: new Set() };
-    shapes.add(shape);
+    const shape = { fill: undefined, holes: [] };
+    shapes.push(shape);
     for (const polygonPtr of wasm.__getArray(shapePtr)) {
       let polygon = [];
       if (shape.fill === undefined) {
         shape.fill = polygon;
       } else {
-        shape.holes.add(polygon);
+        shape.holes.push(polygon);
       }
       for (const vertexPtr of wasm.__getArray(polygonPtr)) {
         polygon.push([
@@ -185,4 +181,35 @@ function loadPathToLinearMemory(wasm, otPath) {
     // 'Z' .. noop
   }
   return i;
+}
+
+
+
+function test(shapes) {
+
+  console.assert(
+    shapes.length === 1,
+    `it should return 1 shape`
+  );
+
+  console.assert(
+    shapes[0].fill.length >= 3,
+    `it should be at least 3 vertices in fill polygon`
+  );
+
+  console.assert(
+    shapes[0].holes.length == 2,
+    `it should be 2 holes in shape`
+  );
+
+  console.assert(
+    shapes[0].holes[0].length >= 3
+    `it should be at least 3 vertices in holes[0] polygon`
+  );
+
+  console.assert(
+    shapes[0].holes[1].length >= 3
+    `it should be at least 3 vertices in holes[1] polygon`
+  );
+
 }
