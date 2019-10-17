@@ -19,7 +19,7 @@ const opentype = require('opentype.js');
 const asLoader = require('assemblyscript/lib/loader');
 const imports = {
   //
-  // ---- These are assemblyscript provided, keep ----
+  // ---- These are provided by assemblyscript, keep ----
   //
   env: {
     abort(_msg, _file, line, column) {
@@ -68,26 +68,24 @@ const imports = {
   const compiled = new WebAssembly.Module(file);
   const wasm = await asLoader.instantiate(compiled, imports);
 
-  globalThis.wasm = wasm;
-
   const fontUrl = '../testbed/font/notoserifdisplay-thin.ttf';
   const otFont = await opentype.load(fontUrl);
 
-  const ch = 'h';
-  const ppc = 0;
+  const ch = 'B';
+  const ppc = 5;
   const eps = 0.0712;
 
   const otPath = otFont.getPath(ch, 0, 0, 1);
   const otFontFmt = otFont.outlineFormat;
   
   // Test: load data into linear memory
-  const bytesUsed = loadPathToLinearMemory(otPath);
+  const bytesUsed = loadPathToLinearMemory(wasm, otPath);
 
   // Test: wasm exported API "compile" (it uses loaded data)
   const result = wasm.compile(bytesUsed, otFontFmt, ppc, eps);
 
   // Test: map result (in linear memory) to js object
-  const shapes = map(result);
+  const shapes = map(wasm, result);
 
   // Should print a Set of Shape
   console.log(shapes);
@@ -100,7 +98,7 @@ const imports = {
 
 
 
-function map(shapesPtr) {
+function map(wasm, shapesPtr) {
   const shapes = new Set();
   const F64 = new Float64Array(wasm.memory.buffer);
   for (const shapePtr of wasm.__getArray(shapesPtr)) {
@@ -126,7 +124,7 @@ function map(shapesPtr) {
 
 
 
-function loadPathToLinearMemory(otPath) {
+function loadPathToLinearMemory(wasm, otPath) {
   const heap = wasm.memory.buffer;
   const view = new DataView(heap);
   const SZ = 8;
@@ -136,7 +134,6 @@ function loadPathToLinearMemory(otPath) {
 
   for (const cmd of otPath.commands) {
     view.setUint8(i, cmd.type.codePointAt());
-    // console.log(cmd.type.codePointAt(), cmd.type)
     i += 1;
     if (cmd.type == 'M' || cmd.type == 'L') {
       view.setFloat64(i, cmd.x, true);
