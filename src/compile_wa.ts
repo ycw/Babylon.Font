@@ -32,10 +32,17 @@ export async function init(wasmUrl: string): Promise<ICompileFn> {
         env: {
             abort(_msg, _file, line, column) {
                 console.error("abort called at assembly/index.ts:" + line + ":" + column);
-            }
+            },
         },
     };
-    const wasm = await loader.instantiateStreaming<MyAPI>(fetch(wasmUrl), imports);
+    let wasm: loader.ASUtil & MyAPI;
+    if (typeof (WebAssembly as any).instantiateStreaming !== "undefined") {
+      wasm = await loader.instantiateStreaming<MyAPI>(fetch(wasmUrl), imports);
+    } else {
+      const response = await fetch(wasmUrl);
+      const buffer = await response.arrayBuffer();
+      wasm = await loader.instantiateBuffer<MyAPI>(buffer, imports);
+    }
     return function compile(cmds: IPathCommand[], fmt: string, ppc = 0, eps = 0) {
         ppc = Math.max(0, Math.min(255, Math.round(ppc)));
         eps = Math.abs(eps);
