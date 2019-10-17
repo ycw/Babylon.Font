@@ -28,6 +28,11 @@ interface MyAPI {
 
 
 export async function init(wasmUrl: string): Promise<ICompileFn> {
+    
+    //
+    // Imports for instantiate
+    //
+
     const imports = {
         env: {
             abort(_msg, _file, line, column) {
@@ -35,14 +40,27 @@ export async function init(wasmUrl: string): Promise<ICompileFn> {
             },
         },
     };
+
+    //
+    // Instantiate
+    // https://caniuse.com/#search=instantiateStreaming
+    //
+
     let wasm: loader.ASUtil & MyAPI;
     if (typeof (WebAssembly as any).instantiateStreaming !== "undefined") {
       wasm = await loader.instantiateStreaming<MyAPI>(fetch(wasmUrl), imports);
-    } else {
+    } 
+    else {
       const response = await fetch(wasmUrl);
       const buffer = await response.arrayBuffer();
       wasm = await loader.instantiateBuffer<MyAPI>(buffer, imports);
     }
+
+    //
+    // Return a fn implemented ICompileFn
+    // may throw from load() when setFloat64 to addr exceeding "--memoryBase"
+    //
+
     return function compile(cmds: IPathCommand[], fmt: string, ppc = 0, eps = 0) {
         ppc = Math.max(0, Math.min(255, Math.round(ppc)));
         eps = Math.abs(eps);
@@ -53,6 +71,11 @@ export async function init(wasmUrl: string): Promise<ICompileFn> {
 }
 
 
+
+//
+// Load IPathCommand[] in linear memory
+// Will not check memory access, may throw.
+//
 
 function load(wasm: loader.ASUtil & MyAPI, cmds: IPathCommand[]) {
 
@@ -136,6 +159,10 @@ export type Shape = {
 };
 
 
+
+//
+// Map result from linear memory to js object
+//
 
 function map(wasm: loader.ASUtil & MyAPI, shapesPtr: number) {
     const F64 = new Float64Array(wasm.memory.buffer);
