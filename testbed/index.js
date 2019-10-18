@@ -4,7 +4,8 @@ const state = {};
 (async function () {
 
     // Compile fn
-    state.compile = await compile_wa.init('./compile_wa.wasm');
+    const wasmUrl = '../src_wasm/build/untouched.wasm';
+    state.compile = await compile_wa.init(wasmUrl);
 
     // Font to test
     state.fontUrl = './font/NotoSerifDisplay-Thin.ttf';
@@ -43,9 +44,9 @@ function createScene(engine) {
     // {eps} dedupEpsilon; =decimate; step is 0, 0.001, 0.002 etc..
     //
 
-    const text = 'Babylon.Font\nwebassembly\nimpl. done';
+    const text = 'hello\nworld!';
     const depth = 0.1;
-    const ppc = 1;
+    const ppc = 5;
     const eps = 0.001;
     const tn = createText(state.otFont, text, depth, ppc, eps);
     tn.rotation.x = -Math.PI / 2;
