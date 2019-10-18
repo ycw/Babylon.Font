@@ -1,56 +1,44 @@
-const state = {};
+main();
 
 
-(async function () {
 
-    // Compile fn
+async function main() {
+
+    // Make compile fn
     const wasmUrl = '../src_wasm/build/untouched.wasm';
-    state.compile = await compile_wa.init(wasmUrl);
-
-    // Font to test
-    state.fontUrl = './font/NotoSerifDisplay-Thin.ttf';
+    const compile = await compile_wa.init(wasmUrl);
 
     // Load font data via opentypejs
-    state.otFont = await opentypeLoadAsync(state.fontUrl);
+    const fontUrl = './font/NotoSerifDisplay-Thin.ttf';
+    const font = await opentypeLoadAsync(fontUrl);
 
     // Create Babylon playground to render compiled shapes
-    createBabylonEnv();
-
-}());
-
+    createBabylonEnv({ compile, font });
+}
 
 
-function createBabylonEnv() {
+
+function createBabylonEnv(state) {
     const engine = new BABYLON.Engine(elCanvas);
-    const scene = createScene(engine);
+    const scene = createScene(engine, state);
     engine.runRenderLoop(() => scene.render());
     addEventListener('resize', () => engine.resize());
 }
 
 
 
-function createScene(engine) {
+function createScene(engine, state) {
     const scene = new BABYLON.Scene(engine);
-
     scene.createDefaultCamera(true, true, true);
     scene.createDefaultLight(true);
 
-    //
-    // `createText` param list
-    // {otFont} opentype.Font
-    // {text} a multi text
-    // {depth} extrude depth
-    // {ppc} pointPerCurve; =smoothness; step is 0 1 2 3 etc..
-    // {eps} dedupEpsilon; =decimate; step is 0, 0.001, 0.002 etc..
-    //
-
     const text = 'hello\nworld!';
     const depth = 0.1;
-    const ppc = 5;
-    const eps = 0.001;
-    const tn = createText(state.otFont, text, depth, ppc, eps);
+    const ppc = 5;      // point per curve
+    const eps = 0.001;  // dedup epsilon
+    const tn = createText(text, depth, ppc, eps, state);
     tn.rotation.x = -Math.PI / 2;
-    tn.scaling.set(0.3, 0.3, 0.3);
+    tn.scaling.set(0.2, 0.2, 0.2);
 
     return scene;
 }
@@ -59,10 +47,9 @@ function createScene(engine) {
 
 //
 // Minimal multiline text mesh impl.
-// An example about how to consume the compiled result.
 //
 
-function createText(otFont, text, depth = 0, ppc = 0, eps = 0) {
+function createText(text, depth, ppc, eps, { compile, font }) {
     const tn = new BABYLON.TransformNode('');
     let z = 0;
     let x = 0;
@@ -71,12 +58,12 @@ function createText(otFont, text, depth = 0, ppc = 0, eps = 0) {
         for (const ch of row) { // each ch
 
             //
-            // Compile char's opentype.PathCommand to shapes
+            // Compile opentype.PathCommand
             //
 
-            const otPath = otFont.getPath(ch, 0, 0, 1);
-            const otFmt = otFont.outlineFormat;
-            const shapes = state.compile(otPath.commands, otFmt, ppc, eps); // compile
+            const otPath = font.getPath(ch, 0, 0, 1);
+            const otFmt = font.outlineFormat;
+            const shapes = compile(otPath.commands, otFmt, ppc, eps);
 
             //
             // Consume shapes
@@ -93,13 +80,17 @@ function createText(otFont, text, depth = 0, ppc = 0, eps = 0) {
                 mesh.position.set(x, 0, z);
             }
 
-            x += otFont.charToGlyph(ch).advanceWidth / otFont.unitsPerEm;
+            //
+            // Advance next char 
+            //
+
+            x += font.charToGlyph(ch).advanceWidth / font.unitsPerEm;
             xMax = Math.max(xMax, x);
         }
         x = 0;
-        z -= 1; // lineheight; push next line downward
+        z -= 1.25; // line height
     }
-    tn.position.x = -1 * xMax / 2;
+    tn.position.x = - xMax / 2;
     const tn2 = new BABYLON.TransformNode('');
     tn.parent = tn2;
     return tn2;
@@ -125,8 +116,7 @@ function opentypeLoadAsync(fontUrl) {
     return new Promise((resolve, reject) => {
         opentype.load(fontUrl, (e, font) => {
             if (e) reject(e);
-            if (font) resolve(font);
-            else reject(e);
+            else resolve(font);
         });
     });
 }
