@@ -1,8 +1,10 @@
 import * as loader from '../src_wasm/node_modules/assemblyscript/lib/loader'
 
+//
+// Opentypejs PathCommand interface
+//
 
-
-interface IPathCommand {
+export interface IPathCommand {
     type: string;
     x?: number;
     y?: number;
@@ -12,25 +14,32 @@ interface IPathCommand {
     y2?: number;
 }
 
+//
+// Compile function signature
+//
 
-
-interface ICompileFn {
+export interface ICompileFn {
     (cmds: IPathCommand[], fmt: string, ppc?: number, eps?: number): Shape[];
 }
 
-
+//
+// Union of assemblyscript loader API & 
+//   exported "func"s of my ".wasm"
+//
 
 interface MyAPI {
     memory: WebAssembly.Memory;
     compile(bytesUsed: number, fmt: string, ppc: number, eps: number): number;
 }
 
-
+//
+// Public API
+//
 
 export async function init(wasmUrl: string): Promise<ICompileFn> {
     
     //
-    // Imports for instantiate
+    // Imports of instantiate
     //
 
     const imports = {
@@ -58,7 +67,7 @@ export async function init(wasmUrl: string): Promise<ICompileFn> {
 
     //
     // Return a fn implemented ICompileFn
-    // may throw from load() when setFloat64 to addr exceeding "--memoryBase"
+    // Throws, from load(), if setFloat64() to addr exceeding "--memoryBase"
     //
 
     return function compile(cmds: IPathCommand[], fmt: string, ppc = 0, eps = 0) {
@@ -70,11 +79,13 @@ export async function init(wasmUrl: string): Promise<ICompileFn> {
     }
 }
 
-
+// ----
+// Internal
+// ----
 
 //
 // Load IPathCommand[] in linear memory
-// Will not check memory access, may throw.
+// Will not check memory access; May throw.
 //
 
 function load(wasm: loader.ASUtil & MyAPI, cmds: IPathCommand[]) {
@@ -149,7 +160,9 @@ function load(wasm: loader.ASUtil & MyAPI, cmds: IPathCommand[]) {
     return i;
 }
 
-
+//
+// Map result from linear memory to js object
+//
 
 export type Vertex = [number, number];
 export type Polygon = Vertex[];
@@ -157,12 +170,6 @@ export type Shape = {
     fill: Polygon;
     holes: Polygon[];
 };
-
-
-
-//
-// Map result from linear memory to js object
-//
 
 function map(wasm: loader.ASUtil & MyAPI, shapesPtr: number) {
     const F64 = new Float64Array(wasm.memory.buffer);
