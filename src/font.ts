@@ -43,7 +43,7 @@ type PolygonMeshOption = {
     depth?: number,
     faceColors?: BABYLON.Color4[],
     faceUV?: BABYLON.Vector4[],
-    frontUVs: BABYLON.Vector4,
+    frontUVs?: BABYLON.Vector4,
     // holes?: BABYLON.Vector3[][],
     // shape: BABYLON.Vector3[],
     sideOrientation?: number
