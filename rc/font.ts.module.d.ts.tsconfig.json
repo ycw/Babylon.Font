@@ -8,10 +8,10 @@
             "dom"
         ],
         "declaration": true,
-        "outFile": "../dist/compile_wa.module.d.ts",
+        "outFile": "../dist/font.module.d.ts",
         "emitDeclarationOnly": true
     },
     "include": [
-        "../src/compile_wa.ts"
+        "../src/font.ts"
     ]
 }
