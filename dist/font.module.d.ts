@@ -36,7 +36,7 @@ declare module "font" {
         depth?: number;
         faceColors?: BABYLON.Color4[];
         faceUV?: BABYLON.Vector4[];
-        frontUVs: BABYLON.Vector4;
+        frontUVs?: BABYLON.Vector4;
         sideOrientation?: number;
         updatable?: boolean;
     };
