@@ -9,6 +9,7 @@
         ],
     },
     "include": [
-        "./src/compile_wa.ts"
+        "./src/compile_wa.ts",
+        "./src/font.ts"
     ]
 }

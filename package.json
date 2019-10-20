@@ -4,10 +4,9 @@
   "description": "Create text in BabylonJS",
   "main": "Font.min.js",
   "scripts": {
-    "build": "npm run build:compile_wa.ts && npm run build:.module.d.ts",
-    "build:compile_wa.ts": "npx webpack --config rc/compile_wa.ts.wpkrc.js",
-    "build:.module.d.ts": "tsc -p rc/ambient_declaration.tsconfig.json",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build:font.module.d.ts": "tsc -p rc/font.ts.module.d.ts.tsconfig.json",
+    "build:font.ts": "npx webpack --config rc/font.ts.wpkrc.js",
+    "build": "npm run build:font.ts && npm run build:font.module.d.ts"
   },
   "repository": {
     "type": "git",
@@ -20,8 +19,13 @@
     "url": "https://github.com/ycw/Babylon.Font/issues"
   },
   "homepage": "https://github.com/ycw/Babylon.Font#readme",
-  "dependencies": {},
+  "dependencies": {
+    "@types/babylonjs": "^2.4.1",
+    "babylonjs": "^4.0.3"
+  },
   "devDependencies": {
+    "@types/opentype.js": "^0.7.2",
+    "opentype.js": "^1.1.0",
     "ts-loader": "^6.2.0",
     "typescript": "^3.6.4",
     "webpack": "^4.41.1",
