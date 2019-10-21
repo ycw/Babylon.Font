@@ -31,6 +31,18 @@ declare module "font" {
     };
     export function InstallCompiler(wasmUrl: string): Promise<Compiler>;
     export function InstallFont(fontUrl: string, compiler: Compiler): Promise<Font>;
+    class Font {
+        private otFont;
+        private compiler;
+        constructor(otFont: opentype.Font, compiler: Compiler);
+        compile(ch: string, fontSize: number, ppc: number, eps: number): Array<ShapeXZ>;
+        char(name: string, fontSize: number, ppc: number, eps: number): Char;
+    }
+    class Compiler {
+        private compileFn;
+        constructor(compileFn: ICompileFn);
+        compile(cmds: IPathCommand[], fmt: string, ppc: number, eps: number): import("compile_wa").Shape[];
+    }
     type PolygonMeshOption = {
         backUVs?: BABYLON.Vector4;
         depth?: number;
@@ -40,18 +52,6 @@ declare module "font" {
         sideOrientation?: number;
         updatable?: boolean;
     };
-    class Font {
-        private otFont;
-        private compiler;
-        constructor(otFont: opentype.Font, compiler: Compiler);
-        compile(ch: string, ppc: number, eps: number, fontSize: number): Array<ShapeXZ>;
-        char(name: string, fontSize: number, ppc: number, eps: number): Char;
-    }
-    class Compiler {
-        private compileFn;
-        constructor(compileFn: ICompileFn);
-        compile(cmds: IPathCommand[], fmt: string, ppc: number, eps: number): import("compile_wa").Shape[];
-    }
     class Char {
         name: string;
         fontSize: number;
@@ -63,6 +63,6 @@ declare module "font" {
         readonly descender: number;
         readonly sTypoAscender: number;
         readonly sTypoDescender: number;
-        node(option?: PolygonMeshOption, scene?: BABYLON.Scene, isCenter?: boolean): BABYLON.TransformNode;
+        node(option?: PolygonMeshOption, scene?: BABYLON.Scene, isPivotAtOrigin?: boolean): BABYLON.TransformNode;
     }
 }
