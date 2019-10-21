@@ -2,13 +2,6 @@ import * as opentype from 'opentype.js'
 import * as BABYLON from 'babylonjs'
 import { init, ICompileFn, IPathCommand } from './compile_wa'
 
-type VertexXZ = BABYLON.Vector3
-type PolygonXZ = Array<VertexXZ>
-type ShapeXZ = {
-    fill: PolygonXZ,
-    holes: Array<PolygonXZ>
-};
-
 //
 // Install compiler 
 //
@@ -46,6 +39,13 @@ function opentypeLoadAsync(fontUrl: string): Promise<opentype.Font> {
 // Font
 // ----
 
+type VertexXZ = BABYLON.Vector3;
+type PolygonXZ = Array<VertexXZ>;
+type ShapeXZ = {
+    fill: PolygonXZ;
+    holes: Array<PolygonXZ>;
+};
+
 class Font {
 
     constructor(
@@ -54,7 +54,7 @@ class Font {
     ) { }
 
     //
-    // Compile glyphs to shapes on XZplane
+    // Compile char glyph to shapes on XZplane
     //
 
     compile(
@@ -101,6 +101,8 @@ class Font {
     }
 }
 
+
+
 // ----
 // Compiler
 // ----
@@ -113,20 +115,20 @@ class Compiler {
     }
 }
 
+
+
 // ----
-// Char (all props are calc on demand)
+// Char
 // ----
 
 type PolygonMeshOption = {
-    backUVs?: BABYLON.Vector4,
-    depth?: number,
-    faceColors?: BABYLON.Color4[],
-    faceUV?: BABYLON.Vector4[],
-    frontUVs?: BABYLON.Vector4,
-    // holes?: BABYLON.Vector3[][],
-    // shape: BABYLON.Vector3[],
-    sideOrientation?: number
-    updatable?: boolean
+    backUVs?: BABYLON.Vector4;
+    depth?: number;
+    faceColors?: BABYLON.Color4[];
+    faceUV?: BABYLON.Vector4[];
+    frontUVs?: BABYLON.Vector4;
+    sideOrientation?: number;
+    updatable?: boolean;
 }
 
 class Char {
@@ -151,7 +153,7 @@ class Char {
     }
 
     //
-    // Font ascender. proportional to fontSize 
+    // Font ascender; proportional to fontSize 
     //
 
     get ascender(): number {
@@ -159,7 +161,7 @@ class Char {
     }
 
     //
-    // Font descender, negative value; proportional to fontSize
+    // Font descender; negative value; proportional to fontSize
     //
 
     get descender(): number {
@@ -185,7 +187,7 @@ class Char {
     }
 
     //
-    // Create single merged Mesh, parenting to TransformNode{}
+    // Create single Mesh, parenting to TransformNode{}
     //
 
     node(
