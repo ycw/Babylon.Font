@@ -9,21 +9,27 @@ type ShapeXZ = {
     holes: Array<PolygonXZ>
 };
 
-
+//
+// Install compiler 
+//
 
 export async function InstallCompiler(wasmUrl: string) {
     const compileFn = await init(wasmUrl);
     return new Compiler(compileFn);
 }
 
-
+//
+// Install font
+//
 
 export async function InstallFont(fontUrl: string, compiler: Compiler) {
     const otFont = await opentypeLoadAsync(fontUrl);
     return new Font(otFont, compiler);
 }
 
-
+//
+// Helper: opentype.load() but async
+//
 
 function opentypeLoadAsync(fontUrl: string): Promise<opentype.Font> {
     return new Promise((resolve, reject) => {
@@ -36,36 +42,30 @@ function opentypeLoadAsync(fontUrl: string): Promise<opentype.Font> {
 
 
 
-
-
-type PolygonMeshOption = {
-    backUVs?: BABYLON.Vector4,
-    depth?: number,
-    faceColors?: BABYLON.Color4[],
-    faceUV?: BABYLON.Vector4[],
-    frontUVs?: BABYLON.Vector4,
-    // holes?: BABYLON.Vector3[][],
-    // shape: BABYLON.Vector3[],
-    sideOrientation?: number
-    updatable?: boolean
-}
+// ----
+// Font
+// ----
 
 class Font {
 
     constructor(
         private otFont: opentype.Font,
         private compiler: Compiler
-    ) {
+    ) { }
 
-    }
-
-
+    //
+    // Compile glyphs to shapes on XZplane
+    //
 
     compile(
+        // Char name
         ch: string,
+        // Font size in opentypejs space
+        fontSize: number,
+        // Points per curve
         ppc: number,
-        eps: number,
-        fontSize: number
+        // Dedupe epsilon 
+        eps: number 
     ): Array<ShapeXZ> {
         const otPath = this.otFont.getPath(ch, 0, 0, fontSize);
         const shapes = this.compiler.compile(
@@ -86,10 +86,8 @@ class Font {
         return shapesXZ;
     }
 
-
-
     //
-    // Get data of single character
+    // Generate Char 
     //
 
     char(
@@ -98,16 +96,14 @@ class Font {
         ppc: number,
         eps: number
     ): Char {
-        const shapes = this.compile(name, ppc, eps, fontSize);
+        const shapes = this.compile(name, fontSize, ppc, eps);
         return new Char(name, fontSize, shapes, this.otFont);
     }
 }
 
-
-
-//
+// ----
 // Compiler
-//
+// ----
 
 class Compiler {
     constructor(private compileFn: ICompileFn) {
@@ -117,11 +113,21 @@ class Compiler {
     }
 }
 
-
-
-//
+// ----
 // Char (all props are calc on demand)
-//
+// ----
+
+type PolygonMeshOption = {
+    backUVs?: BABYLON.Vector4,
+    depth?: number,
+    faceColors?: BABYLON.Color4[],
+    faceUV?: BABYLON.Vector4[],
+    frontUVs?: BABYLON.Vector4,
+    // holes?: BABYLON.Vector3[][],
+    // shape: BABYLON.Vector3[],
+    sideOrientation?: number
+    updatable?: boolean
+}
 
 class Char {
 
@@ -179,13 +185,13 @@ class Char {
     }
 
     //
-    // Create a merged Mesh for single character; Not centered
+    // Create single merged Mesh, parenting to TransformNode{}
     //
 
     node(
         option?: PolygonMeshOption,
         scene?: BABYLON.Scene,
-        isCenter = false
+        isPivotAtOrigin = false
     ): BABYLON.TransformNode {
         const node = new BABYLON.TransformNode('', scene);
         const meshes: BABYLON.Mesh[] = [];
@@ -199,9 +205,9 @@ class Char {
             meshes.push(mesh);
         }
         if (meshes.length) {
-            mesh = BABYLON.Mesh.MergeMeshes(meshes, true);
+            mesh = BABYLON.Mesh.MergeMeshes(meshes, true, true);
             mesh.parent = node;
-            if (isCenter) {
+            if (isPivotAtOrigin) {
                 const bbox = mesh.getBoundingInfo().boundingBox;
                 node.position.copyFrom(bbox.center.scale(-1));
                 const node2 = new BABYLON.TransformNode('', scene);
@@ -211,5 +217,4 @@ class Char {
         }
         return node;
     }
-
 }
