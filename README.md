@@ -37,11 +37,11 @@ https://ycw.github.io/Babylon.Font/
 
 # Font 
 
+The only way to create a `Font{}`.
+
 ```js
 const compiler = await Font.InstallCompiler('compile_wa.wasm');
-
-// The only way to create a Font{} 
-const font = await Font.InstallFont('x.ttf', compiler);
+const font = await Font.InstallFont('x.ttf', compiler); // <--
 ```
 
 It has two methods 
@@ -56,6 +56,14 @@ const node = char.node()
 // 2. Create ShapeXZ[] (see ShapeXZ section) 
 const shapes = font.compile(ch, sz, ppc, eps) 
 ```
+
+and one property
+
+```js
+// OpentypeJS Font instance
+font.otFont 
+```
+
 
 
 # Char
@@ -94,15 +102,6 @@ const node = char.node(
   isPivotAtOrigin // optional; centering the char mesh; default false;
 );                // -> TransformNode{}
 
-```
-
-
-
-# OpentypeJS Font 
-
-```js
-const font = await Font.InstallFont(..);
-font.otFont    // opentype.Font{}
 ```
 
 
