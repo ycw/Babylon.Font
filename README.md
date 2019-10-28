@@ -104,6 +104,13 @@ const node = char.node(
 
 ```
 
+Space 
+- x = left edge of embox
+- z = baseline
+
+If `isPivotAtOrigin` is set, the char mesh is translated according to its bounding box, such that it centers to origin. Since then, it is very difficult to line up with other nodes on the same **baseline**.
+
+
 
 
 # ShapeXZ 
@@ -118,6 +125,6 @@ shapesXZ
 ```
 
 Note: 
-- it may contain 0 shapes, e.g. space
-- it may contain more than 1 shapes, e.g. "i" 
-- a shape may contain more than 1 holes, e.g. "8" 
+- It may contain 0 shapes, e.g. space
+- It may contain more than 1 shape, e.g. "i" 
+- A shape may contain more than 1 hole, e.g. "8" 
