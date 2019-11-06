@@ -31,8 +31,6 @@ Create text in BabylonJS
 
 https://ycw.github.io/Babylon.Font/
 
-(source: https://github.com/ycw/Babylon.Font/tree/gh-pages) 
-
 
 
 # Font 
