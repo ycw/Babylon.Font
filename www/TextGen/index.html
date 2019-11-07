@@ -18,14 +18,19 @@
             <canvas id='el_canvas'></canvas>
         </section>
         <section id='el_controls'>
+            <section class='dump section'>
+                <h2>Output</h2>
+                <label>Geometry</label>
+                <button id='el_serialize'>.json</button>
+                <label>Render</label>
+                <button id='el_screenshot'>.png</button>
+            </section>
             <section class='render section'>
                 <h2>Render</h2>
                 <label>Width</label>
                 <input id='el_saveWidth' type='number'>
                 <label>Height</label>
                 <input id='el_saveHeight' type='number'>
-                <label>Save</label>
-                <button id='el_save'>.png</button>
             </section>
             <section class='text section'>
                 <h2>Text</h2>
@@ -36,7 +41,7 @@
                 <label>Angle</label>
                 <input id='el_lightAngle' type='range' min=0 max=360 step=1>
                 <label>Distance</label>
-                <input id='el_lightDistance' type='range' min=0 max=10 step=0.05>
+                <input id='el_lightDistance' type='range' min=0 max=50 step=0.5>
                 <lable>Intensity</lable>
                 <input id='el_lightIntensity' type='range' min=0 max=30 step=0.1>
             </section>
@@ -58,7 +63,7 @@
                 <label>Dedupe Epsilon</label>
                 <input id='el_eps' type='range' min=0.000 max=0.2 step=0.001></input>
                 <label>Depth</label>
-                <input id='el_depth' type='range' min=0.0 max=0.2 step=0.01></input>
+                <input id='el_depth' type='range' min=0.0 max=2 step=0.01></input>
             </section>
         </section>
     </main>

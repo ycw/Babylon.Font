@@ -20,12 +20,13 @@
 
         lightAngle: 180,
         lightDistance: 5,
-        lightIntensity: 3.5,
+        lightIntensity: 5,
+
         font,
-        fontSize: 0.2,
+        fontSize: 1,
         fontPpc: 10,
         fontEps: 0.01,
-        fontDepth: 0.01,
+        fontDepth: 0.1,
 
         fontColor: [1, 0.75, 0.65],
         shadowColor: [1, 0, 0],
@@ -42,7 +43,7 @@
         wallMat: null,
         fontMat: null,
         meshStore: new Map(),
-        scene
+        scene,
     };
 
     initScene(state);
@@ -119,7 +120,7 @@ function initUI(state) {
         state.scene.getEngine().resize();
     }
 
-    function saveRender() {
+    function screenshot() {
         const engine = state.scene.getEngine();
         const camera = state.scene.activeCamera;
         const canvas = engine.getRenderingCanvas();
@@ -134,6 +135,54 @@ function initUI(state) {
         canvas.height = oHeight;
         engine.resize();
         state.scene.render();
+    }
+
+    function serialize() {
+        if (state.text.length === 0) {
+            return;
+        }
+
+        const result = {};
+        result.chars = [];
+        const names = new Set([...state.text]);
+        for (const name of names) {
+            const { mesh, char } = state.meshStore.get(name);
+            const data = mesh.geometry.serializeVerticeData();
+            const { advanceWidth } = char;
+            result.chars.push({ name, data, advanceWidth });
+        }
+
+        const { char } = state.meshStore.get(state.text[0]);
+        result.ascender = char.ascender;
+        result.descender = char.descender;
+
+        // Dump JSON
+        // https://doc.babylonjs.com/resources/save_babylon
+        const str = JSON.stringify(result);
+        const blob = new Blob([str], { type: 'octet/stream' });
+        serialize.url && URL.revokeObjectURL(serialize.url);
+        serialize.url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = serialize.url;
+        a.download = 'a.json';
+        const ev = document.createEvent('MouseEvents');
+        ev.initEvent('click', true, false);
+        a.dispatchEvent(ev);
+    }
+
+    async function loadFont(file) {
+        const url = URL.createObjectURL(file);
+        try {
+            const font = await Font.InstallFont(url, state.compiler);
+            state.font = font;
+            state.meshStore.clear();
+            render(state);
+            loadFont.url && URL.revokeObjectURL(loadFont.url);
+            loadFont.url = url;
+        } catch (e) {
+            alert('Failed to install font');
+            console.error(e);
+        }
     }
 
     // Handle Text Section
@@ -198,25 +247,13 @@ function initUI(state) {
         for (const item of e.dataTransfer.items) {
             if (item.kind == 'file') {
                 const file = item.getAsFile();
-                const url = URL.createObjectURL(file);
-                try {
-                    const font = await Font.InstallFont(url, state.compiler);
-                    state.font = font;
-                    state.meshStore.clear();
-                    render(state);
-                } catch (e) {
-                    alert('Failed to install font');
-                    console.error(e);
-                }
+                await loadFont(file);
                 break;
             }
         }
     };
 
     // Handle Render Section
-    $('#el_save').onclick = e => {
-        saveRender();
-    };
     $('#el_saveWidth').oninput = e => {
         state.saveWidth = parseInt(e.target.value, 10);
         updateCanvasSize();
@@ -228,6 +265,14 @@ function initUI(state) {
     addEventListener('resize', e => {
         updateCanvasSize();
     });
+
+    // Handle Dump Section
+    $('#el_screenshot').onclick = e => {
+        screenshot();
+    };
+    $('#el_serialize').onclick = e => {
+        serialize();
+    };
 
     // Sync UI
     updateLight();
@@ -258,17 +303,17 @@ function initScene(state) {
     // Setup Camera
     const cam = new BABYLON.ArcRotateCamera('',
         -BABYLON.Tools.ToRadians(125), BABYLON.Tools.ToRadians(45),
-        50, new BABYLON.Vector3(), scene
+        200, new BABYLON.Vector3(), scene
     );
     cam.attachControl(scene.getEngine().getRenderingCanvas());
     cam.wheelPrecision = 10;
-    cam.panningSensibility *= 10;
+    cam.panningSensibility *= 5;
     cam.upperBetaLimit = Math.PI / 2;
     cam.fov = BABYLON.Tools.ToRadians(1);
 
     // Create Wall mesh
     const wall = BABYLON.MeshBuilder.CreateGround('wall', {
-        width: 100, height: 100
+        width: 1e4, height: 1e4, subdivisions: 10
     });
     wall.position.y = -fontDepth;
     const wallMat = new BABYLON.ShadowOnlyMaterial('', scene);
@@ -283,7 +328,7 @@ function initScene(state) {
     const shadowGen = new BABYLON.ShadowGenerator(2048, light, true);
     shadowGen.filteringQuality = BABYLON.ShadowGenerator.QUALITY_HIGH;
     wall.receiveShadows = true;
-    shadowGen.bias = 0.0000001;
+    shadowGen.bias = 0.000001;
     state.shadowGen = shadowGen;
 
     // Create Ambient Light
@@ -294,6 +339,7 @@ function initScene(state) {
     // Create Material
     const fontMat = new BABYLON.StandardMaterial('');
     fontMat.specularColor.set(0, 0, 0);
+    fontMat.doNotSerialize = true;
     state.fontMat = fontMat;
 
     // Fx
