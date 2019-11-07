@@ -33,7 +33,7 @@
         saveWidth: 1920,
         saveHeight: 1080,
 
-        text: 'Babylon.Font\nTextGen',
+        text: 'Babylon.Font',
         light: null,
         shadowGen: null,
         hostNode: null,
