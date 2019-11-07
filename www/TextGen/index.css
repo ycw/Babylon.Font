@@ -11,13 +11,14 @@ body {
 }
 
 main {
-    display:grid; max-width:90vw; max-height:90vh;
+    display:grid; width:100vw; height:100vh;
+    box-sizing:border-box; padding:1rem;
     grid-template: 
-        'preview render' 1fr
+        'preview render' auto
         'preview light' auto
         'preview font' auto
-        'text color' auto 
-        / 3fr 1fr;
+        'text color' 1fr
+        / 2.5fr 1fr;
     gap:1em;
 }
 
@@ -27,12 +28,25 @@ main {
     display:grid;
     place-content:center;
     overflow:hidden;
+    box-sizing:border-box;
+    border:thin dashed rgba(0,0,0,0.3);
 }
 
 .preview canvas {
     display:block;
+    border:thin solid rgba(0,0,0,0.3);
+}
+
+#el_controls {
+    display:contents;
+    font:1em/1 monospace;
+}
+
+input, textarea {
+    margin:0;
+    padding:0;
+    width:100%;
     box-sizing:border-box;
-    border:thin dotted currentColor;
 }
 
 #el_controls {
@@ -48,23 +62,22 @@ input, textarea {
 }
 
 .section {
-    box-sizing:border-box;
-    border:thin dashed rgba(0,0,0,0.3);
-    padding:1em;
     display:grid; min-width:32ch;
-    gap:0.1em;
+    gap:0.5rem;
     grid-template-columns:20ch 1fr;
     align-content:start;
 }
 
-.section:focus-within, .section:hover, #el_canvas:hover {
-    box-shadow:0 0 10px rgba(0,0,0,0.1);
+#el_canvas:hover {
+    box-shadow:0 0 10px rgba(0,0,0,0.1) inset;
 }
 
 .section h2 {
     grid-column:1/-1;
     margin:0 0 0.5rem 0;
     padding:0;
+    font:bold 1.5em/1 monospace;
+    text-decoration: underline;
 }
 
 .text.section {
