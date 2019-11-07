@@ -4,7 +4,7 @@
     const compiler = await Font.InstallCompiler('../../dist/compile_wa.wasm');
 
     // Install Font
-    const font = await Font.InstallFont('./font/NotoSansCJKtc-Thin.otf', compiler);
+    const font = await Font.InstallFont('./font/NotoSerifDisplay-Regular.ttf', compiler);
 
     // Create BabylonJS Env
     const canvas = document.querySelector('canvas');
