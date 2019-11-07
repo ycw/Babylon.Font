@@ -18,9 +18,9 @@
     const state = {
         compiler,
 
-        lightAngle: 360,
+        lightAngle: 180,
         lightDistance: 2,
-        lightIntensity: 0.2,
+        lightIntensity: 2,
         font,
         fontSize: 0.2,
         fontPpc: 10,
@@ -246,7 +246,7 @@ function initScene(state) {
     // Setup Camera
     const cam = new BABYLON.ArcRotateCamera('',
         -BABYLON.Tools.ToRadians(125), BABYLON.Tools.ToRadians(45),
-        32, new BABYLON.Vector3(), scene
+        50, new BABYLON.Vector3(), scene
     );
     cam.attachControl(scene.getEngine().getRenderingCanvas());
     cam.wheelPrecision = 10;
