@@ -19,16 +19,18 @@
         compiler,
 
         lightAngle: 180,
-        lightDistance: 2,
-        lightIntensity: 2,
+        lightDistance: 5,
+        lightIntensity: 3.5,
         font,
         fontSize: 0.2,
         fontPpc: 10,
         fontEps: 0.01,
-        fontDepth: 0.05,
+        fontDepth: 0.01,
 
-        fontColor: [0, 0.5, 1],
-        shadowColor: [1, 0, 0.5],
+        fontColor: [1, 0.75, 0.65],
+        shadowColor: [1, 0, 0],
+        bgColor: [0, 0, 0],
+        bgAlpha: 1,
 
         saveWidth: 1920,
         saveHeight: 1080,
@@ -89,6 +91,10 @@ function initUI(state) {
         state.wallMat.shadowColor.set(...state.shadowColor);
     }
 
+    function updateBg() {
+        state.scene.clearColor.set(...state.bgColor, state.bgAlpha);
+    }
+
     function updateCanvasSize() {
         const container = $('.preview');
         const { width: cW, height: cH } = container.getBoundingClientRect();
@@ -130,13 +136,13 @@ function initUI(state) {
         state.scene.render();
     }
 
-    // Handle text
+    // Handle Text Section
     $('#el_text').oninput = e => {
         state.text = e.target.value;
         render(state);
     };
 
-    // Handle light controls 
+    // Handle Light Section 
     $('#el_lightAngle').oninput = e => {
         state.lightAngle = +e.target.value;
         updateLight();
@@ -150,7 +156,7 @@ function initUI(state) {
         updateLight();
     };
 
-    // Color
+    // Handle Color Section
     $('#el_fg').oninput = e => {
         state.fontColor = hex2rgb(e.target.value);
         updateFontColor();
@@ -159,8 +165,16 @@ function initUI(state) {
         state.shadowColor = hex2rgb(e.target.value);
         updateShadowColor();
     };
+    $('#el_bgColor').oninput = e => {
+        state.bgColor = hex2rgb(e.target.value);
+        updateBg();
+    };
+    $('#el_bgAlpha').oninput = e => {
+        state.bgAlpha = +e.target.value;
+        updateBg();
+    };
 
-    // Font
+    // Handle Font Section
     $('#el_ppc').oninput = e => {
         state.fontPpc = +e.target.value;
         state.meshStore.clear();
@@ -199,7 +213,7 @@ function initUI(state) {
         }
     };
 
-    // Render
+    // Handle Render Section
     $('#el_save').onclick = e => {
         saveRender();
     };
@@ -211,23 +225,24 @@ function initUI(state) {
         state.saveHeight = parseInt(e.target.value, 10);
         updateCanvasSize();
     };
-
-    // Resize
     addEventListener('resize', e => {
         updateCanvasSize();
     });
 
-    //// Sync UI
+    // Sync UI
     updateLight();
     updateFontColor();
     updateShadowColor();
     updateCanvasSize();
+    updateBg();
     $('#el_text').value = state.text;
     $('#el_lightAngle').value = state.lightAngle.toString();
     $('#el_lightDistance').value = state.lightDistance.toString();
     $('#el_lightIntensity').value = state.lightIntensity.toString();
     $('#el_fg').value = rgb2hex(state.fontColor);
     $('#el_shadowColor').value = rgb2hex(state.shadowColor);
+    $('#el_bgColor').value = rgb2hex(state.bgColor);
+    $('#el_bgAlpha').value = state.bgAlpha.toString();
     $('#el_ppc').value = state.fontPpc.toString();
     $('#el_eps').value = state.fontEps.toString();
     $('#el_depth').value = state.fontDepth.toString();
@@ -239,9 +254,6 @@ function initUI(state) {
 
 function initScene(state) {
     const { lightAngle, lightDistance, lightHeightFactor, fontDepth, scene } = state;
-
-    // Transparent "background"
-    scene.clearColor.set(0, 0, 0, 0);
 
     // Setup Camera
     const cam = new BABYLON.ArcRotateCamera('',
@@ -256,7 +268,7 @@ function initScene(state) {
 
     // Create Wall mesh
     const wall = BABYLON.MeshBuilder.CreateGround('wall', {
-        width: 10, height: 10
+        width: 100, height: 100
     });
     wall.position.y = -fontDepth;
     const wallMat = new BABYLON.ShadowOnlyMaterial('', scene);
