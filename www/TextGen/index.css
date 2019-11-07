@@ -1,0 +1,94 @@
+html, body {
+    padding:0;
+    margin:0;
+    height:100vh;
+}
+
+body {
+    display:grid;
+    place-content:center;
+    background:#eee;
+}
+
+main {
+    display:grid; max-width:90vw; max-height:90vh;
+    grid-template: 
+        'preview render' 1fr
+        'preview light' auto
+        'preview font' auto
+        'text color' auto 
+        / 3fr 1fr;
+    gap:1em;
+}
+
+.preview {
+    grid-area:preview;
+    width:100%; height:100%;
+    display:grid;
+    place-content:center;
+    overflow:hidden;
+}
+
+.preview canvas {
+    display:block;
+    box-sizing:border-box;
+    border:thin dotted currentColor;
+}
+
+#el_controls {
+    display:contents;
+    font:1em/1 monospace;
+}
+
+input, textarea {
+    margin:0;
+    padding:0;
+    width:100%;
+    box-sizing:border-box;
+}
+
+.section {
+    box-sizing:border-box;
+    border:thin dashed rgba(0,0,0,0.3);
+    padding:1em;
+    display:grid; min-width:32ch;
+    gap:0.1em;
+    grid-template-columns:20ch 1fr;
+    align-content:start;
+}
+
+.section:focus-within, .section:hover, #el_canvas:hover {
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+.section h2 {
+    grid-column:1/-1;
+    margin:0 0 0.5rem 0;
+    padding:0;
+}
+
+.text.section {
+    grid-area:text;
+    grid-template-columns:1fr;
+    grid-template-rows:auto 1fr;
+}
+
+#el_text {
+    height:100%;
+}
+
+.font.section {
+    grid-area:font;
+}
+
+.color.section {
+    grid-area:color;
+}
+
+.light.section {
+    grid-area:light;
+}
+
+.render.section {
+    grid-area:render;
+}
