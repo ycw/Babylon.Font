@@ -229,7 +229,7 @@ function initUI(state) {
 
     $('#el_text').oninput = e => {
         state.text = e.target.value;
-        render(state);
+        renderText(state.text, state.font, state.meshStore, state.scene);
     };
 
     // Light Related
