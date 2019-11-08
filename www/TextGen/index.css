@@ -5,23 +5,22 @@ html, body {
 }
 
 body {
-    display:grid;
-    place-content:center;
     background:#eee;
 }
 
 main {
-    display:grid; width:100%; height:100vh;
-    box-sizing:border-box; padding:1rem;
+    font:1em/1 monospace;
+    display:grid; width:100%; height:100vh; 
     grid-template: 
-        'preview render' auto
-        'preview dump' auto
-        'preview light' auto
-        'preview font' auto
-        'text color' 1fr
-        / 2.5fr 1fr;
-    gap:1em;
+        'preview sidebar' 70vh
+        'text    sidebar' 1fr
+        / 1fr auto;
+    gap:0 5vmin;
 }
+
+/*
+Preview
+*/
 
 .preview {
     grid-area:preview;
@@ -33,72 +32,136 @@ main {
     border:thin dashed rgba(0,0,0,0.3);
 }
 
-.preview canvas {
+#el_canvas {
     display:block;
     border:thin solid rgba(0,0,0,0.3);
-}
-
-#el_controls {
-    display:contents;
-    font:1em/1 monospace;
-}
-
-input, textarea {
-    margin:0;
-    padding:0;
-    width:100%;
     box-sizing:border-box;
 }
 
-#el_controls {
-    display:contents;
-    font:1em/1 monospace;
-}
-
-input, textarea {
-    margin:0;
-    padding:0;
-    width:100%;
-    box-sizing:border-box;
-}
-
-.section {
-    display:grid; min-width:32ch;
-    gap:0.5rem;
-    grid-template-columns:20ch 1fr;
-    align-content:start;
-}
-
-.section h2 {
-    grid-column:1/-1;
-    margin:0 0 0.5rem 0;
-    padding:0;
-    font:bold 1.2em/1 monospace;
-    text-decoration: underline;
-}
+/*
+Text
+*/
 
 .text.section {
     grid-area:text;
+    width:100%;
+    height:100%;
+    display:grid;
     grid-template-rows:auto 1fr;
 }
 
 #el_text {
+    display:block; width:100%; height:100%;
+    box-sizing:border-box;
+    margin:0;
+}
+
+
+/*
+Sidebar
+*/
+
+.sidebar {
+    grid-area:sidebar;
+    justify-self:end;
+    overflow-y:scroll;
+    display:grid; height:100%; width:50ch;
+    align-content:start;
+    grid-template:
+        'render' auto
+        'dump' auto
+        'font' auto 
+        'light' auto 
+        'shadow' auto
+        'color' auto
+        /1fr;
+    gap:1rem;
+}
+
+.sidebar details summary {
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.sidebar details > section {
+    margin:1rem;
+    margin-bottom:0;
+}
+
+.sidebar select, 
+.sidebar input, 
+.sidebar button {
+    min-height:1.2rem;
+    width:12ch;
+    font-size:1em;
+    margin:0;
+    box-sizing:border-box;
+}
+
+.sidebar label {
+    display:contents;
+}
+
+.sidebar .section > section {
+    display:grid;
+    grid-template-columns:20ch 1fr;
+    gap:0 1rem;
+    align-items:center;
+}
+
+.sidebar hr {
     grid-column:1/-1;
-    height:100%;
+    width:100%; height:0;
+    border:0 none;
+    border-bottom:thin dashed currentColor;
+    opacity:0.5;
 }
 
-.font.section {
-    grid-area:font;
+/*
+Render Section 
+*/
+
+.render.section {
+    grid-area:render;
 }
 
-.color.section {
-    grid-area:color;
+/*
+Dump Section
+*/
+
+.dump.section {
+    grid-area:dump;
 }
+
+/*
+Light Section
+*/
 
 .light.section {
     grid-area:light;
 }
 
-.render.section {
-    grid-area:render;
+/*
+Shadow Section
+*/
+
+.shadow.section {
+    grid-area:shadow;
+}
+
+
+/*
+Font Section
+*/
+
+.font.section {
+    grid-area:font;
+}
+
+/*
+Color Section
+*/
+
+.color.section {
+    grid-area:color;
 }
