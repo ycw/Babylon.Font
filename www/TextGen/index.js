@@ -236,7 +236,7 @@ function initUI(state) {
 
     $('#el_lightAngle').oninput = e => {
         state.light.angle = +e.target.value;
-        updateLight(state.light);
+        updateLight(state.scene, state.light);
     }
     $('#el_lightDistance').oninput = e => {
         state.light.distance = +e.target.value;
