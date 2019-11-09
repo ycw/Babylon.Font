@@ -122,14 +122,14 @@ function initUI(state) {
         eps: 0.016,
         depth: 0.2,
         render: () => {
-            state.meshStore.clear();
+            clearMeshStore(state.meshStore);
             render(state);
         },
         onDrop: async (file) => {
             const font = await installFont(file, state.compiler);
             if (font) {
                 state.font = font;
-                state.meshStore.clear();
+                clearMeshStore(state.meshStore);
                 render(state);
             }
         }
@@ -213,6 +213,15 @@ function updateCanvasSize(scene, w, h) {
         }
     }
     scene.getEngine().resize();
+}
+
+
+
+function clearMeshStore(meshStore) {
+    for (const [ch, { mesh }] of meshStore.entries()) {
+        mesh.dispose();
+        meshStore.delete(ch);
+    }
 }
 
 
