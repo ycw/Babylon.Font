@@ -12,11 +12,23 @@ main {
     font:1em/1 monospace;
     display:grid; width:100%; height:100vh; 
     grid-template: 
-        'preview sidebar' 70vh
-        'text    sidebar' 1fr
+        'main sidebar' 1fr
         / 1fr auto;
-    gap:0 5vmin;
 }
+
+/*
+Main column
+*/
+
+.main.column {
+    grid-area:main;
+    display:grid;
+    grid-template:
+        'preview' 70vh
+        'text' 1fr
+        / 1fr;
+    box-sizing:border-box; padding:1rem;
+} 
 
 /*
 Preview
@@ -24,18 +36,17 @@ Preview
 
 .preview {
     grid-area:preview;
-    width:100%; height:100%;
-    display:grid;
+    display:grid; width:100%; height:100%;
     place-content:center;
     overflow:hidden;
-    box-sizing:border-box;
+    box-sizing:border-box; 
     border:thin dashed rgba(0,0,0,0.3);
 }
 
 #el_canvas {
     display:block;
-    border:thin solid rgba(0,0,0,0.3);
     box-sizing:border-box;
+    border:thin solid rgba(0,0,0,0.3);
 }
 
 /*
@@ -44,16 +55,20 @@ Text
 
 .text.section {
     grid-area:text;
-    width:100%;
-    height:100%;
-    display:grid;
-    grid-template-rows:auto 1fr;
+    display:grid; width:100%; height:100%;
+    grid-template-rows:auto 1fr; 
 }
 
-#el_text {
+.text.section .title {
+    font:unset;
+    font-weight:bold;
+}
+
+#el_textContent {
     display:block; width:100%; height:100%;
     box-sizing:border-box;
     margin:0;
+    resize:none;
 }
 
 
@@ -64,7 +79,6 @@ Sidebar
 .sidebar {
     grid-area:sidebar;
     justify-self:end;
-    overflow-y:scroll;
     display:grid; height:100%; width:50ch;
     align-content:start;
     grid-template:
@@ -75,17 +89,9 @@ Sidebar
         'shadow' auto
         'color' auto
         /1fr;
-    gap:1rem;
-}
-
-.sidebar details summary {
-    cursor:pointer;
-    font-weight:bold;
-}
-
-.sidebar details > section {
-    margin:1rem;
-    margin-bottom:0;
+    overflow-y:scroll;
+    box-sizing:border-box;
+    padding:1rem;
 }
 
 .sidebar select, 
@@ -98,23 +104,23 @@ Sidebar
     box-sizing:border-box;
 }
 
-.sidebar label {
-    display:contents;
+.sidebar details { margin:0; }
+
+.sidebar details > summary {
+    cursor:pointer;
+    font-weight:bold;
 }
 
-.sidebar .section > section {
+.sidebar details > section {
+    margin:1rem;
     display:grid;
     grid-template-columns:20ch 1fr;
     gap:0 1rem;
     align-items:center;
 }
 
-.sidebar hr {
-    grid-column:1/-1;
-    width:100%; height:0;
-    border:0 none;
-    border-bottom:thin dashed currentColor;
-    opacity:0.5;
+.sidebar details label {
+    display:contents;
 }
 
 /*
