@@ -88,11 +88,17 @@ Sidebar
         'light' auto 
         'shadow' auto
         'color' auto
+        'info' auto
         /1fr;
     overflow-y:scroll;
     box-sizing:border-box;
     padding:1rem;
 }
+/* 
+Bug: container padding is collapsed IF last elm is a "closed" <details>
+Fixed: add an extra elm with `height` of "padding size" 
+*/
+.sidebar:after { content:''; display:block; height:1rem; }
 
 .sidebar select, 
 .sidebar input, 
@@ -104,11 +110,24 @@ Sidebar
     box-sizing:border-box;
 }
 
-.sidebar details { margin:0; }
+.sidebar details { 
+    margin:0; 
+}
 
 .sidebar details > summary {
     cursor:pointer;
     font-weight:bold;
+}
+
+.sidebar details > summary > small {
+    opacity:0.9;
+    padding:0 0 0 1ch;
+    font-weight:normal; 
+}
+
+.sidebar details > summary > small:before { 
+    content:'#';
+    padding:0 1ch 0 0;
 }
 
 .sidebar details > section {
@@ -170,4 +189,18 @@ Color Section
 
 .color.section {
     grid-area:color;
+}
+
+/*
+App Info Section
+*/
+
+.info.section {
+    grid-area:info;
+    display:grid;
+}
+
+.info.section > section {
+    grid-template-columns:auto 1fr;
+    gap:0.5ch 1rem;
 }
