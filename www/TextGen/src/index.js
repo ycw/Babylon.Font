@@ -219,7 +219,7 @@ function updateCanvasSize(scene, w, h) {
 
 function clearMeshStore(meshStore) {
     for (const [ch, { mesh }] of meshStore.entries()) {
-        mesh.dispose();
+        mesh && mesh.dispose();
         meshStore.delete(ch);
     }
 }
