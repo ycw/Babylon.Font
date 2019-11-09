@@ -1,5 +1,15 @@
 # Babylon.Font
-Create text in BabylonJS
+
+lib
+- [Compile](#compile) glyph into shapes using WASM
+- [Build](#char) extruded mesh 
+
+tool
+- [Dump][1] mesh geometry  
+
+[1]: https://ycw.github.io/Babylon.Font/www/TextGen/
+
+
 
 # Usage
 
@@ -9,120 +19,104 @@ Create text in BabylonJS
 <script src='opentype.js'></script>
 <script src='font.js'></script>
 <script>
+(async function() {
+
+  // Create BabylonJS environment
+  const scene = ..;
   
   // Install compiler
   const compiler = await Font.InstallCompiler('compile_wa.wasm');
   
   // Install font(s)
-  const font = await Font.InstallFont('x.ttf', compiler);
+  const font = await Font.InstallFont('a.ttf', compiler); 
 
-  // Create Char
-  const char = font.char('B', 1, 10, 0.003);
+  // Create Char{}
+  const char = font.char('B');
 
-  // Create TransformNode 
-  char.node({ depth: 1 });
+  // Generate mesh (wrapped in transform node)
+  const node = char.node({ depth:1 }, scene);
 
+})();
 </script>
 ```
-
-
-
-# Examples
-
-https://ycw.github.io/Babylon.Font/
-
+ 
 
 
 # Font 
 
-The only way to create a `Font{}`.
+Construct.
 
 ```js
-const compiler = await Font.InstallCompiler('compile_wa.wasm');
-const font = await Font.InstallFont('x.ttf', compiler); // <--
+const font = await Font.InstallFont('a.ttf', compiler);
 ```
 
-It has two methods 
+Get underlying OpentypeJS Font instance.
+- `font.otFont`
 
-```js
-// 1. Create Char{} (see Char section)
-const char = font.char(ch, sz, ppc, eps)
+Compile font glyph into shapes
+- `font.compile(..)` 
+- see [Compile](#compile) 
 
-// Then use it to create a TransformNode{} (see Node section) 
-const node = char.node()
+Generate extruded mesh for single character 
 
-// 2. Create ShapeXZ[] (see ShapeXZ section) 
-const shapes = font.compile(ch, sz, ppc, eps) 
-```
+- `font.char(..).node(..)` 
+- see [Char](#char)
 
-and one property
 
-```js
-// OpentypeJS Font instance
-font.otFont 
-```
 
 
 
 # Char
 
+Construct.
+
 ```js
 const char = font.char(
   ch,  // char
   sz,  // fontsize
-  ppc, // number of points used to interp for single bezier curve
-  eps  // threshold used to dedup nearby vertices, e.g. 0.001 
+  ppc, // number of points used to interp a bezier curve
+  eps  // threshold used to dedup nearby vertices, ~= 1/1000 of sz 
 );
 ```
 
-It exposes useful properties for layout. All of them are normalized
-and proportional to font size. 
+Then, generate mesh.
 
 ```js
-char.ascender       // number; top to baseline
-char.descender      // number; baseline to bottom; negative
-char.advanceWidth   // number; +L/R bearings
-char.sTypoAscender  // number; top to CJK_baseline
-char.sTypoDescender // number; CJK_baseline to bottom
-```
- 
-
-
-# Node 
-
-A helper - creating a `TransformNode{}` wrapping a char mesh (if any)   
-
-```js
-const char = font.char(..);
 const node = char.node(
-  opt,            // optional; used as MeshBuilder.CreatePolygon() option
+  opt,            // optional; used by MeshBuilder.CreatePolygon()
   scene,          // optional; 
-  isPivotAtOrigin // optional; centering the char mesh; default false;
+  isPivotAtOrigin // optional; centers nested mesh; Default false
 );                // -> TransformNode{}
-
 ```
-
-Space 
-- x = left edge of embox
-- z = baseline
-
-If `isPivotAtOrigin` is set, the char mesh is translated according to its bounding box, such that it centers to origin. Since then, it is very difficult to line up with other nodes on the same **baseline**.
-
+- The mesh is wrapped in a transform node
+- For space characters, no mesh is generated, transform node is empty.
+- `node.x` refers to embox left edge
+- `node.z` refers to baseline
+- If `isPivotAtOrigin` is set, mesh is centered.    
 
 
-
-# ShapeXZ 
+Get layout properties. 
 
 ```js
-const shapesXZ = font.compile(ch, sz, ppc, eps);
-
-shapesXZ
-//- is array of {fill, holes}
-//- where fill  : Vector3[]     # on XZplane
-//-       holes : Vector3[][]   # on XZplane 
+char.advanceWidth   // width plus L & R bearings
+char.ascender       // distance from top to baseline
+char.descender      // distance from baseline to bottom; negative 
+char.sTypoAscender  // distance from top to CJK_baseline 
+char.sTypoDescender // distance from CJK_baseline to bottom
 ```
 
-Note: 
-- It may contain 0 shapes, e.g. space
-- It may contain more than 1 shape, e.g. "i" 
-- A shape may contain more than 1 hole, e.g. "8" 
+
+
+# Compile
+
+Compile glyph into shapes.
+
+```js
+const shapes = font.compile(ch, sz, ppc, eps); 
+// -> ShapeXZ[] 
+//
+// type ShapeXZ = {
+//   fill  : Vector3[]     # on XZplane
+//   holes : Vector3[][]   # on XZplane
+// }
+```
