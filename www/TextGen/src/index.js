@@ -32,7 +32,6 @@ const fontUrl = './font/NotoSerifDisplay-Regular.ttf';
 
 
 
-
 function initScene(state) {
     const { scene } = state;
     scene.metadata = {};
@@ -119,8 +118,8 @@ function initUI(state) {
 
     // Font Related
     cFont.init({
-        ppc: 10,
-        eps: 0.005,
+        ppc: 9,
+        eps: 0.016,
         depth: 0.2,
         render: () => {
             state.meshStore.clear();
