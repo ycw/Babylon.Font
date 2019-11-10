@@ -1,11 +1,14 @@
 # Babylon.Font
 
-lib
-- [Compile](#compile) glyph into shapes using WASM
-- [Build](#char) extruded mesh 
+Library
 
-tool
-- [Dump][1] mesh geometry  
+- Compile glyph using WebAssembly.
+- Build mesh from glyph.
+
+Tool - [TextGen][1]
+
+- Dump mesh geomerty of chars in use to json
+- Screenshot to png
 
 [1]: https://ycw.github.io/Babylon.Font/www/TextGen/
 
@@ -33,42 +36,51 @@ tool
   // Create Char{}
   const char = font.char('B');
 
-  // Generate mesh (wrapped in transform node)
+  // Build mesh (wrapped in transform node)
   const node = char.node({ depth:1 }, scene);
 
 })();
 </script>
 ```
- 
+
 
 
 # Font 
 
-Construct.
+Construct:
 
 ```js
-const font = await Font.InstallFont('a.ttf', compiler);
+const font = await Font.InstallFont(
+  fontUrl,   // font file url 
+  compiler   // Compiler{}
+);
 ```
 
-Get underlying OpentypeJS Font instance.
-- `font.otFont`
+Build a mesh for char (see [#Char](#char)) 
 
-Compile font glyph into shapes
-- `font.compile(..)` 
-- see [Compile](#compile) 
+```js 
+const char = font.char(..)
+const node = char.node(..)
+``` 
 
-Generate extruded mesh for single character 
+Advance:
+Compile font glyph into shapes (see [#Compile](#compile)) 
 
-- `font.char(..).node(..)` 
-- see [Char](#char)
+```js 
+const shapes = font.compile(..)
+``` 
 
+Get underlying OpentypeJS Font instance:
 
+```js 
+const otFont = font.otFont
+```
 
 
 
 # Char
 
-Construct.
+Construct:
 
 ```js
 const char = font.char(
@@ -79,23 +91,7 @@ const char = font.char(
 );
 ```
 
-Then, generate mesh.
-
-```js
-const node = char.node(
-  option,           // MeshBuilder.CreatePolygon() option 
-  scene,            // scene that resulting node is adding to
-  isPivotAtOrigin   // centers the mesh? default false
-);                  // -> TransformNode{}
-```
-- The mesh is wrapped in a transform node
-- For space characters, no mesh is generated, transform node is empty.
-- `node.x` refers to embox left edge
-- `node.z` refers to baseline
-- If `isPivotAtOrigin` is set, the mesh is centered.    
-
-
-Get layout properties. 
+Useful layout properties: 
 
 ```js
 char.advanceWidth     // width plus L & R bearings
@@ -105,11 +101,27 @@ char.sTypoAscender    // distance from top to CJK_baseline
 char.sTypoDescender   // distance from CJK_baseline to bottom
 ```
 
+Build a mesh for char:
+
+```js
+const node = char.node(
+  option,           // MeshBuilder.CreatePolygon() option 
+  scene,            // scene that resulting node is adding to
+  isPivotAtOrigin   // centers the mesh? default false
+);                  // -> TransformNode{}
+```
+
+- The mesh is wrapped in a transform node.
+- For space characters, no mesh is generated, returns empty transform node.
+- `node.x` refers to embox left edge.
+- `node.z` refers to baseline.
+- If `isPivotAtOrigin` is set, the child mesh is centered.
+
 
 
 # Compile
 
-Compile glyph into shapes.
+Compile glyph into shapes:
 
 ```js
 const shapes = font.compile(
@@ -118,9 +130,13 @@ const shapes = font.compile(
   ppc,   // number of points used to interp a bezier curve
   eps    // threshold used to dedup nearby vertices, ~= 1/1000 of sz
 );       // -> ShapeXZ[] 
+```
 
-// type ShapeXZ = {
-//   fill  : Vector3[]     # on XZplane
-//   holes : Vector3[][]   # on XZplane
-// }
+ShapeXZ interface:
+
+```
+{
+  fill  : Vector3[]     # on XZplane
+  holes : Vector3[][]   # on XZplane
+}
 ```
