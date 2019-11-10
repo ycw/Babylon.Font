@@ -72,10 +72,10 @@ Construct.
 
 ```js
 const char = font.char(
-  ch,  // char
-  sz,  // fontsize
-  ppc, // number of points used to interp a bezier curve
-  eps  // threshold used to dedup nearby vertices, ~= 1/1000 of sz 
+  ch,    // char
+  sz,    // fontsize
+  ppc,   // number of points used to interp a bezier curve
+  eps    // threshold used to dedup nearby vertices, ~= 1/1000 of sz 
 );
 ```
 
@@ -83,26 +83,26 @@ Then, generate mesh.
 
 ```js
 const node = char.node(
-  opt,            // optional; used by MeshBuilder.CreatePolygon()
-  scene,          // optional; 
-  isPivotAtOrigin // optional; centers nested mesh; Default false
-);                // -> TransformNode{}
+  option,           // MeshBuilder.CreatePolygon() option 
+  scene,            // scene that resulting node is adding to
+  isPivotAtOrigin   // centers the mesh? default false
+);                  // -> TransformNode{}
 ```
 - The mesh is wrapped in a transform node
 - For space characters, no mesh is generated, transform node is empty.
 - `node.x` refers to embox left edge
 - `node.z` refers to baseline
-- If `isPivotAtOrigin` is set, mesh is centered.    
+- If `isPivotAtOrigin` is set, the mesh is centered.    
 
 
 Get layout properties. 
 
 ```js
-char.advanceWidth   // width plus L & R bearings
-char.ascender       // distance from top to baseline
-char.descender      // distance from baseline to bottom; negative 
-char.sTypoAscender  // distance from top to CJK_baseline 
-char.sTypoDescender // distance from CJK_baseline to bottom
+char.advanceWidth     // width plus L & R bearings
+char.ascender         // distance from top to baseline
+char.descender        // distance from baseline to bottom; negative 
+char.sTypoAscender    // distance from top to CJK_baseline 
+char.sTypoDescender   // distance from CJK_baseline to bottom
 ```
 
 
@@ -112,9 +112,13 @@ char.sTypoDescender // distance from CJK_baseline to bottom
 Compile glyph into shapes.
 
 ```js
-const shapes = font.compile(ch, sz, ppc, eps); 
-// -> ShapeXZ[] 
-//
+const shapes = font.compile(
+  ch,    // char
+  sz,    // fontsize
+  ppc,   // number of points used to interp a bezier curve
+  eps    // threshold used to dedup nearby vertices, ~= 1/1000 of sz
+);       // -> ShapeXZ[] 
+
 // type ShapeXZ = {
 //   fill  : Vector3[]     # on XZplane
 //   holes : Vector3[][]   # on XZplane
