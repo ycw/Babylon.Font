@@ -35,7 +35,7 @@ const fontUrl = './font/NotoSerifDisplay-Regular.ttf';
 function initScene(state) {
     const { scene } = state;
     scene.metadata = {};
-    scene.ambientColor.set(1, 1, 1);
+    scene.fogEnabled = false;
 
     // Setup Camera
     const cam = new BABYLON.ArcRotateCamera('',
