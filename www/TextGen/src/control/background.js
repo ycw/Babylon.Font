@@ -30,5 +30,10 @@ function handleAlpha(e) {
 }
 
 function update() {
+    // Fix Firefox bug
+    if (alpha === 0) {
+        scene.clearColor.set(0, 0, 0, 0);
+        return;
+    }
     scene.clearColor.set(...color, alpha);
 }
