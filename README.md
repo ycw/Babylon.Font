@@ -7,8 +7,9 @@ Library
 
 Tool - [TextGen][1]
 
-- Dump mesh geomerty of chars in use to json
-- Screenshot to png
+- Config glyph.
+- Dump mesh geomerty (of chars in use) to json.
+- Screenshot to png.
 
 [1]: https://ycw.github.io/Babylon.Font/www/TextGen/
 
@@ -56,7 +57,7 @@ const font = await Font.InstallFont(
 );
 ```
 
-Build a mesh for char (see [#Char](#char)) 
+Build a mesh for char (see [#Char](#char)):
 
 ```js 
 const char = font.char(..)
@@ -64,7 +65,7 @@ const node = char.node(..)
 ``` 
 
 Advance:
-Compile font glyph into shapes (see [#Compile](#compile)) 
+Compile font glyph into shapes (see [#Compile](#compile)): 
 
 ```js 
 const shapes = font.compile(..)
