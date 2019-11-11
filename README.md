@@ -2,13 +2,12 @@
 
 Library
 
-- Compile glyph using WebAssembly.
-- Build mesh from glyph.
+- Compile glyph to shapes using WebAssembly.
+- Build mesh from shapes.
 
 Tool - [TextGen][1]
 
-- Config glyph.
-- Dump mesh geomerty (of chars in use) to json.
+- Dump mesh geometry to json.
 - Screenshot to png.
 
 [1]: https://ycw.github.io/Babylon.Font/www/TextGen/
