@@ -8,7 +8,7 @@ import * as cDump from './control/dump.js';
 import * as cRendering from './control/rendering.js';
 
 const wasmUrl = '../../dist/compile_wa.wasm';
-const fontUrl = './font/NotoSerifDisplay-Regular.ttf';
+const fontUrl = './font/NotoSerif-Regular.ttf';
 
 (async function main() {
 
@@ -36,14 +36,15 @@ function initScene(state) {
     const { scene } = state;
     scene.metadata = {};
     scene.fogEnabled = false;
+    scene.shadowsEnabled = false;
 
     // Setup Camera
     const cam = new BABYLON.ArcRotateCamera('',
         BABYLON.Tools.ToRadians(-90), BABYLON.Tools.ToRadians(0),
-        300, new BABYLON.Vector3(), scene
+        400, new BABYLON.Vector3(), scene
     );
     cam.attachControl(scene.getEngine().getRenderingCanvas());
-    cam.wheelPrecision = 10;
+    cam.wheelPrecision = 1;
     cam.panningSensibility *= 2;
     cam.upperBetaLimit = Math.PI / 2;
     cam.fov = Math.PI / 180;
@@ -80,7 +81,7 @@ function initUI(state) {
 
     // Text Related
     cText.init({
-        content: 'Babylon.Font',
+        content: 'Type something',
         render: () => render(state)
     });
 
@@ -89,7 +90,7 @@ function initUI(state) {
         angle: 45,
         distance: 10,
         height: 8,
-        intensity: 0.5,
+        intensity: 0,
         light: state.scene.getLightByName('light0')
     });
 
@@ -98,29 +99,30 @@ function initUI(state) {
         bias: 0.000001,
         normalBias: 0.00005,
         color: [0, 0.5, 1],
-        isGrounded: true,
+        isEnabled: false,
         shadowGenerator: state.scene.metadata.shadowGenerator,
-        groundMesh: state.scene.getMeshByName('ground')
+        groundMesh: state.scene.getMeshByName('ground'),
+        scene: state.scene
     });
 
     // Background Related
     cBackground.init({
-        color: [0, 0, 0],
+        color: [1, 1, 1],
         alpha: 0,
         scene: state.scene
     });
 
     // Foreground Related
     cForeground.init({
-        color: [0.2, 0.2, 0.2],
+        color: [0, 0, 0],
         material: state.scene.getMaterialByName('text')
     });
 
     // Font Related
     cFont.init({
-        ppc: 10,
-        eps: 0.015,
-        depth: 0.15,
+        ppc: 5,
+        eps: 0.04,
+        depth: 0,
         render: () => {
             clearMeshStore(state.meshStore);
             render(state);
