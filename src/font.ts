@@ -41,7 +41,7 @@ export class Font {
     static Measure(
         font: Font,
         name: string,
-        size: number = 1
+        size: number
     ) {
         return new Metrics(font, name, size);
     }
