@@ -120,8 +120,8 @@ function initUI(state) {
 
     // Font Related
     cFont.init({
-        ppc: 5,
-        eps: 0.04,
+        ppc: 4,
+        eps: 0.05,
         depth: 0,
         render: () => {
             clearMeshStore(state.meshStore);
