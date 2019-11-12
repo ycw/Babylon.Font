@@ -62,7 +62,7 @@ Tool - [Gen][1]
 ```js
 const compiler = await Compiler.Build(
   wasmUrl   // compiler (.wasm) url
-);          //-> BF.Compiler{} 
+);          //-> Compiler{} 
 ```
 
 ## Font
@@ -72,8 +72,8 @@ const compiler = await Compiler.Build(
 ```js
 const font = await Font.Install(
   fontUrl,   // font (.otf/.ttf) url 
-  compiler   // BF.Compiler{}
-);           //-> BF.Font{}
+  compiler   // Compiler{}
+);           //-> Font{}
 
 font.raw;    // opentype.Font{}
 ```
@@ -82,10 +82,10 @@ font.raw;    // opentype.Font{}
 
 ```js
 const metrics = Font.Measure(
-  font,   // BF.Font{}
+  font,   // Font{}
   name,   // char name, e.g. 'B'
   size    // font size
-);        //-> BF.Font.Metrics{}
+);        //-> Font.Metrics{}
 
 metrics.advanceWidth;
 metrics.ascender;
@@ -96,19 +96,19 @@ metrics.descender;
 
 ```js
 const shapes = Font.Compile(
-  font, // BF.Font{} 
+  font, // Font{} 
   name, // char name, e.g. 'B'
   size, // font size
   ppc,  // no. intermediate points used to interp. a bezier curve
   eps   // threshold of decimation (>1/1000 of font size)
-);      //-> Array<BF.Font.Shape> 
+);      //-> Array<Font.Shape> 
 ```
 
 ### Font.BuildMesh
 
 ```js
 const mesh = Font.BuildMesh(
-  shapes, // Array<BF.Shape> 
+  shapes, // Array<Font.Shape> 
   option, // option of MeshBuilder.CreatePolygon() [optional] 
   scene   // BABYLON.Scene{} [optional]  
 );        //-> BABYLON.Mesh
