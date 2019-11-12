@@ -38,7 +38,6 @@ Tool - [Gen][1]
   const ppc = 0;
   const eps = 0;
   const shapes = Font.Compile(font, 'c', fontSize, ppc, eps);
-
   const depth = 1;
   const sideOrientation = BABYLON.Mesh.DOUBLESIDE;
   const mesh = Font.BuildMesh(shapes, { depth, sideOrientation }, scene);
@@ -48,11 +47,69 @@ Tool - [Gen][1]
   metrics.advanceWidth;
   metrics.ascender;
   metrics.descender;
+
 })();
 </script>
 ```
 
 
-
 # API
-(TODO) 
+
+## Compiler
+
+### Compiler.Build
+
+```js
+const compiler = await Compiler.Build(
+  wasmUrl   // compiler (.wasm) url
+);          //-> BF.Compiler{} 
+```
+
+## Font
+
+### Font.Install
+
+```js
+const font = await Font.Install(
+  fontUrl,   // font (.otf/.ttf) url 
+  compiler   // BF.Compiler{}
+);           //-> BF.Font{}
+
+font.raw;    // opentype.Font{}
+```
+
+### Font.Measure 
+
+```js
+const metrics = Font.Measure(
+  font,   // BF.Font{}
+  name,   // char name, e.g. 'B'
+  size    // font size
+);        //-> BF.Font.Metrics{}
+
+metrics.advanceWidth;
+metrics.ascender;
+metrics.descender;
+```
+
+### Font.Compile
+
+```js
+const shapes = Font.Compile(
+  font, // BF.Font{} 
+  name, // char name, e.g. 'B'
+  size, // font size
+  ppc,  // no. intermediate points used to interp. a bezier curve
+  eps   // threshold of decimation (>1/1000 of font size)
+);      //-> Array<BF.Font.Shape> 
+```
+
+### Font.BuildMesh
+
+```js
+const mesh = Font.BuildMesh(
+  shapes, // Array<BF.Shape> 
+  option, // option of MeshBuilder.CreatePolygon() [optional] 
+  scene   // BABYLON.Scene{} [optional]  
+);        //-> BABYLON.Mesh
+```
