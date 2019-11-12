@@ -1,12 +1,12 @@
 {
-  "name": "Babylon.Font",
+  "name": "babylon.font",
   "version": "1.0.0",
-  "description": "Create text in BabylonJS",
-  "main": "Font.min.js",
+  "description": "",
+  "main": "",
   "scripts": {
-    "build:font.module.d.ts": "tsc -p rc/font.ts.module.d.ts.tsconfig.json",
-    "build:font.ts": "npx webpack --config rc/font.ts.wpkrc.js",
-    "build": "npm run build:font.ts && npm run build:font.module.d.ts"
+    "build:0": "npx webpack --config rc/babylon.font.ts-webpack.config.js",
+    "build:1": "tsc -p rc/babylon.font.ts-module.d.ts-tsconfig.json",
+    "build": "npm run build:0"
   },
   "repository": {
     "type": "git",
@@ -27,7 +27,7 @@
     "@types/opentype.js": "^0.7.2",
     "opentype.js": "^1.1.0",
     "ts-loader": "^6.2.0",
-    "typescript": "^3.6.4",
+    "typescript": "^3.7.2",
     "webpack": "^4.41.1",
     "webpack-cli": "^3.3.9"
   }

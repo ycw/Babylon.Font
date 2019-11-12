@@ -12,8 +12,8 @@ const fontUrl = './font/NotoSerif-Regular.ttf';
 
 (async function main() {
 
-    const compiler = await Font.InstallCompiler(wasmUrl);
-    const font = await Font.InstallFont(fontUrl, compiler);
+    const compiler = await BF.Compiler.Build(wasmUrl);
+    const font = await BF.Font.Install(fontUrl, compiler);
 
     // Create BabylonJS Env
     const canvas = document.querySelector('canvas');
@@ -159,14 +159,16 @@ function initUI(state) {
             return { width, height };
         },
         getTextContent: () => {
-            return cText.content
+            return cText.content;
+        },
+        getMetrics: (name) => {
+            return BF.Font.Measure(state.font, name, 1);
         },
         updateCanvasSize: () => {
             const { width, height } = cRendering;
             updateCanvasSize(state.scene, width, height);
         }
     });
-
 
     // Recompute canvas size on resize
     addEventListener('resize', () => {
@@ -182,7 +184,7 @@ function initUI(state) {
 async function installFont(file, compiler) {
     const url = URL.createObjectURL(file);
     try {
-        const font = await Font.InstallFont(url, compiler);
+        const font = await BF.Font.Install(url, compiler);
         installFont.url && URL.revokeObjectURL(installFont.url);
         installFont.url = url;
         return font;
@@ -249,6 +251,9 @@ function render(state) {
     let x = 0;
     let xMax = 0;
     let line = 0;
+
+    const sideOrientation = BABYLON.Mesh.DOUBLESIDE;
+
     for (const ch of content) {
         if (ch == '\n') {
             x = 0;
@@ -256,19 +261,16 @@ function render(state) {
             continue;
         }
         if (!meshStore.has(ch)) {
-            const char = font.char(ch, size, ppc, eps);
-            const node = char.node({
-                depth, sideOrientation: BABYLON.Mesh.DOUBLESIDE
-            });
-            const mesh = node.getChildMeshes()[0];
+            const shapes = BF.Font.Compile(font, ch, size, ppc, eps);
+            const mesh = BF.Font.BuildMesh(shapes, { depth, sideOrientation });
             if (mesh) {
                 mesh.setEnabled(false);
                 mesh.receiveShadows = true;
                 mesh.material = textMat;
             }
-            meshStore.set(ch, { mesh, char });
+            meshStore.set(ch, { mesh });
         }
-        const { mesh, char } = meshStore.get(ch);
+        const { mesh } = meshStore.get(ch);
         if (mesh) {
             const inst = mesh.createInstance('');
             inst.position.x = x;
@@ -276,14 +278,14 @@ function render(state) {
             inst.parent = scene.metadata.hostNode;
             shadowGenerator.addShadowCaster(inst);
         }
-        x += char.advanceWidth;
+        x += BF.Font.Measure(font, ch, size).advanceWidth;
         xMax = Math.max(xMax, x);
     }
 
-    const { ascender } = font.char(content[0], size, ppc, eps);
+    const { ascender } = BF.Font.Measure(font, content[0], size);
     const { hostNode } = scene.metadata;
     hostNode.position.x = -0.5 * xMax;
-    hostNode.position.z = 0.5 * (line * size - ascender);
+    hostNode.position.z = 0.5 * ((line + 1) * size - ascender);
 
     const groundMesh = scene.getMeshByName('ground');
     groundMesh.position.y = -1 * depth;

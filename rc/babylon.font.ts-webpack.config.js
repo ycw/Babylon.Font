@@ -1,11 +1,11 @@
 module.exports = [{
     mode: 'production',
     devtool: 'source-map',
-    entry: './src/font.ts', // rel to package.json (i.e. proj root)
+    entry: './src/babylon.font.ts', // rel to package.json (i.e. proj root)
     output: {
         path: require('path').join(__dirname, '../dist/'),
-        filename: 'font.js',
-        library: 'Font'
+        filename: 'babylon.font.js',
+        library: 'BF'
     },
     externals: {
         'babylonjs': 'BABYLON',

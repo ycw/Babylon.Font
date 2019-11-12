@@ -8,10 +8,10 @@
             "dom"
         ],
         "declaration": true,
-        "outFile": "../dist/font.module.d.ts",
+        "outFile": "../dist/babylon.font.module.d.ts",
         "emitDeclarationOnly": true
     },
     "include": [
-        "../src/font.ts"
+        "../src/babylon.font.ts"
     ]
 }

@@ -4,6 +4,7 @@ let scene;
 let meshStore;
 let getSize;
 let getTextContent;
+let getMetrics;
 let updateCanvasSize;
 
 export function init(o) {
@@ -11,6 +12,7 @@ export function init(o) {
     meshStore = o.meshStore;
     getSize = o.getSize;
     getTextContent = o.getTextContent;
+    getMetrics = o.getMetrics;
     updateCanvasSize = o.updateCanvasSize;
 
     $('#el_dumpImage').onclick = handleImage;
@@ -54,21 +56,21 @@ function serialize() {
         if (name == '\n') {
             continue;
         }
-        const { mesh, char } = meshStore.get(name);
-        const { advanceWidth } = char;
         let data = null;
+        const { mesh } = meshStore.get(name);
         if (mesh) {
             data = mesh.geometry.serializeVerticeData();
             delete data.id;
             delete data.updatable;
         }
+        const { advanceWidth } = getMetrics(name);
         result.chars.push({ name, data, advanceWidth });
     }
 
     if (content.length) {
-        const { char } = meshStore.get(content[0]);
-        result.ascender = char.ascender;
-        result.descender = char.descender;
+        const { ascender, descender } = getMetrics(content[0]);
+        result.ascender = ascender;
+        result.descender = descender;
     }
 
     // https://doc.babylonjs.com/resources/save_babylon
