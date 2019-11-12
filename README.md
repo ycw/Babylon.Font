@@ -5,12 +5,12 @@ Library
 - Compile glyph to shapes using WebAssembly.
 - Build mesh from shapes.
 
-Tool - [BF.Gen][1]
+Tool - [Gen][1]
 
 - Dump mesh geometry to json.
 - Screenshot to png.
 
-[1]: https://ycw.github.io/Babylon.Font/www/BF.Gen/
+[1]: https://ycw.github.io/Babylon.Font/app/gen/
 
 
 
