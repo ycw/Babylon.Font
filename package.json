@@ -13,8 +13,8 @@
     "url": "git+https://github.com/ycw/Babylon.Font.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "ycw",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/ycw/Babylon.Font/issues"
   },
