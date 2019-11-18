@@ -41,7 +41,7 @@ function initScene(state) {
     // Setup Camera
     const cam = new BABYLON.ArcRotateCamera('',
         BABYLON.Tools.ToRadians(-90), BABYLON.Tools.ToRadians(0),
-        400, new BABYLON.Vector3(), scene
+        500, new BABYLON.Vector3(), scene
     );
     cam.attachControl(scene.getEngine().getRenderingCanvas());
     cam.wheelPrecision = 1;
@@ -81,16 +81,25 @@ function initUI(state) {
 
     // Text Related
     cText.init({
-        content: 'Type something',
+        content: [
+            `ABCDEFGHIJKLM`,
+            `NOPQRSTUVWXYZ`,
+            `abcdefghijklm`,
+            `nopqrstuvwxyz`,
+            `0123456789`,
+            `\`~!@#$%^&*_-+`,
+            `<>{}[]()\/`,
+            `;:"',.?!`
+        ].join('\n'),
         render: () => render(state)
     });
 
     // Light Related
     cLight.init({
         angle: 135,
-        distance: 10,
-        height: 8,
-        intensity: 2,
+        distance: 100,
+        height: 100,
+        intensity: 1,
         color: [1, 1, 1],
         light: state.scene.getLightByName('light0')
     });
@@ -115,9 +124,9 @@ function initUI(state) {
 
     // Font Related
     cFont.init({
-        ppc: 12,
-        eps: 0.04,
-        depth: 0.2,
+        ppc: 10,
+        eps: 0.045,
+        depth: 0.25,
         render: () => {
             clearMeshStore(state.meshStore);
             render(state);
@@ -277,7 +286,7 @@ function render(state) {
         xMax = Math.max(xMax, x);
     }
 
-    const { ascender } = BF.Font.Measure(font, content[0], size);
+    const { ascender } = BF.Font.Measure(font, 'M', size);
     const { hostNode } = scene.metadata;
     hostNode.position.x = -0.5 * xMax;
     hostNode.position.z = 0.5 * ((line + 1) * size - ascender);
