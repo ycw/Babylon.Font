@@ -113,7 +113,7 @@ const mesh = Font.BuildMesh(
 
 ## Thanks
 
-[Max Graey][T01] - Helps with AssemblyScript/WASM optimizations
+[MaxGraey][T01] - Helps with AssemblyScript/WASM optimizations
 
 [OpentypeJS][T02] - Read and write OpenType fonts using JavaScript.
 
@@ -123,8 +123,8 @@ const mesh = Font.BuildMesh(
 
 [AssemblyScript][T05] - Compiles a strict subset of TypeScript (basically JavaScript with types) to WebAssembly using Binaryen.
 
-[T01]:[//github.com/MaxGraey]
-[T02]:[//github.com/opentypejs/opentype.js]
-[T03]:[//github.com/mapbox/earcut]
-[T04]:[//github.com/BabylonJS/Babylon.js]
-[T05]:[//github.com/AssemblyScript/assemblyscript]
+[T01]:[https://github.com/MaxGraey]
+[T02]:[https://github.com/opentypejs/opentype.js]
+[T03]:[https://github.com/mapbox/earcut]
+[T04]:[https://github.com/BabylonJS/Babylon.js]
+[T05]:[https://github.com/AssemblyScript/assemblyscript]
