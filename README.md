@@ -1,16 +1,15 @@
-# Babylon.Font
+# About
 
 Library
 
 - Compile glyph to shapes using WebAssembly.
 - Build mesh from shapes.
 
-Tool - [Gen][1]
+Tool
 
-- Dump mesh geometry to json.
-- Screenshot to png.
-
-[1]: https://ycw.github.io/Babylon.Font/app/gen/
+- [Gen][https://ycw.github.io/Babylon.Font/app/gen/]
+  - Dump mesh geometry to json.
+  - Screenshot to png.
 
 
 
@@ -113,3 +112,23 @@ const mesh = Font.BuildMesh(
   scene   // BABYLON.Scene{} [optional]  
 );        //-> BABYLON.Mesh
 ```
+
+
+
+# Thanks
+
+[Max Graey][T01] - WSAM optimization
+
+[OpentypeJS][T02] - Read and write OpenType fonts using JavaScript. 
+
+[EarcutJS][T03] - The fastest and smallest JavaScript polygon triangulation library for your WebGL apps 
+
+[BabylonJS][T04] - A powerful, beautiful, simple, and open game and rendering engine packed into a friendly JavaScript framework. 
+
+[AssemblyScript][T05] - Compiles a strict subset of TypeScript (basically JavaScript with types) to WebAssembly using Binaryen.
+
+[T01]:[//github.com/MaxGraey]
+[T02]:[//github.com/opentypejs/opentype.js]
+[T03]:[//github.com/mapbox/earcut]
+[T04]:[//github.com/BabylonJS/Babylon.js]
+[T05]:[//github.com/AssemblyScript/assemblyscript]
