@@ -91,6 +91,7 @@ function initUI(state) {
         distance: 10,
         height: 8,
         intensity: 0,
+        color: [1, 1, 1],
         light: state.scene.getLightByName('light0')
     });
 

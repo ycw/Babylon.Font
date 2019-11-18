@@ -19,7 +19,7 @@
             <section class='preview'>
                 <canvas id='el_canvas'></canvas>
             </section>
-    
+
             <section class='text section'>
                 <h2 class='title'>Text</h2>
                 <textarea id='el_textContent'></textarea>
@@ -51,7 +51,7 @@
             <details class='dump section' open>
                 <summary>Dump</summary>
                 <section>
-                    <label>Data
+                    <label>Geometry
                         <button id='el_dumpData'>Save</button>
                     </label>
                     <label>Rendering
@@ -99,11 +99,14 @@
             <details class='color section' open>
                 <summary>Color</summary>
                 <section>
-                    <label>Foreground
-                        <input id='el_fgColor' type='color'>
+                    <label>Light
+                        <input id='el_lightColor' type='color'>
                     </label>
                     <label>Shadow
                         <input id='el_shadowColor' type='color'>
+                    </label>
+                    <label>Foreground
+                        <input id='el_fgColor' type='color'>
                     </label>
                     <label>Background
                         <input id='el_bgColor' type='color'>
