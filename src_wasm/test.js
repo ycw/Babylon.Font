@@ -1,5 +1,5 @@
 //
-// Test "build/untouched.wasm" 
+// Test "build/untouched.wasm"
 //
 
 //
@@ -12,9 +12,9 @@
 const fs = require('fs');
 const { promisify } = require('util');
 const opentype = require('opentype.js');
-const asLoader = require('assemblyscript/lib/loader');
+const asLoader = require('@assemblyscript/loader');
 const imports = {
-  
+
   //
   // ---- These are provided by assemblyscript, keep ----
   //
