@@ -1,6 +1,5 @@
 import * as cLight from './control/light.js';
 import * as cShadow from './control/shadow.js';
-import * as cBackground from './control/background.js';
 import * as cForeground from './control/foreground.js';
 import * as cFont from './control/font.js';
 import * as cText from './control/text.js';
@@ -37,6 +36,7 @@ function initScene(state) {
     scene.metadata = {};
     scene.fogEnabled = false;
     scene.shadowsEnabled = false;
+    scene.clearColor.set(0, 0, 0, 0);
 
     // Setup Camera
     const cam = new BABYLON.ArcRotateCamera('',
@@ -87,10 +87,10 @@ function initUI(state) {
 
     // Light Related
     cLight.init({
-        angle: 45,
+        angle: 135,
         distance: 10,
         height: 8,
-        intensity: 0,
+        intensity: 2,
         color: [1, 1, 1],
         light: state.scene.getLightByName('light0')
     });
@@ -99,23 +99,17 @@ function initUI(state) {
     cShadow.init({
         bias: 0.000001,
         normalBias: 0.00005,
-        color: [0, 0.5, 1],
-        isEnabled: false,
+        color: [1, 0, 0.5],
+        isEnabled: true,
         shadowGenerator: state.scene.metadata.shadowGenerator,
         groundMesh: state.scene.getMeshByName('ground'),
         scene: state.scene
     });
 
-    // Background Related
-    cBackground.init({
-        color: [1, 1, 1],
-        alpha: 0,
-        scene: state.scene
-    });
-
     // Foreground Related
     cForeground.init({
-        color: [0, 0, 0],
+        color: [0, 0.5, 1],
+        isEmissive: false,
         material: state.scene.getMaterialByName('text')
     });
 
@@ -123,7 +117,7 @@ function initUI(state) {
     cFont.init({
         ppc: 12,
         eps: 0.04,
-        depth: 0,
+        depth: 0.2,
         render: () => {
             clearMeshStore(state.meshStore);
             render(state);
