@@ -41,7 +41,7 @@ function initScene(state) {
     // Setup Camera
     const cam = new BABYLON.ArcRotateCamera('',
         BABYLON.Tools.ToRadians(-90), BABYLON.Tools.ToRadians(0),
-        500, new BABYLON.Vector3(), scene
+        600, new BABYLON.Vector3(), scene
     );
     cam.attachControl(scene.getEngine().getRenderingCanvas());
     cam.wheelPrecision = 1;
@@ -86,9 +86,10 @@ function initUI(state) {
             `NOPQRSTUVWXYZ`,
             `abcdefghijklm`,
             `nopqrstuvwxyz`,
-            `0123456789\`~!`,
+            ` `, // <- space
+            `0123456789\`!~`,
             `@#$%^&*_-+<>{`,
-            `}[]()/;:"',.?`
+            `}[]()/;:"',.?`,
         ].join('\n'),
         render: () => render(state)
     });
@@ -123,8 +124,8 @@ function initUI(state) {
 
     // Font Related
     cFont.init({
-        ppc: 10,
-        eps: 0.045,
+        ppc: 12,
+        eps: 0.039,
         depth: 0.25,
         render: () => {
             clearMeshStore(state.meshStore);
