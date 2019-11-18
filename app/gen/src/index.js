@@ -86,10 +86,9 @@ function initUI(state) {
             `NOPQRSTUVWXYZ`,
             `abcdefghijklm`,
             `nopqrstuvwxyz`,
-            `0123456789`,
-            `\`~!@#$%^&*_-+`,
-            `<>{}[]()\/`,
-            `;:"',.?!`
+            `0123456789\`~!`,
+            `@#$%^&*_-+<>{`,
+            `}[]()/;:"',.?`
         ].join('\n'),
         render: () => render(state)
     });
