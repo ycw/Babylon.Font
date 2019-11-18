@@ -61,19 +61,10 @@ export class Compiler {
         // https://caniuse.com/#search=instantiateStreaming
         //
 
-        let wasm: loader.ASUtil & MyAPI;
-        if (typeof (WebAssembly as any).instantiateStreaming !== "undefined") {
-            wasm = await loader.instantiateStreaming<MyAPI>(
-                fetch(wasmUrl),
-                imports
-            );
-        }
-        else {
-            const response = await fetch(wasmUrl);
-            const buffer = await response.arrayBuffer();
-            wasm = await loader.instantiateBuffer<MyAPI>(buffer, imports);
-        }
-
+        const wasm = await loader.instantiateStreaming<MyAPI>(
+            fetch(wasmUrl),
+            imports
+        );
         return new Compiler(wasm);
     }
 
