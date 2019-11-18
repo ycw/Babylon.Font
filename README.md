@@ -113,18 +113,12 @@ const mesh = Font.BuildMesh(
 
 ## Thanks
 
-[Max Graey][T01] - Helps with AssemblyScript/WASM optimizations
+[MaxGraey](https://github.com/MaxGraey) - Helps with AssemblyScript/WASM optimizations
 
-[OpentypeJS][T02] - Read and write OpenType fonts using JavaScript.
+[OpentypeJS](https://github.com/opentypejs/opentype.js) - Read and write OpenType fonts using JavaScript.
 
-[EarcutJS][T03] - The fastest and smallest JavaScript polygon triangulation library for your WebGL apps
+[Earcut](https://github.com/mapbox/earcut) - The fastest and smallest JavaScript polygon triangulation library for your WebGL apps
 
-[BabylonJS][T04] - A powerful, beautiful, simple, and open game and rendering engine packed into a friendly JavaScript framework.
+[BabylonJS](https://github.com/BabylonJS/Babylon.js) - A powerful, beautiful, simple, and open game and rendering engine packed into a friendly JavaScript framework.
 
-[AssemblyScript][T05] - Compiles a strict subset of TypeScript (basically JavaScript with types) to WebAssembly using Binaryen.
-
-[T01]:[//github.com/MaxGraey]
-[T02]:[//github.com/opentypejs/opentype.js]
-[T03]:[//github.com/mapbox/earcut]
-[T04]:[//github.com/BabylonJS/Babylon.js]
-[T05]:[//github.com/AssemblyScript/assemblyscript]
+[AssemblyScript](https://github.com/AssemblyScript/assemblyscript) - Compiles a strict subset of TypeScript (basically JavaScript with types) to WebAssembly using Binaryen.
