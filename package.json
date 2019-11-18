@@ -6,7 +6,7 @@
   "scripts": {
     "build:0": "npx webpack --config rc/babylon.font.ts-webpack.config.js",
     "build:1": "tsc -p rc/babylon.font.ts-module.d.ts-tsconfig.json",
-    "build": "npm run build:0"
+    "build": "npm run build:0 && npm run build:0"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/ycw/Babylon.Font#readme",
   "dependencies": {
+    "@assemblyscript/loader": "^0.8.1",
     "@types/babylonjs": "^2.4.1",
     "babylonjs": "^4.0.3"
   },

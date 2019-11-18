@@ -1,16 +1,13 @@
 {
   "scripts": {
     "asbuild:untouched": "asc assembly/index.ts -b build/untouched.wasm -t build/untouched.wat --sourceMap --validate --debug --memoryBase 65536",
-    "asbuild:optimized": "asc assembly/index.ts -b build/optimized.wasm -t build/optimized.wat --sourceMap --validate --optimize --memoryBase 65536",
+    "asbuild:optimized": "asc assembly/index.ts -b build/optimized.wasm -t build/optimized.wat --sourceMap --validate -O3 --memoryBase 65536",
     "asbuild": "npm run asbuild:untouched && npm run asbuild:optimized",
-    
     "dev": "npm run asbuild:untouched",
-    "dist": "asc assembly/index.ts -b ../dist/compile_wa.wasm --validate --optimize --memoryBase 65536"
-  },
-  "dependencies": {
-    "assemblyscript": "github:assemblyscript/assemblyscript"
+    "dist": "asc assembly/index.ts -b ../dist/compile_wa.wasm --validate -O3 --memoryBase 65536"
   },
   "devDependencies": {
+    "assemblyscript": "^0.8.1",
     "opentype.js": "github:opentypejs/opentype.js"
   }
 }

@@ -1,6 +1,4 @@
-import * as loader from '../src_wasm/node_modules/assemblyscript/lib/loader'
-
-
+import * as loader from '@assemblyscript/loader'
 
 //
 // Opentypejs PathCommand interface
@@ -16,8 +14,6 @@ interface IPathCommand {
     y2?: number;
 }
 
-
-
 //
 // Union of assemblyscript loader API & exported "func"s of my ".wasm"
 //
@@ -27,10 +23,8 @@ interface MyAPI {
     compile(bytesUsed: number, fmt: string, ppc: number, eps: number): number;
 }
 
-
-
 //
-// Shape - Compiled result 
+// Shape - Compiled result
 //
 
 type Vertex = [number, number];
@@ -39,8 +33,6 @@ export type Shape = {
     fill: Polygon;
     holes: Polygon[];
 };
-
-
 
 //
 // Compiler - A wrapper of glue codes
@@ -87,7 +79,7 @@ export class Compiler {
 
     //
     // Encode OpentypeJS IPathCommand[], put into {buffer}
-    // 
+    //
 
     encode(cmds: IPathCommand[], buffer: ArrayBuffer) {
 
@@ -171,7 +163,7 @@ export class Compiler {
         ppc = Math.max(0, Math.min(255, Math.round(ppc)));
         eps = Math.abs(eps);
 
-        // 
+        //
         // Load into wasm.memory if needed
         //
 
