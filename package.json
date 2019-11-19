@@ -4,9 +4,7 @@
   "description": "",
   "main": "",
   "scripts": {
-    "build:0": "npx webpack --config rc/babylon.font.ts-webpack.config.js",
-    "build:1": "tsc -p rc/babylon.font.ts-module.d.ts-tsconfig.json",
-    "build": "npm run build:1 && npm run build:0"
+    "build": "npx webpack -c rc/babylon.font.ts-webpack.config.js"
   },
   "repository": {
     "type": "git",
