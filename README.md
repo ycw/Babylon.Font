@@ -31,16 +31,11 @@
   const font = await BF.Font.Install('a.ttf', compiler);
 
   // Build mesh for single character
-  const fontSize = 1;
-  const ppc = 0;
-  const eps = 0;
-  const shapes = Font.Compile(font, 'c', fontSize, ppc, eps);
-  const depth = 1;
-  const sideOrientation = BABYLON.Mesh.DOUBLESIDE;
-  const mesh = Font.BuildMesh(shapes, { depth, sideOrientation }, scene);
+  const shapes = BF.Font.Compile(font, 'c', ..); // see ### Font.Compile
+  const mesh = BF.Font.BuildMesh(shapes, ..); // see ### Font.BuildMesh
 
   // Measure a character
-  const metrics = Font.Measure(font, 'c', fontSize);
+  const metrics = BF.Font.Measure(font, 'c', fontSize);
   metrics.advanceWidth;
   metrics.ascender;
   metrics.descender;
@@ -96,8 +91,8 @@ const shapes = Font.Compile(
   font, // Font{}
   name, // char name, e.g. 'B'
   size, // font size
-  ppc,  // no. intermediate points used to interp. a bezier curve
-  eps   // threshold of decimation (>1/1000 of font size)
+  ppc,  // no. of intermediate points used to interp. a bezier curve [0, 255]
+  eps   // threshold of decimation, e.g. 0.001
 );      //-> Array<Font.Shape>
 ```
 
@@ -106,19 +101,27 @@ const shapes = Font.Compile(
 ```js
 const mesh = Font.BuildMesh(
   shapes, // Array<Font.Shape>
-  option, // option of MeshBuilder.CreatePolygon() [optional]
-  scene   // BABYLON.Scene{} [optional]
+  option, // options(excludes shape & holes[]) of MeshBuilder.CreatePolygon()
+  scene   // BABYLON.Scene{}
 );        //-> BABYLON.Mesh
 ```
 
 ## Thanks
 
-[MaxGraey](https://github.com/MaxGraey) - Helps with AssemblyScript/WASM optimizations
+[MaxGraey](https://github.com/MaxGraey) - 
+Helps with AssemblyScript/WASM optimizations
 
-[OpentypeJS](https://github.com/opentypejs/opentype.js) - Read and write OpenType fonts using JavaScript.
+[OpentypeJS](https://github.com/opentypejs/opentype.js) - 
+Read and write OpenType fonts using JavaScript.
 
-[Earcut](https://github.com/mapbox/earcut) - The fastest and smallest JavaScript polygon triangulation library for your WebGL apps
+[Earcut](https://github.com/mapbox/earcut) - 
+The fastest and smallest JavaScript polygon triangulation library for your 
+WebGL apps
 
-[BabylonJS](https://github.com/BabylonJS/Babylon.js) - A powerful, beautiful, simple, and open game and rendering engine packed into a friendly JavaScript framework.
+[BabylonJS](https://github.com/BabylonJS/Babylon.js) - 
+A powerful, beautiful, simple, and open game and rendering engine packed into a 
+friendly JavaScript framework.
 
-[AssemblyScript](https://github.com/AssemblyScript/assemblyscript) - Compiles a strict subset of TypeScript (basically JavaScript with types) to WebAssembly using Binaryen.
+[AssemblyScript](https://github.com/AssemblyScript/assemblyscript) - 
+Compiles a strict subset of TypeScript (basically JavaScript with types) to 
+WebAssembly using Binaryen.
