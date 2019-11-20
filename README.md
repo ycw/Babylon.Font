@@ -11,6 +11,8 @@
   - Dump mesh geometry to json.
   - Screenshot to png.
 
+
+
 # Usage
 
 ```html
@@ -43,6 +45,7 @@
 })();
 </script>
 ```
+
 
 
 # API
@@ -106,7 +109,9 @@ const mesh = Font.BuildMesh(
 );        //-> BABYLON.Mesh
 ```
 
-## Thanks
+
+
+# Thanks
 
 [MaxGraey](https://github.com/MaxGraey) - 
 Helps with AssemblyScript/WASM optimizations
@@ -125,3 +130,8 @@ friendly JavaScript framework.
 [AssemblyScript](https://github.com/AssemblyScript/assemblyscript) - 
 Compiles a strict subset of TypeScript (basically JavaScript with types) to 
 WebAssembly using Binaryen.
+
+
+
+# License
+[MIT](https://github.com/ycw/Babylon.Font/blob/master/LICENSE)
