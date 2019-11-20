@@ -7,7 +7,7 @@ import * as cDump from './control/dump.js';
 import * as cRendering from './control/rendering.js';
 import { Compiler, Font } from '../../../dist/babylon.font.mjs';
 
-const wasmUrl = '../../dist/compile_wa.wasm';
+const wasmUrl = '../../dist/compiler.wasm';
 const fontUrl = './font/NotoSerif-Regular.ttf';
 
 (async function main() {

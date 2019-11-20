@@ -4,7 +4,7 @@
     "asbuild:optimized": "asc assembly/index.ts -b build/optimized.wasm -t build/optimized.wat --sourceMap --validate -O3 --memoryBase 65536",
     "asbuild": "npm run asbuild:untouched && npm run asbuild:optimized",
     "dev": "npm run asbuild:untouched",
-    "dist": "asc assembly/index.ts -b ../dist/compile_wa.wasm --validate -O3 --memoryBase 65536"
+    "dist": "asc assembly/index.ts -b ../dist/compiler.wasm -t build/compiler.wat --sourceMap --validate -O3 --memoryBase 65536"
   },
   "devDependencies": {
     "assemblyscript": "^0.8.1",
