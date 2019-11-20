@@ -110,7 +110,7 @@ Fixed: add an extra elm with `height` of "padding size"
 }
 
 .sidebar details { 
-    margin:0; 
+    margin:0.5em 0; 
 }
 
 .sidebar details > summary {
