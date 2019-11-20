@@ -110,7 +110,7 @@ function initUI(state) {
         bias: 0.000001,
         normalBias: 0.00005,
         color: [1, 0, 0.5],
-        isEnabled: true,
+        isEnabled: false,
         shadowGenerator: state.scene.metadata.shadowGenerator,
         groundMesh: state.scene.getMeshByName('ground'),
         scene: state.scene
@@ -125,9 +125,9 @@ function initUI(state) {
 
     // Font Related
     cFont.init({
-        ppc: 12,
-        eps: 0.039,
-        depth: 0.25,
+        ppc: 20,
+        eps: 0.03,
+        depth: 0.00,
         render: () => {
             clearMeshStore(state.meshStore);
             render(state);
