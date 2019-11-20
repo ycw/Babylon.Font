@@ -19,25 +19,26 @@
 <script src='babylon.js'></script>
 <script src='earcut.js'></script>
 <script src='opentype.js'></script>
-<script src='babylon.font.js'></script>
-<script>
+<script type='module'>
+import { Compiler, Font } from './babylon.font.mjs';
+
 (async function() {
 
   // Create BabylonJS environment
   const scene = ..;
 
   // Build compiler
-  const compiler = await BF.Compiler.Build('compile_wa.wasm');
+  const compiler = await Compiler.Build('compile_wa.wasm');
 
   // Install font(s)
-  const font = await BF.Font.Install('a.ttf', compiler);
+  const font = await Font.Install('a.ttf', compiler);
 
   // Build mesh for single character
-  const shapes = BF.Font.Compile(font, 'c', ..); // see ### Font.Compile
-  const mesh = BF.Font.BuildMesh(shapes, ..); // see ### Font.BuildMesh
+  const shapes = Font.Compile(font, 'c', ..); // see ### Font.Compile
+  const mesh = Font.BuildMesh(shapes, ..); // see ### Font.BuildMesh
 
   // Measure a character
-  const metrics = BF.Font.Measure(font, 'c', fontSize);
+  const metrics = Font.Measure(font, 'c', fontSize);
   metrics.advanceWidth;
   metrics.ascender;
   metrics.descender;
