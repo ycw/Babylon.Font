@@ -4,7 +4,9 @@
   "description": "",
   "main": "",
   "scripts": {
-    "build": "webpack --config rc/babylon.font.ts-webpack.config.js"
+    "build:js": "webpack --config rc/babylon.font.js-webpack.config.js",
+    "build:mjs": "rollup --config rc/babylon.font.mjs-rollup.config.js",
+    "build": "npm run build:js && npm run build:mjs"
   },
   "repository": {
     "type": "git",
@@ -21,13 +23,16 @@
   },
   "homepage": "https://github.com/ycw/Babylon.Font#readme",
   "dependencies": {
-    "@assemblyscript/loader": "^0.8.1",
-    "@types/babylonjs": "^2.4.1",
-    "babylonjs": "^4.0.3"
+    "@assemblyscript/loader": "^0.8.1"
   },
   "devDependencies": {
     "@types/opentype.js": "^0.7.2",
-    "opentype.js": "^1.1.0",
+    "babylonjs": "^4.0.3",
+    "rollup": "^1.27.3",
+    "rollup-plugin-babel-minify": "^9.1.1",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-typescript2": "^0.25.2",
     "ts-loader": "^6.2.0",
     "typescript": "^3.7.2",
     "webpack": "^4.41.1",
