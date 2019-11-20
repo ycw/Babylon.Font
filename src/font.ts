@@ -1,5 +1,6 @@
-import * as opentype from 'opentype.js'
-import * as BABYLON from 'babylonjs'
+/// <reference path='../node_modules/babylonjs/babylon.module.d.ts' />
+/// <reference path='../node_modules/@types/opentype.js/index.d.ts' />
+
 import { Compiler } from './compiler'
 
 type Shape = {
@@ -74,7 +75,7 @@ export class Font {
         scene?: BABYLON.Scene
     ) {
         const meshes: BABYLON.Mesh[] = [];
-        for (const { fill, holes } of shapes) { 
+        for (const { fill, holes } of shapes) {
             const mesh = BABYLON.MeshBuilder.CreatePolygon('', {
                 ...option,
                 shape: fill,
@@ -132,6 +133,7 @@ function opentypeLoadAsync(
     fontUrl: string
 ): Promise<opentype.Font> {
     return new Promise((resolve, reject) => {
+        // @ts-ignore : UMD global
         opentype.load(fontUrl, (err, otFont) => {
             if (err) {
                 reject(err);
