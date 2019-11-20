@@ -82,12 +82,11 @@ Sidebar
     display:grid; height:100%; width:50ch;
     align-content:start;
     grid-template:
-        'render' auto
-        'dump' auto
-        'font' auto 
+        'font' auto
+        'render' auto 
+        'foreground' auto
         'light' auto 
         'shadow' auto
-        'color' auto
         'info' auto
         /1fr;
     overflow-y:scroll;
@@ -151,14 +150,6 @@ Render Section
 }
 
 /*
-Dump Section
-*/
-
-.dump.section {
-    grid-area:dump;
-}
-
-/*
 Light Section
 */
 
@@ -184,11 +175,11 @@ Font Section
 }
 
 /*
-Color Section
+Foreground Section
 */
 
-.color.section {
-    grid-area:color;
+.foreground.section {
+    grid-area:foreground;
 }
 
 /*
