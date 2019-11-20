@@ -5,14 +5,15 @@ import * as cFont from './control/font.js';
 import * as cText from './control/text.js';
 import * as cDump from './control/dump.js';
 import * as cRendering from './control/rendering.js';
+import { Compiler, Font } from '../../../dist/babylon.font.mjs';
 
 const wasmUrl = '../../dist/compile_wa.wasm';
 const fontUrl = './font/NotoSerif-Regular.ttf';
 
 (async function main() {
 
-    const compiler = await BF.Compiler.Build(wasmUrl);
-    const font = await BF.Font.Install(fontUrl, compiler);
+    const compiler = await Compiler.Build(wasmUrl);
+    const font = await Font.Install(fontUrl, compiler);
 
     // Create BabylonJS Env
     const canvas = document.querySelector('canvas');
@@ -166,7 +167,7 @@ function initUI(state) {
             return cText.content;
         },
         getMetrics: (name) => {
-            return BF.Font.Measure(state.font, name, 1);
+            return Font.Measure(state.font, name, 1);
         },
         updateCanvasSize: () => {
             const { width, height } = cRendering;
@@ -188,7 +189,7 @@ function initUI(state) {
 async function installFont(file, compiler) {
     const url = URL.createObjectURL(file);
     try {
-        const font = await BF.Font.Install(url, compiler);
+        const font = await Font.Install(url, compiler);
         installFont.url && URL.revokeObjectURL(installFont.url);
         installFont.url = url;
         return font;
@@ -265,8 +266,8 @@ function render(state) {
             continue;
         }
         if (!meshStore.has(ch)) {
-            const shapes = BF.Font.Compile(font, ch, size, ppc, eps);
-            const mesh = BF.Font.BuildMesh(shapes, { depth, sideOrientation });
+            const shapes = Font.Compile(font, ch, size, ppc, eps);
+            const mesh = Font.BuildMesh(shapes, { depth, sideOrientation });
             if (mesh) {
                 mesh.setEnabled(false);
                 mesh.receiveShadows = true;
@@ -282,11 +283,11 @@ function render(state) {
             inst.parent = scene.metadata.hostNode;
             shadowGenerator.addShadowCaster(inst);
         }
-        x += BF.Font.Measure(font, ch, size).advanceWidth;
+        x += Font.Measure(font, ch, size).advanceWidth;
         xMax = Math.max(xMax, x);
     }
 
-    const { ascender } = BF.Font.Measure(font, 'M', size);
+    const { ascender } = Font.Measure(font, 'M', size);
     const { hostNode } = scene.metadata;
     hostNode.position.x = -0.5 * xMax;
     hostNode.position.z = 0.5 * ((line + 1) * size - ascender);
