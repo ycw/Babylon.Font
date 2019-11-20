@@ -20,6 +20,7 @@
 <script src='earcut.js'></script>
 <script src='opentype.js'></script>
 <script type='module'>
+
 import { Compiler, Font } from './babylon.font.mjs';
 
 (async function() {
@@ -28,7 +29,7 @@ import { Compiler, Font } from './babylon.font.mjs';
   const scene = ..;
 
   // Build compiler
-  const compiler = await Compiler.Build('compile_wa.wasm');
+  const compiler = await Compiler.Build('compiler.wasm');
 
   // Install font(s)
   const font = await Font.Install('a.ttf', compiler);
@@ -44,6 +45,7 @@ import { Compiler, Font } from './babylon.font.mjs';
   metrics.descender;
 
 })();
+
 </script>
 ```
 
