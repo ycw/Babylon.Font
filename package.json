@@ -11,7 +11,10 @@
     "url": "git+https://github.com/ycw/Babylon.Font.git"
   },
   "keywords": [],
-  "author": "ycw",
+  "author": "ycw (https://github.com/ycw)",
+  "contributors": [
+    "Max Graey (https://github.com/MaxGraey)"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ycw/Babylon.Font/issues"
