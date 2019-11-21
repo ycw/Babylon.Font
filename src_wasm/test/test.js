@@ -1,23 +1,15 @@
-//
-// Test "build/untouched.wasm"
-//
-
-//
-// TODO
-// 1. It seems that assemblyscript `load<T>()` must use little endian
-//    for multibyte data like f64. So I have to set 3nd param of
-//    `dataview.setFloat64(,,_)` to be `true` (?)
-//
-
 const fs = require('fs');
+const path = require('path');
 const { promisify } = require('util');
 const opentype = require('opentype.js');
 const asLoader = require('@assemblyscript/loader');
+const testUtil = require('./util/index.js');
+
+const wasmUrl = path.resolve(__dirname, '../build/untouched.wasm');
+const fontUrl = path.resolve(__dirname, './font/notoserifdisplay-thin.ttf');
+
 const imports = {
 
-  //
-  // ---- These are provided by assemblyscript, keep ----
-  //
   env: {
     abort(_msg, _file, line, column) {
       console.error("abort called at index.ts:" + line + ":" + column);
@@ -25,8 +17,9 @@ const imports = {
   },
 
   //
-  // ---- These are debug utils when I dev assembly/index.ts ----
+  // Debug utils (assembly/index.js)
   //
+
   index: {
     inspectPolygons(str, polygonsPtr) {
       let i = 0;
@@ -50,44 +43,34 @@ const imports = {
 
 
 
-//
-// ---- These are provided by assemblyscript, keep ----
-//
-// const compiled = new WebAssembly.Module(fs.readFileSync(__dirname + "/build/optimized.wasm"));
-// Object.defineProperty(module, "exports", {
-//   get: () => new WebAssembly.Instance(compiled, imports).exports
-// });
-
-
-
 (async function () {
-  const file = await promisify(fs.readFile)(__dirname + '/build/untouched.wasm');
+  const file = await promisify(fs.readFile)(wasmUrl);
   const compiled = new WebAssembly.Module(file);
   const wasm = await asLoader.instantiate(compiled, imports);
 
-  const fontUrl = '../testbed/font/notoserifdisplay-thin.ttf';
-  const otFont = await opentype.load(fontUrl);
+  const otFont = await promisify(opentype.load)(fontUrl);
 
-  const ch = 'B';
-  const ppc = 5;
-  const eps = 0.0712;
+  {
+    const ch = 'B';
+    const ppc = 1;
+    const eps = 0.003;
 
-  const otPath = otFont.getPath(ch, 0, 0, 1);
-  const otFontFmt = otFont.outlineFormat;
+    const otPath = otFont.getPath(ch, 0, 0, 1);
+    const otFontFmt = otFont.outlineFormat;
 
-  // Test: load data into linear memory
-  const bytesUsed = loadPathToLinearMemory(wasm, otPath);
+    // Test: load data into linear memory
+    const bytesUsed = loadPathToLinearMemory(wasm, otPath);
 
-  // Test: wasm exported API "compile" (it uses loaded data)
-  const result = wasm.compile(bytesUsed, otFontFmt, ppc, eps);
+    // Test: wasm exported API "compile" (it uses loaded data)
+    const result = wasm.compile(bytesUsed, otFontFmt, ppc, eps);
 
-  // Test: map result (in linear memory) to js object
-  const shapes = map(wasm, result);
+    // Test: map result (in linear memory) to js object
+    const shapes = map(wasm, result);
 
-  // Test mapped js object
-  test(shapes);
+    // Test: shapes
+    test(shapes);
+  }
 
-  // No Assertion fail = passed
 }());
 
 
@@ -185,29 +168,32 @@ function loadPathToLinearMemory(wasm, otPath) {
 
 function test(shapes) {
 
-  console.assert(
-    shapes.length === 1,
-    `it should return 1 shape`
-  );
+  const shapesTester = new testUtil.ShapesTester(shapes);
 
-  console.assert(
-    shapes[0].fill.length >= 3,
-    `it should be at least 3 vertices in fill polygon`
-  );
+  shapesTester.should('has 1 shape', (shapes) => {
+    return shapes.length === 1;
+  });
 
-  console.assert(
-    shapes[0].holes.length == 2,
-    `it should be 2 holes in shape`
-  );
+  shapesTester.should('at least 3 vertices in .fill polygon', (shapes) => {
+    return shapes[0].fill.length >= 3;
+  })
 
-  console.assert(
-    shapes[0].holes[0].length >= 3,
-    `it should be at least 3 vertices in holes[0] polygon`
-  );
+  
+  shapesTester.should('has 2 holes in shape', (shapes) => {
+    return shapes[0].holes.length === 2;
+  });
 
-  console.assert(
-    shapes[0].holes[1].length >= 3,
-    `it should be at least 3 vertices in holes[1] polygon`
-  );
+  
+  shapesTester.should('at least 3 vertices in holes[0] polygon', (shapes) => {
+    return shapes[0].holes[0].length >= 3;
+  });
 
+
+  shapesTester.should('at least 3 vertices in holes[1] polygon', (shapes) => {
+    return shapes[0].holes[1].length >= 3;
+  });
+
+  shapesTester.run();
+  const shapeReporter = new testUtil.ShapesReporter();
+  shapeReporter.report(shapesTester);
 }
