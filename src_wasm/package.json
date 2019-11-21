@@ -1,7 +1,7 @@
 {
   "scripts": {
     "asbuild:untouched": "asc assembly/index.ts -b build/untouched.wasm -t build/untouched.wat --sourceMap --validate --debug --memoryBase 65536",
-    "test": "node test/test.js",
+    "test": "node test/index.js",
     "dev": "npm run asbuild:untouched && npm run test",
     "build": "asc assembly/index.ts -b ../dist/compiler.wasm -t build/compiler.wat --sourceMap --validate -O3 --memoryBase 65536"
   },
