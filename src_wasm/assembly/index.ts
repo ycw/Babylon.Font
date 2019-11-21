@@ -1,23 +1,3 @@
-//
-// Compile opentypejs.PathCommand into shapes data
-// which is ready to map to library dependent struct
-// e.g. `BABYLON.Vector3(x, 0, -y)`
-//
-
-// # Sample Output
-// (Array of shapes)
-// [
-//   [ fill, hole, hole ]  # "fill" has 2 "holes" inside
-//   [ fill ]              # "fill" has 0 "holes"
-// ]
-// where
-//   fill = [[x, y], [x, y], ...]
-//   hole = ditto
-
-// # Note
-// + MemoryBase capacity = 65536 bytes 
-//   ~= 1000 flatten 'C' PathCommands
-
 // # Flatten PathCommands in Linear Memory Structure
 // | Command | Structure
 // |---------|----------
@@ -27,6 +7,17 @@
 // | C       | u8, f64, f64, f64, f64, f64, f64, f64, f64
 // | Z       | u8
 
+
+
+const SZ: u8 = 8; // f64 size in byte
+const TINYSTEP: f64 = 1e-3; // see `pickAPoint()`
+const FARAWAY: f64 = 1e10; // represent infinity
+
+
+
+//
+// Classes
+//
 
 class Vertex {
   constructor(public x: f64 = 0, public y: f64 = 0) { }
@@ -41,18 +32,19 @@ class BBox {
   ) { }
 }
 
-type Polygon = Array<Vertex>;
-type Result = Array<Array<Polygon>>;
 
-const SZ: u8 = 8; // f64 sz in byte
-const TINYSTEP = 0.001; // see `pickAPoint()`
+
+//
+// Type Alias
+//
+
+type Polygon = Array<Vertex>;
+type CompileResult = Array<Array<Polygon>>;
 
 
 
 //
-// "bring-in" fns (just some debug utilities)
-// Pipe wasm stuff to js console
-// Comment out when build
+// External functions
 //
 
 // export declare function inspectPolygons(msg: string, x: Array<Polygon>): void;
@@ -61,14 +53,15 @@ const TINYSTEP = 0.001; // see `pickAPoint()`
 
 
 //
-// Compile loadedIn opentype PathCommand data (already in memory base sector)
-// {bytesUsed} flatten commands bytes used (must < --memoryBase value)
-// {fmt} outlineFormat; 1:'cff' non1:'truetype'
-// {ppc} pointPerCurve; 0~255
-// {eps} dedupEpsilon; ideal values 0.001, 0.002, ...
+// Compile path commands
+//
+// {bytesUsed} no. of bytes the flatten commands used 
+// {fmt} outlineFormat; 1:'cff', non1:'truetype'
+// {ppc} pointPerCurve(no. of intermediate points); [0, 255]
+// {eps} dedupEpsilon(decimation); ideal values e.g. 0.001 
 //
 
-export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): Result {
+export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): CompileResult {
 
   ppc += 2;
 
@@ -159,7 +152,7 @@ export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): Result {
 
       //
       // IF over decimation,
-      // dedup again w/ most restricted eps value
+      // dedup again w/ most restricted {eps} value (0.0)
       //
 
       if (polygons[iP].length < 3) {
@@ -199,21 +192,23 @@ export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): Result {
   // inspectPolygons('holes', holes);
   // inspectNumber('polygon count', polygons.length);
 
-  const result: Array<Array<Polygon>> = [];
-  linkUp(fills, holes, result);
-  return result;
+  // const result: CompileResult = [];
+  // linkUp(fills, holes, result);
+  // return result;
+  return linkUp(fills, holes);
 }
 
 
+
 //
-// Linkup
+// Linkup (group hole polygon(s) into corresponding fill polygon)
 //
 
 function linkUp(
   fills: Array<Polygon>,
   holes: Array<Polygon>,
-  result: Array<Array<Polygon>>
-): Result {
+): CompileResult {
+  const result: CompileResult = [];
   let hole: Polygon;
   let fill: Polygon;
   for (let i = 0, ilen = fills.length; i < ilen; ++i) {
@@ -237,7 +232,7 @@ function linkUp(
           if (index !== -1) {
             $hs.splice(index, 1);
           }
-          // Dont shortcurcuit; holes in stach
+          // Dont shortcurcuit; holes in stash
           // maybe also inside current testing hole.
         }
       }
@@ -263,18 +258,21 @@ function linkUp(
 function dedup(vs: Polygon, eps: f64): Polygon {
   const first = vs[0];
   const result: Polygon = [first];
+  let i = 1;
   let len = vs.length;
-  if (isVertexEqual(vs[len - 1], first, eps)) {
+  let $curr: Vertex;
+  let $prev = first;
+  while (len > 1) {
+    if (!isVertexEqual(vs[len - 1], first, eps)) {
+      break;
+    }
     --len;
   }
-  let i = 1;
-  let $v: Vertex;
-  let $1 = first;
   while (i < len) {
-    $v = vs[i];
-    if (!isVertexEqual($v, $1, eps)) {
-      result.push($v);
-      $1 = $v;
+    $curr = vs[i];
+    if (!isVertexEqual($curr, $prev, eps)) {
+      result.push($curr);
+      $prev = $curr;
     }
     ++i;
   }
@@ -380,7 +378,7 @@ function interpC(
 
 function isHole_oddeven(target: Polygon, polygons: Polygon[]): bool {
   const p0 = pickAPoint(target);
-  const $p1 = new Vertex(100, p0.y);
+  const $p1 = new Vertex(FARAWAY, p0.y);
   let c = 0;
   let $polygon: Polygon;
   let $v0: Vertex;
@@ -407,7 +405,7 @@ function isHole_oddeven(target: Polygon, polygons: Polygon[]): bool {
 
 function isHole_nonzero(target: Polygon, polygons: Polygon[]): bool {
   const p0 = pickAPoint(target);
-  const $p1 = new Vertex(100, p0.y);
+  const $p1 = new Vertex(FARAWAY, p0.y);
   let $v1: Vertex;
   let $v0: Vertex;
   let c = 0;
@@ -429,7 +427,30 @@ function isHole_nonzero(target: Polygon, polygons: Polygon[]): bool {
 
 //
 // Pick a point in polygon
+// 
+//   . <<< next neighbor
+//   | \
+//   |x  \. <<< the rightmost point
+//   |  /
+//   ./ <<< prev neighbor
+//   
+// x = the picked point 
+// Note: 
+//   produce unexpected result if the triangle is not small enough, consider:
+//   
+//   .  <<< next neighbor
+//   |\
+//   | \
+//   |  \
+//   |_  \
+//     |  \
+//   x |   \. <<< the rightmost point
+//    _|  /
+//   |   /
+//   |  /
+//   |./    <<< prev neighbor
 //
+//  x is outside polygon
 
 function pickAPoint(vs: Polygon): Vertex {
   let $end = vs.length - 1;
@@ -447,10 +468,7 @@ function pickAPoint(vs: Polygon): Vertex {
   }
   const curr = vs[i];
   const prev = vs[i ? i - 1 : $end];
-  const next = vs[i == $end ? 0 : i + 1]; // kill %
-  // $1: (next-curr)/|next-curr| * epsilon + curr -> tinystep from curr to next
-  // $2: (prev-curr)/|prev-curr| * epsilon + curr -> tinystep from curr to prev
-  // then ($1 + $2 + curr)/3 ~= tri centroid
+  const next = vs[i == $end ? 0 : i + 1];
   const $1 = tinystep(curr, next, TINYSTEP);
   const $2 = tinystep(curr, prev, TINYSTEP);
   return new Vertex(
@@ -477,7 +495,9 @@ function tinystep(
   const d = Math.sqrt(dx * dx + dy * dy);
   return {
     x: dx / d * e + v0x,
+    // x: v0x + Math.sign(dx) * e,
     y: dy / d * e + v0y
+    // y: v0y + Math.sign(dy) * e
   };
 }
 
@@ -530,7 +550,7 @@ function windingOfTwoLines(
 //
 
 function isPointInsidePolygon(p: Vertex, vs: Polygon): bool {
-  const $p1 = new Vertex(100, p.y);
+  const $p1 = new Vertex(FARAWAY, p.y);
   let c = 0; // nonzero winding rule count
   for (let i = 0, len = vs.length - 1; i <= len; ++i) {
     let $v0 = vs[i];
@@ -582,9 +602,9 @@ function isPolygonInsidePolygon(
   let bboxA = boundingBoxOf(A);
   let bboxB = boundingBoxOf(B);
   if (
-    bboxA.xMax < bboxB.xMin 
-    || bboxA.xMin > bboxB.xMax 
-    || bboxA.yMax < bboxB.yMin 
+    bboxA.xMax < bboxB.xMin
+    || bboxA.xMin > bboxB.xMax
+    || bboxA.yMax < bboxB.yMin
     || bboxA.yMin > bboxB.yMax
   ) {
     return false;
