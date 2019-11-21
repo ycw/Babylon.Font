@@ -8,7 +8,7 @@ import * as cRendering from './control/rendering.js';
 import { Compiler, Font } from '../../../dist/babylon.font.mjs';
 
 const wasmUrl = '../../dist/compiler.wasm';
-const fontUrl = './font/NotoSerif-Regular.ttf';
+const fontUrl = './font/NotoSansMono-Thin.ttf';
 
 (async function main() {
 
