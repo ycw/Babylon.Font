@@ -150,11 +150,7 @@ export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): CompileRe
     if (cmd == 90) { // 'Z'
       polygons[iP] = dedup(polygons[iP], eps);
 
-      //
-      // IF over decimation,
-      // dedup again w/ most restricted {eps} value (0.0)
-      //
-
+      // IF over decimation, dedup again w/ most restricted {eps} value (0.0)
       if (polygons[iP].length < 3) {
         polygons[iP] = dedup(polygons[iP], 0.0);
       }
@@ -166,7 +162,11 @@ export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): CompileRe
 
   //
   // Determine fill/hole
-  // cff : oddeven (cw+1, ccw-1)
+  // 
+  // | outline  | rule    | hole if |
+  // |----------|---------|---------|
+  // | cff      | oddeven | even    |
+  // | truetype | nonzero | zero    |
   //
 
   const fills: Array<Polygon> = [];
@@ -192,9 +192,6 @@ export function compile(bytesUsed: usize, fmt: u8, ppc: u8, eps: f64): CompileRe
   // inspectPolygons('holes', holes);
   // inspectNumber('polygon count', polygons.length);
 
-  // const result: CompileResult = [];
-  // linkUp(fills, holes, result);
-  // return result;
   return linkUp(fills, holes);
 }
 
@@ -282,7 +279,7 @@ function dedup(vs: Polygon, eps: f64): Polygon {
 
 
 //
-// Is vertex0 equals(closeto) vertex1
+// Is a vertex close-to another one 
 //
 
 // @ts-ignore: asc attribute 
@@ -426,31 +423,15 @@ function isHole_nonzero(target: Polygon, polygons: Polygon[]): bool {
 
 
 //
-// Pick a point in polygon
-// 
-//   . <<< next neighbor
-//   | \
-//   |x  \. <<< the rightmost point
-//   |  /
-//   ./ <<< prev neighbor
-//   
-// x = the picked point 
-// Note: 
-//   produce unexpected result if the triangle is not small enough, consider:
-//   
-//   .  <<< next neighbor
-//   |\
-//   | \
-//   |  \
-//   |_  \
-//     |  \
-//   x |   \. <<< the rightmost point
-//    _|  /
-//   |   /
-//   |  /
-//   |./    <<< prev neighbor
+// Pick a point in polygon, algo:
 //
-//  x is outside polygon
+// 1. Form a tiny triangle
+//    p0 = the rightmost point
+//    p1 = next neighbor of the rightmost point
+//    p2 = prev neighbor of the rightmost point
+// 2. Compute the centroid of the triangle as picked point
+//    (p0 + p1 + p2) / 3.0 
+//
 
 function pickAPoint(vs: Polygon): Vertex {
   let $end = vs.length - 1;
@@ -472,15 +453,15 @@ function pickAPoint(vs: Polygon): Vertex {
   const $1 = tinystep(curr, next, TINYSTEP);
   const $2 = tinystep(curr, prev, TINYSTEP);
   return new Vertex(
-    ($1.x + $2.x + curr.x) * (1.0 / 3),
-    ($1.y + $2.y + curr.y) * (1.0 / 3)
+    ($1.x + $2.x + curr.x) / 3.0,
+    ($1.y + $2.y + curr.y) / 3.0
   );
 }
 
 
 
 //
-// Find a point from v0 to v1 && very close-to v0
+// Find a point lying on line v0v1 && very close-to v0
 //
 
 function tinystep(
@@ -492,19 +473,17 @@ function tinystep(
   const v0y = v0.y;
   const dx = v1.x - v0x;
   const dy = v1.y - v0y;
-  const d = Math.sqrt(dx * dx + dy * dy);
+  const d = Math.hypot(dx, dy);
   return {
-    x: dx / d * e + v0x,
-    // x: v0x + Math.sign(dx) * e,
-    y: dy / d * e + v0y
-    // y: v0y + Math.sign(dy) * e
+    x: v0x + dx / d * e,
+    y: v0y + dy / d * e
   };
 }
 
 
 
 //
-// is Line A intersects Line B
+// Is Line A intersects Line B
 //
 
 // @ts-ignore: asc attribute
@@ -522,7 +501,19 @@ function isLinesIntersect(
 
 
 //
-// Winding from ab to ac
+// Winding from ab to ac, algo:
+// 
+// (b - a) cross (c - a)           # if < 0 then -1 else 1
+// ^^$1^^^       ^^$2^^^
+//
+// $1 =(b.x - a.x, b.y - a.y)
+// $2 = (c.x - a.x, c.y - a.y) 
+//
+// Then, $1 cross $2
+// = ($1.x * $2.y - $1.y * $2.x) 
+// = (b.x-a.x) * (c.y-a.y) - (b.y-a.y) * (c.x-a.x)
+// 
+// If it is negative, winding is -1, otherwise +1.
 //
 
 // @ts-ignore: asc attribute
@@ -532,14 +523,6 @@ function windingOfTwoLines(
   b: Vertex,
   c: Vertex
 ): i32 {
-  // (b - a) cross (c - a)
-  // ^^$1^^^       ^^$2^^^
-  // const $1x = b[0] - a[0];
-  // const $1y = b[1] - a[1];
-  // const $2x = c[0] - a[0];
-  // const $2y = c[1] - a[1];
-  // cross
-  // return $1x * $2y - $1y * $2x < 0 ? -1 : +1;
   return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x) < 0 ? -1 : 1;
 }
 
@@ -589,16 +572,18 @@ function boundingBoxOf(polygon: Polygon): BBox {
 
 //
 // Is polygon A inside polygon B
-// (for testing is "hole" in "fill", is "hole" in "hole")
+// (for testing "hole in fill?", "hole in hole?")
 //
 
 function isPolygonInsidePolygon(
   A: Polygon,
   B: Polygon
 ): bool {
+
   //
-  // ------ boundingbox fast check
+  // false if bboxes are not overlapping 
   //
+
   let bboxA = boundingBoxOf(A);
   let bboxB = boundingBoxOf(B);
   if (
@@ -611,7 +596,7 @@ function isPolygonInsidePolygon(
   }
 
   //
-  // true if A is not touching B && A has a point inside B
+  // true if A is not crossing B && A has a point inside B
   //
 
   for (let iA = 0, alen = A.length - 1; iA <= alen; ++iA) {
