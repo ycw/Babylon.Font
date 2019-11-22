@@ -9,6 +9,7 @@
  (type $FUNCSIG$viii (func (param i32 i32 i32)))
  (type $FUNCSIG$iiiid (func (param i32 i32 i32 f64) (result i32)))
  (type $FUNCSIG$iid (func (param i32 f64) (result i32)))
+ (type $FUNCSIG$ddd (func (param f64 f64) (result f64)))
  (type $FUNCSIG$idd (func (param f64 f64) (result i32)))
  (import "env" "abort" (func $~lib/builtins/abort (param i32 i32 i32 i32)))
  (memory $0 2)
@@ -3489,13 +3490,185 @@
   call $~lib/rt/pure/__release
   local.get $12
  )
- (func $assembly/index/tinystep (; 39 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
-  (local $2 f64)
+ (func $~lib/math/NativeMath.hypot (; 39 ;) (type $FUNCSIG$ddd) (param $0 f64) (param $1 f64) (result f64)
+  (local $2 i64)
   (local $3 f64)
-  (local $4 i32)
+  (local $4 i64)
+  (local $5 i32)
+  (local $6 f64)
+  (local $7 f64)
+  (local $8 f64)
+  (local $9 i32)
+  (local $10 f64)
+  (local $11 i64)
+  local.get $0
+  i64.reinterpret_f64
+  i64.const 9223372036854775807
+  i64.and
+  local.tee $4
+  local.get $1
+  i64.reinterpret_f64
+  i64.const 9223372036854775807
+  i64.and
+  local.tee $2
+  i64.lt_u
+  if
+   local.get $4
+   local.get $2
+   local.set $4
+   local.set $2
+  end
+  local.get $4
+  i64.const 52
+  i64.shr_u
+  i32.wrap_i64
+  local.set $5
+  local.get $2
+  f64.reinterpret_i64
+  local.set $1
+  local.get $2
+  i64.const 52
+  i64.shr_u
+  i32.wrap_i64
+  local.tee $9
+  i32.const 2047
+  i32.eq
+  if
+   local.get $1
+   return
+  end
+  local.get $4
+  f64.reinterpret_i64
+  local.set $0
+  i32.const 1
+  local.get $2
+  i64.const 0
+  i64.eq
+  local.get $5
+  i32.const 2047
+  i32.eq
+  select
+  if
+   local.get $0
+   return
+  end
+  local.get $5
+  local.get $9
+  i32.sub
+  i32.const 64
+  i32.gt_s
+  if
+   local.get $0
+   local.get $1
+   f64.add
+   return
+  end
+  f64.const 1
+  local.set $6
+  local.get $5
+  i32.const 1533
+  i32.gt_s
+  if (result f64)
+   f64.const 5260135901548373507240989e186
+   local.set $6
+   local.get $1
+   f64.const 1.90109156629516e-211
+   f64.mul
+   local.set $1
+   local.get $0
+   f64.const 1.90109156629516e-211
+   f64.mul
+  else
+   local.get $9
+   i32.const 573
+   i32.lt_s
+   if (result f64)
+    f64.const 1.90109156629516e-211
+    local.set $6
+    local.get $1
+    f64.const 5260135901548373507240989e186
+    f64.mul
+    local.set $1
+    local.get $0
+    f64.const 5260135901548373507240989e186
+    f64.mul
+   else
+    local.get $0
+   end
+  end
+  local.tee $0
+  local.get $0
+  local.get $0
+  f64.const 134217729
+  f64.mul
+  local.tee $3
+  f64.sub
+  local.get $3
+  f64.add
+  local.tee $7
+  f64.sub
+  local.set $10
+  local.get $1
+  local.get $1
+  local.get $1
+  f64.const 134217729
+  f64.mul
+  local.tee $3
+  f64.sub
+  local.get $3
+  f64.add
+  local.tee $8
+  f64.sub
+  local.set $3
+  local.get $6
+  local.get $8
+  local.get $8
+  f64.mul
+  local.get $1
+  local.get $1
+  f64.mul
+  local.tee $1
+  f64.sub
+  f64.const 2
+  local.get $8
+  f64.mul
+  local.get $3
+  f64.add
+  local.get $3
+  f64.mul
+  f64.add
+  local.get $7
+  local.get $7
+  f64.mul
+  local.get $0
+  local.get $0
+  f64.mul
+  local.tee $0
+  f64.sub
+  f64.const 2
+  local.get $7
+  f64.mul
+  local.get $10
+  f64.add
+  local.get $10
+  f64.mul
+  f64.add
+  f64.add
+  local.get $1
+  f64.add
+  local.get $0
+  f64.add
+  f64.sqrt
+  f64.mul
+ )
+ (func $assembly/index/tinystep (; 40 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
+  (local $2 i32)
+  (local $3 f64)
+  (local $4 f64)
   (local $5 f64)
   (local $6 f64)
-  (local $7 i32)
+  (local $7 f64)
+  (local $8 i32)
   local.get $0
   call $~lib/rt/pure/__retain
   drop
@@ -3506,56 +3679,50 @@
   f64.load
   local.get $0
   f64.load
-  local.tee $5
+  local.tee $4
   f64.sub
-  local.set $2
+  local.tee $5
   local.get $1
   f64.load offset=8
   local.get $0
   f64.load offset=8
   local.tee $6
   f64.sub
+  local.tee $7
+  call $~lib/math/NativeMath.hypot
   local.set $3
   i32.const 16
   i32.const 3
   call $~lib/rt/tlsf/__alloc
   call $~lib/rt/pure/__retain
-  local.tee $4
-  local.get $2
-  local.get $2
-  local.get $2
-  f64.mul
-  local.get $3
-  local.get $3
-  f64.mul
-  f64.add
-  f64.sqrt
   local.tee $2
+  local.get $4
+  local.get $5
+  local.get $3
   f64.div
   f64.const 0.001
   f64.mul
-  local.get $5
   f64.add
   f64.store
-  local.get $4
-  local.get $3
   local.get $2
+  local.get $6
+  local.get $7
+  local.get $3
   f64.div
   f64.const 0.001
   f64.mul
-  local.get $6
   f64.add
   f64.store offset=8
-  local.get $4
+  local.get $2
   call $~lib/rt/pure/__retain
-  local.get $4
+  local.get $2
   call $~lib/rt/pure/__release
   local.get $0
   call $~lib/rt/pure/__release
   local.get $1
   call $~lib/rt/pure/__release
  )
- (func $assembly/index/Vertex#constructor (; 40 ;) (type $FUNCSIG$idd) (param $0 f64) (param $1 f64) (result i32)
+ (func $assembly/index/Vertex#constructor (; 41 ;) (type $FUNCSIG$idd) (param $0 f64) (param $1 f64) (result i32)
   (local $2 i32)
   i32.const 16
   i32.const 3
@@ -3569,7 +3736,7 @@
   f64.store offset=8
   local.get $2
  )
- (func $assembly/index/pickAPoint (; 41 ;) (type $FUNCSIG$ii) (param $0 i32) (result i32)
+ (func $assembly/index/pickAPoint (; 42 ;) (type $FUNCSIG$ii) (param $0 i32) (result i32)
   (local $1 i32)
   (local $2 i32)
   (local $3 i32)
@@ -3661,8 +3828,8 @@
   local.get $1
   f64.load
   f64.add
-  f64.const 0.3333333333333333
-  f64.mul
+  f64.const 3
+  f64.div
   local.get $2
   f64.load offset=8
   local.get $4
@@ -3671,8 +3838,8 @@
   local.get $1
   f64.load offset=8
   f64.add
-  f64.const 0.3333333333333333
-  f64.mul
+  f64.const 3
+  f64.div
   call $assembly/index/Vertex#constructor
   local.get $5
   call $~lib/rt/pure/__release
@@ -3689,7 +3856,7 @@
   local.get $0
   call $~lib/rt/pure/__release
  )
- (func $assembly/index/isHole_oddeven (; 42 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
+ (func $assembly/index/isHole_oddeven (; 43 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
   (local $3 i32)
   (local $4 i32)
@@ -4013,7 +4180,7 @@
   i32.and
   i32.eqz
  )
- (func $assembly/index/isHole_nonzero (; 43 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
+ (func $assembly/index/isHole_nonzero (; 44 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
   (local $3 i32)
   (local $4 i32)
@@ -4379,7 +4546,7 @@
   i32.and
   i32.eqz
  )
- (func $assembly/index/boundingBoxOf (; 44 ;) (type $FUNCSIG$ii) (param $0 i32) (result i32)
+ (func $assembly/index/boundingBoxOf (; 45 ;) (type $FUNCSIG$ii) (param $0 i32) (result i32)
   (local $1 i32)
   (local $2 i32)
   (local $3 f64)
@@ -4462,7 +4629,7 @@
   local.get $0
   call $~lib/rt/pure/__release
  )
- (func $assembly/index/isPointInsidePolygon (; 45 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
+ (func $assembly/index/isPointInsidePolygon (; 46 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
   (local $3 i32)
   (local $4 i32)
@@ -4793,7 +4960,7 @@
   i32.const 0
   i32.ne
  )
- (func $assembly/index/isPolygonInsidePolygon (; 46 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
+ (func $assembly/index/isPolygonInsidePolygon (; 47 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
   (local $3 i32)
   (local $4 i32)
@@ -5188,7 +5355,7 @@
   local.get $1
   call $~lib/rt/pure/__release
  )
- (func $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#indexOf (; 47 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
+ (func $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#indexOf (; 48 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
   (local $3 i32)
   local.get $1
@@ -5245,7 +5412,7 @@
   call $~lib/rt/pure/__release
   i32.const -1
  )
- (func $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#splice (; 48 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
+ (func $~lib/array/Array<~lib/array/Array<assembly/index/Vertex>>#splice (; 49 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
   (local $3 i32)
   (local $4 i32)
@@ -5360,7 +5527,7 @@
   i32.store offset=12
   local.get $6
  )
- (func $assembly/index/linkUp (; 49 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
+ (func $assembly/index/linkUp (; 50 ;) (type $FUNCSIG$iii) (param $0 i32) (param $1 i32) (result i32)
   (local $2 i32)
   (local $3 i32)
   (local $4 i32)
@@ -5563,7 +5730,7 @@
   call $~lib/rt/pure/__release
   local.get $10
  )
- (func $assembly/index/compile (; 50 ;) (type $FUNCSIG$iiiid) (param $0 i32) (param $1 i32) (param $2 i32) (param $3 f64) (result i32)
+ (func $assembly/index/compile (; 51 ;) (type $FUNCSIG$iiiid) (param $0 i32) (param $1 i32) (param $2 i32) (param $3 f64) (result i32)
   (local $4 i32)
   (local $5 i32)
   (local $6 i32)
@@ -6176,7 +6343,7 @@
   local.get $2
   call $~lib/rt/pure/__release
  )
- (func $~lib/rt/pure/__visit (; 51 ;) (type $FUNCSIG$vii) (param $0 i32) (param $1 i32)
+ (func $~lib/rt/pure/__visit (; 52 ;) (type $FUNCSIG$vii) (param $0 i32) (param $1 i32)
   local.get $0
   i32.const 66204
   i32.lt_u
@@ -6286,7 +6453,7 @@
    unreachable
   end
  )
- (func $~lib/array/Array<assembly/index/Vertex>#__visit_impl (; 52 ;) (type $FUNCSIG$vii) (param $0 i32) (param $1 i32)
+ (func $~lib/array/Array<assembly/index/Vertex>#__visit_impl (; 53 ;) (type $FUNCSIG$vii) (param $0 i32) (param $1 i32)
   (local $2 i32)
   (local $3 i32)
   local.get $0
@@ -6319,7 +6486,7 @@
    end
   end
  )
- (func $~lib/rt/__visit_members (; 53 ;) (type $FUNCSIG$vii) (param $0 i32) (param $1 i32)
+ (func $~lib/rt/__visit_members (; 54 ;) (type $FUNCSIG$vii) (param $0 i32) (param $1 i32)
   block $block$4$break
    block $switch$1$default
     block $switch$1$case$8
@@ -6360,7 +6527,7 @@
    call $~lib/rt/pure/__visit
   end
  )
- (func $null (; 54 ;) (type $FUNCSIG$v)
+ (func $null (; 55 ;) (type $FUNCSIG$v)
   nop
  )
 )
