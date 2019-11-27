@@ -1,0 +1,40 @@
+# JSON Structure
+
+{ ascender: <number>
+  descender: <number>
+  chars: [
+    { name: <number>
+      advanceWidth: <number>
+      data: null | {
+        positions: <number>[]
+        indices: <number>[]
+        uvs: <number>[]
+        normals: <number>[]
+      }
+    }
+  ]
+}
+
+
+
+# Binary Structure 
+
+u32   # version
+      #
+f32   # ascender
+f32   # descender
+u32   # n char
+      #
+u32   # codepoint
+f32   # advanceWidth
+u32   # datameta (bit0=has data or not) 
+u32   # n bytes for positions[] (f32)
+u32   # n bytes for indices[] (u32)
+u32   # n bytes for uvs[] (f32)
+u32   # n bytes for normals[] (f32)
+f32.. # positions data
+u32.. # indices data
+f32.. # uvs data
+f32.. # normals data
+      #
+i32   # codepoint (next char begin)
