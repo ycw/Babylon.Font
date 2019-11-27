@@ -10,6 +10,7 @@
 
 # Serde
 
+- [src](https://github.com/ycw/Babylon.Font/blob/master/app/gen/src/helper/serde/)
 - [dist](https://github.com/ycw/Babylon.Font/blob/master/app/gen/dist/)
 - [struct](https://github.com/ycw/Babylon.Font/blob/master/app/gen/src/struct.txt)
 
