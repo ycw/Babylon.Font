@@ -9,7 +9,9 @@
 
 - [Gen](https://ycw.github.io/Babylon.Font/app/gen/)
   - Dump mesh geometry to json.
+  - Dump mesh geometry to binary.
   - Screenshot to png.
+  - [more](https://ycw.github.io/Babylon.Font/app/gen/README.md) ...
 
 
 
