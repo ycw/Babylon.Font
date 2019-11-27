@@ -1,4 +1,8 @@
 import { $ } from '../helper/dom.js';
+import { save } from '../helper/saver.js';
+import { serialize as seBin } from '../helper/serde/bin/se.js';
+import { serialize as seJson } from '../helper/serde/json/se.js';
+import { deserialize as deBin } from '../helper/serde/bin/de.js';
 
 let scene;
 let meshStore;
@@ -17,6 +21,7 @@ export function init(o) {
 
     $('#el_dumpImage').onclick = handleImage;
     $('#el_dumpData').onclick = handleData;
+    $('#el_dumpDataBin').onclick = handleDataBin;
 }
 
 function handleImage(e) {
@@ -24,7 +29,15 @@ function handleImage(e) {
 }
 
 function handleData(e) {
-    serialize();
+    const text = getTextContent();
+    const json = seJson(text, meshStore, getMetrics);
+    save([str], 'a.json');
+}
+
+function handleDataBin(e) {
+    const text = getTextContent();
+    const arrayBuffer = seBin(text, meshStore, getMetrics);
+    save([arrayBuffer], 'a.bin');
 }
 
 function screenshot() {
@@ -42,52 +55,4 @@ function screenshot() {
     canvas.width = oW;
     canvas.height = oH;
     updateCanvasSize();
-}
-
-function serialize() {
-    const result = {
-        ascender: NaN,
-        descender: NaN,
-        chars: []
-    };
-    const content = getTextContent();
-    const names = new Set([...content]);
-    for (const name of names) {
-        if (name == '\n') {
-            continue;
-        }
-        let data = null;
-        const { mesh } = meshStore.get(name);
-        if (mesh) {
-            data = mesh.geometry.serializeVerticeData();
-            delete data.id;
-            delete data.updatable;
-        }
-        const { advanceWidth } = getMetrics(name);
-        result.chars.push({ name, data, advanceWidth });
-    }
-
-    if (content.length) {
-        const { ascender, descender } = getMetrics(content[0]);
-        result.ascender = ascender;
-        result.descender = descender;
-    }
-
-    // https://doc.babylonjs.com/resources/save_babylon
-
-    const str = JSON.stringify(result, (k, v) => {
-        if (typeof v == 'number') {
-            return Number(v.toString().substring(0, 8));
-        }
-        return v;
-    });
-    const blob = new Blob([str], { type: 'octet/stream' });
-    serialize.url && URL.revokeObjectURL(serialize.url);
-    serialize.url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = serialize.url;
-    a.download = 'a.json';
-    const ev = document.createEvent('MouseEvents');
-    ev.initEvent('click', true, false);
-    a.dispatchEvent(ev);
 }
