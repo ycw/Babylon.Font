@@ -4,6 +4,7 @@
 - Config font and preview resulting mesh in real-time
 - Dump geometry and layout props to .json or .bin
 - Make a thumbnail
+- [Try it online](https://ycw.github.io/Babylon.Font/app/gen/)
 
 
 
