@@ -1,0 +1,11 @@
+{
+    "name": "babylon.font.app.gen",
+    "version": "1.0.0",
+    "scripts": {
+        "build:bin.de.mjs": "rollup -c rc/bin.de.mjs-rollup.config.js",
+        "build": "npm run build:bin.de.mjs"
+    },
+    "dependencies": {
+        "rollup-plugin-terser": "^5.1.2"
+    }
+}
