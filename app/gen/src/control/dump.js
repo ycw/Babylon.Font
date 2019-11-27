@@ -31,6 +31,7 @@ function handleImage(e) {
 function handleData(e) {
     const text = getTextContent();
     const json = seJson(text, meshStore, getMetrics);
+    const str = JSON.stringify(json);
     save([str], 'a.json');
 }
 
