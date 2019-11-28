@@ -2,17 +2,16 @@
 
 { ascender: <number>
   descender: <number>
-  chars: [
+  chars: array of 
     { name: <number>
       advanceWidth: <number>
       data: null | {
-        positions: <number>[]
-        indices: <number>[]
-        uvs: <number>[]
-        normals: <number>[]
+        positions: array of <number>
+        indices: array of <number>
+        uvs: array of <number>
+        normals: array of <number>
       }
     }
-  ]
 }
 
 
@@ -23,18 +22,21 @@ u32   # version
       #
 f32   # ascender
 f32   # descender
-u32   # n char
+u32   # nChar
       #
 u32   # codepoint
 f32   # advanceWidth
-u32   # datameta (bit0=has data or not) 
-u32   # n bytes for positions[] (f32)
-u32   # n bytes for indices[] (u32)
-u32   # n bytes for uvs[] (f32)
-u32   # n bytes for normals[] (f32)
-f32.. # positions data
-u32.. # indices data
-f32.. # uvs data
-f32.. # normals data
+u32   # dataMeta (bit0=has data or not) 
+u32   # szPositions .. size of positions[] in byte
+u32   # szIndices .... size of indices[] in byte
+u32   # szUvs ........ size of uvs[] in byte
+u32   # szNormals .... size of normals[] in byte
+f32.. # positions[] data (f32)
+u32.. # indices[] data (u32)
+f32.. # uvs[] data (f32)
+f32.. # normals[] data (f32)
       #
-i32   # codepoint (next char begin)
+i32   # codepoint (next char begins) 
+..
+
+
