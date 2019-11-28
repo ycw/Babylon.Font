@@ -79,12 +79,3 @@ class Parser {
         return result;
     }
 }
-
-
-function get(arrayBuffer, byteOffset, name) {
-    const ABView = classOf(name);
-    const view = new ABView(arrayBuffer, byteOffset);
-    const result = view[0];
-    const byteAdvanced = sizeof(name);
-    return { result, byteAdvanced }
-}
