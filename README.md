@@ -114,6 +114,16 @@ const mesh = Font.BuildMesh(
 );        //-> BABYLON.Mesh
 ```
 
+### Font.Shape
+
+```ts
+// Font.Shape{} has 2 props, 'fill' and 'holes'
+type Shape = {
+    fill: BABYLON.Vector3[],
+    holes: BABYLON.Vector3[][]
+}
+```
+
 
 
 # Thanks
