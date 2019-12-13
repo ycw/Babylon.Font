@@ -36,7 +36,7 @@ u32.. # indices[] data (u32)
 f32.. # uvs[] data (f32)
 f32.. # normals[] data (f32)
       #
-i32   # codepoint (next char begins) 
+u32   # codepoint (next char begins) 
 ..
 
 
