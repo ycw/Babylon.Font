@@ -5,7 +5,9 @@
         "lib": [
             "es2018",
             "dom"
-        ]
+        ],
+        "declaration": true,
+        "emitDeclarationOnly": true
     },
     "files": [
         "./babylon.font.ts"
