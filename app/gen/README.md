@@ -3,7 +3,7 @@
 - Drop .otf/.ttf to load new font
 - Configure and preview resulting mesh in real-time
 - Dump geometry and layout propertiess to .json or .bin
-  - [Structure of .json](#json-structure)
+  - [Structure of .json](#.json-structure)
   - [Create mesh from .json](#mesh-creation)
   - [Deserialize .bin](#binary-deserialization)
 - Make a thumbnail
@@ -11,10 +11,10 @@
 
 
 
-# JSON Structure 
+# .json Structure 
 
 ```ts
-type JSON = { 
+type json = { 
     ascender: number;
     descender: number;
     chars: char[];
