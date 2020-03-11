@@ -3,7 +3,7 @@
 { ascender: <number>
   descender: <number>
   chars: array of 
-    { name: <number>
+    { name: <string>
       advanceWidth: <number>
       data: null | {
         positions: array of <number>
