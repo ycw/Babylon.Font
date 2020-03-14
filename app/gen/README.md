@@ -2,8 +2,8 @@
 
 - Drop .otf/.ttf to load new font
 - Configure and preview resulting mesh in real-time
-- Dump geometry and layout propertiess to .json or .bin
-  - [Structure of .json](#.json-structure)
+- Dump geometry and layout properties to .json or .bin
+  - [Structure of .json](#json-structure)
   - [Create mesh from .json](#mesh-creation)
   - [Deserialize .bin](#binary-deserialization)
 - Make a thumbnail
@@ -11,7 +11,7 @@
 
 
 
-# .json Structure 
+# JSON Structure 
 
 ```ts
 type json = { 
@@ -24,10 +24,10 @@ type char = {
     name: string;
     advanceWidth: number;
     data: null | { 
-        positions: number[]
-        indices: number[]
-        uvs: number[]
-        normals: number[]
+        positions: number[];
+        indices: number[];
+        uvs: number[];
+        normals: number[];
     };
 }
 ```
@@ -42,7 +42,7 @@ type char = {
     const r = await fetch('./a.json');
     const json = await r.json();
 
-    // Generate a mesh for first char
+    // E.g. generate a mesh for first char
 
     const { data } = json.chars[0];
 
@@ -62,7 +62,7 @@ type char = {
 For space characters, `data` is **usually** `null`. This depends on font, e.g. a font is missing glyph of '&#x2003;' (EM SPACE), then `data` of em space char refers to [replacement glyph](http://unicode.org/glossary/#replacement_glyph). 
 
 ```ts
-char.name;          // ' ' (EM SPACE)
+char.name;          // ' '
 char.data != null;  // true
 ```
 
