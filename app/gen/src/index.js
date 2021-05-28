@@ -262,11 +262,11 @@ function render(state) {
             inst.position.z = -1 * line * size;
             inst.parent = scene.metadata.hostNode;
         }
-        x += Font.Measure(font, ch, size).advanceWidth;
+        x += font.measure(ch, size).advanceWidth;
         xMax = Math.max(xMax, x);
     }
 
-    const { ascender } = Font.Measure(font, 'M', size);
+    const { ascender } = font.measure('M', size);
     const { hostNode } = scene.metadata;
     hostNode.position.x = -0.5 * xMax;
     hostNode.position.z = 0.5 * ((line + 1) * size - ascender);
