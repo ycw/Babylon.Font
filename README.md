@@ -4,7 +4,7 @@ Create text mesh for BabylonJS using WebAssembly. ( here's a bare [example](http
 
 Plus, a handy tool to pre-generate glyph data in json/binary.
 - [Web Application](https://ycw.github.io/Babylon.Font/app/gen/)
-- [Documentation](https://ycw.github.io/Babylon.Font/app/gen/README.md)
+- [Documentation](https://github.com/ycw/Babylon.Font/tree/master/app/gen)
 
 
 
