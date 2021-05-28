@@ -6,11 +6,11 @@ import minify from 'rollup-plugin-babel-minify';
 export default {
     input: './src/babylon.font.ts',
     output: {
-        file: './dist/babylon.font.mjs',
-        format: 'esm',
+        file: './dist/babylon.font.js',
+        format: 'es',
         sourcemap: true
     },
-    
+
     plugins: [
         // Resolve source specifier by node style
         resolve(),
@@ -19,13 +19,14 @@ export default {
         commonjs(),
 
         // Intergrate with typescript
-        typescript({ 
-            tsconfig: './src/tsconfig.json' 
+        typescript({
+            tsconfig: './src/tsconfig.json'
         }),
-
+    ].concat(process.env.mode?.toLowerCase() === 'production' ? [
+        
         // Minify the bundle
         minify({
             comments: false,
         })
-    ]
+    ]: [])
 }

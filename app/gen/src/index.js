@@ -1,11 +1,14 @@
+import BABYLON from 'https://cdn.skypack.dev/babylonjs@4.2.0';
+import earcut from 'https://cdn.skypack.dev/earcut@2.2.2';
+import opentype from 'https://cdn.skypack.dev/opentype.js@1.3.3';
+import { Compiler, Font, TextMeshBuilder } from '../../../dist/babylon.font.js';
+
 import * as cLight from './control/light.js';
-import * as cShadow from './control/shadow.js';
 import * as cForeground from './control/foreground.js';
 import * as cFont from './control/font.js';
 import * as cText from './control/text.js';
 import * as cDump from './control/dump.js';
 import * as cRendering from './control/rendering.js';
-import { Compiler, Font } from '../../../dist/babylon.font.mjs';
 
 const wasmUrl = '../../dist/compiler.wasm';
 const fontUrl = './font/NotoSansMono-Thin.ttf';
@@ -13,7 +16,7 @@ const fontUrl = './font/NotoSansMono-Thin.ttf';
 (async function main() {
 
     const compiler = await Compiler.Build(wasmUrl);
-    const font = await Font.Install(fontUrl, compiler);
+    const font = await Font.Install(fontUrl, compiler, opentype);
 
     // Create BabylonJS Env
     const canvas = document.querySelector('canvas');
@@ -24,7 +27,8 @@ const fontUrl = './font/NotoSansMono-Thin.ttf';
 
     // App State
     const meshStore = new Map();
-    const state = { compiler, font, scene, meshStore };
+    const builder = new TextMeshBuilder(BABYLON, earcut);
+    const state = { compiler, font, scene, meshStore, builder };
 
     initScene(state);
     initUI(state);
@@ -36,7 +40,6 @@ function initScene(state) {
     const { scene } = state;
     scene.metadata = {};
     scene.fogEnabled = false;
-    scene.shadowsEnabled = false;
     scene.clearColor.set(0, 0, 0, 0);
 
     // Setup Camera
@@ -45,27 +48,15 @@ function initScene(state) {
         600, new BABYLON.Vector3(), scene
     );
     cam.attachControl(scene.getEngine().getRenderingCanvas());
-    cam.wheelPrecision = 1;
+    cam.wheelPrecision = 10;
     cam.panningSensibility *= 2;
     cam.upperBetaLimit = Math.PI / 2;
     cam.fov = Math.PI / 180;
 
-    // Create Ground mesh
-    const ground = BABYLON.MeshBuilder.CreateGround('ground', {
-        width: 1e4, height: 1e4, subdivisions: 100
-    });
-    ground.material = new BABYLON.ShadowOnlyMaterial('ground', scene);
-    ground.receiveShadows = true;
-
-    // Create Shadow Light 
+    // Create Light 
     const light0 = new BABYLON.DirectionalLight('light0',
         BABYLON.Vector3.Zero(), scene
     );
-
-    // Create Shadow Generator
-    const shadowGenerator = new BABYLON.ShadowGenerator(2048, light0, true);
-    shadowGenerator.filteringQuality = BABYLON.ShadowGenerator.QUALITY_HIGH;
-    scene.metadata.shadowGenerator = shadowGenerator;
 
     // Create Font Material
     const textMat = new BABYLON.StandardMaterial('text');
@@ -103,17 +94,6 @@ function initUI(state) {
         intensity: 1,
         color: [1, 1, 1],
         light: state.scene.getLightByName('light0')
-    });
-
-    // Shadow Related
-    cShadow.init({
-        bias: 0.000001,
-        normalBias: 0.00005,
-        color: [1, 0, 0.5],
-        isEnabled: false,
-        shadowGenerator: state.scene.metadata.shadowGenerator,
-        groundMesh: state.scene.getMeshByName('ground'),
-        scene: state.scene
     });
 
     // Foreground Related
@@ -189,7 +169,7 @@ function initUI(state) {
 async function installFont(file, compiler) {
     const url = URL.createObjectURL(file);
     try {
-        const font = await Font.Install(url, compiler);
+        const font = await Font.Install(url, compiler, opentype);
         installFont.url && URL.revokeObjectURL(installFont.url);
         installFont.url = url;
         return font;
@@ -236,7 +216,7 @@ function clearMeshStore(meshStore) {
 
 
 function render(state) {
-    const { scene, font, meshStore } = state;
+    const { scene, font, meshStore, builder } = state;
     const { size, ppc, eps, depth } = cFont;
     const { content } = cText;
 
@@ -250,7 +230,6 @@ function render(state) {
         return;
     }
 
-    const { shadowGenerator } = scene.metadata;
     const textMat = scene.getMaterialByName('text');
 
     let x = 0;
@@ -266,11 +245,12 @@ function render(state) {
             continue;
         }
         if (!meshStore.has(ch)) {
-            const shapes = Font.Compile(font, ch, size, ppc, eps);
-            const mesh = Font.BuildMesh(shapes, { depth, sideOrientation });
+            const mesh = builder.create({
+                font, text: ch, 
+                size, ppc, eps, depth, sideOrientation
+            });
             if (mesh) {
                 mesh.setEnabled(false);
-                mesh.receiveShadows = true;
                 mesh.material = textMat;
             }
             meshStore.set(ch, { mesh });
@@ -281,7 +261,6 @@ function render(state) {
             inst.position.x = x;
             inst.position.z = -1 * line * size;
             inst.parent = scene.metadata.hostNode;
-            shadowGenerator.addShadowCaster(inst);
         }
         x += Font.Measure(font, ch, size).advanceWidth;
         xMax = Math.max(xMax, x);
@@ -291,7 +270,4 @@ function render(state) {
     const { hostNode } = scene.metadata;
     hostNode.position.x = -0.5 * xMax;
     hostNode.position.z = 0.5 * ((line + 1) * size - ascender);
-
-    const groundMesh = scene.getMeshByName('ground');
-    groundMesh.position.y = -1 * depth;
 }

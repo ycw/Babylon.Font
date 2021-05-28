@@ -1,15 +1,15 @@
 {
     "compilerOptions": {
         "moduleResolution": "node",
-        "target": "es2018",
+        "target": "ES2018",
+        "module": "ES2015",
         "lib": [
-            "es2018",
+            "ES2018",
             "dom"
         ],
-        "declaration": true,
-        "emitDeclarationOnly": true
+        "declaration": false,
     },
-    "files": [
-        "./babylon.font.ts"
+    "include": [
+        "./*.ts"
     ]
 }

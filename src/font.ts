@@ -1,12 +1,12 @@
 /// <reference path='../node_modules/babylonjs/babylon.module.d.ts' />
-/// <reference path='../node_modules/@types/opentype.js/index.d.ts' />
 
-import { Compiler } from './compiler'
+import { Compiler, Shape } from './compiler'
 
-type Shape = {
-    fill: BABYLON.Vector3[],
-    holes: BABYLON.Vector3[][]
-};
+
+
+//
+// PolygonMeshOption ( subset of MeshBuilder.CreatePolygon params )
+//
 
 type PolygonMeshOption = {
     backUVs?: BABYLON.Vector4;
@@ -26,25 +26,25 @@ type PolygonMeshOption = {
 
 export class Font {
 
-    constructor(
+    private constructor(
         public raw: opentype.Font,
         private compiler: Compiler
     ) { }
 
     static async Install(
         fontUrl: string,
-        compiler: Compiler
+        compiler: Compiler,
+        opentype: any,
     ) {
-        const raw = await opentypeLoadAsync(fontUrl);
+        const raw = await opentype.load(fontUrl);
         return new Font(raw, compiler);
     }
 
-    static Measure(
-        font: Font,
+    measure(
         name: string,
         size: number
     ) {
-        return new Metrics(font, name, size);
+        return new Metrics(this, name, size);
     }
 
     static Compile(
@@ -57,38 +57,69 @@ export class Font {
         const cmds = font.raw.getPath(name, 0, 0, size).commands;
         const fmt = font.raw.outlinesFormat;
         const shapes = font.compiler.compile(cmds, fmt, ppc, eps * size);
-        const vec3 = ([x, y]) => new BABYLON.Vector3(x, 0, -y);
-        const result: Array<Shape> = [];
-        for (const { fill, holes } of shapes) {
-            const shape = {
-                fill: fill.map(vec3),
-                holes: holes.map(hole => hole.map(vec3))
-            };
-            result.push(shape);
-        }
-        return result;
+        return shapes;
     }
 
-    static BuildMesh(
+}
+
+
+
+// 
+// TextMeshBuilder
+//
+
+interface IBabylon {
+    Mesh: typeof BABYLON.Mesh;
+    MeshBuilder: typeof BABYLON.MeshBuilder;
+    Vector3: typeof BABYLON.Vector3
+}
+
+export class TextMeshBuilder {
+
+    constructor(
+        private babylon: IBabylon,
+        private earcut: any
+    ) { }
+
+    private createFromShapes(
         shapes: Shape[],
-        option?: PolygonMeshOption,
-        scene?: BABYLON.Scene
+        option: PolygonMeshOption,
+        scene?: BABYLON.Scene,
     ) {
         const meshes: BABYLON.Mesh[] = [];
+        const toVec3 = (vert) => new this.babylon.Vector3(vert[0], 0, -vert[1]);
         for (const { fill, holes } of shapes) {
-            const mesh = BABYLON.MeshBuilder.CreatePolygon('', {
+            const mesh = this.babylon.MeshBuilder.CreatePolygon('', {
                 ...option,
-                shape: fill,
-                holes: holes
-            }, scene);
+                shape: fill.map(toVec3),
+                holes: holes.map(hole => hole.map(toVec3))
+            }, scene, this.earcut);
             meshes.push(mesh);
         }
 
         if (meshes.length > 0) {
-            return BABYLON.Mesh.MergeMeshes(meshes, true, true);
+            return this.babylon.Mesh.MergeMeshes(meshes, true, true);
         } else {
             return null;
         }
+    }
+
+    create({
+        font,
+        text,
+        size = 100,
+        ppc = 2,
+        eps = 0.001,
+        ...option
+    }: {
+        font: Font,
+        text: string,
+        size: number,
+        ppc: number,
+        eps: number,
+    } & PolygonMeshOption, scene?: BABYLON.Scene) {
+        const shapes = Font.Compile(font, text, size, ppc, eps);
+        return this.createFromShapes(shapes, option, scene);
     }
 }
 
@@ -121,25 +152,4 @@ export class Metrics {
     get advanceWidth() {
         return this.font.raw.getAdvanceWidth(this.name, this.size);
     }
-}
-
-
-
-//
-// Helper: opentype.load async
-//
-
-function opentypeLoadAsync(
-    fontUrl: string
-): Promise<opentype.Font> {
-    return new Promise((resolve, reject) => {
-        // @ts-ignore : UMD global
-        opentype.load(fontUrl, (err, otFont) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(otFont);
-            }
-        });
-    });
 }

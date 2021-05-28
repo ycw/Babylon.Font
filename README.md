@@ -1,29 +1,30 @@
 # About
 
-#### Library
+Create text mesh for BabylonJS using WebAssembly. ( here's a bare [example](https://ycw.github.io/Babylon.Font/examples/bare/) )
 
-- Compile glyph to shapes using WebAssembly.
-- Build mesh from shapes.
-
-#### Tool
-
-- [Gen](https://ycw.github.io/Babylon.Font/app/gen/)
-  - Dump mesh geometry to json.
-  - Dump mesh geometry to binary.
-  - Screenshot to png.
-  - [more](https://github.com/ycw/Babylon.Font/blob/master/app/gen/README.md) ...
+Plus, a handy tool to pre-generate glyph data in json/binary.
+- [Web Application](https://ycw.github.io/Babylon.Font/app/gen/)
+- [Documentation](https://ycw.github.io/Babylon.Font/app/gen/README.md)
 
 
 
-# Usage
+## Installation
 
-```html
-<script src='babylon.js'></script>
-<script src='earcut.js'></script>
-<script src='opentype.js'></script>
-<script type='module'>
+`npm i ycw/babylon.font`
 
-import { Compiler, Font } from './babylon.font.mjs';
+or via cdn 
+
+https://cdn.jsdelivr.net/gh/ycw/babylon.font@{VERSION}/dist/babylon.font.js
+
+
+
+## Usage
+
+```js
+import * as BABYLON from 'babylonjs'
+import * as opentype from 'opentype.js'
+import earcut from 'earcut'
+import { Compiler, Font, TextMeshBuilder } from 'babylon.font';
 
 (async function() {
 
@@ -34,21 +35,19 @@ import { Compiler, Font } from './babylon.font.mjs';
   const compiler = await Compiler.Build('compiler.wasm');
 
   // Install font(s)
-  const font = await Font.Install('a.ttf', compiler);
+  const font = await Font.Install('a.ttf', compiler, opentype);
 
-  // Build mesh for single character
-  const shapes = Font.Compile(font, 'c', ..); // see ### Font.Compile
-  const mesh = Font.BuildMesh(shapes, ..); // see ### Font.BuildMesh
+  // Create mesh
+  const builder = new TextMeshBuilder(BABYLON, earcut);
+  const mesh = builder.create({ font, text: 'foo' });
 
-  // Measure a character
-  const metrics = Font.Measure(font, 'c', fontSize);
+  // Measure
+  const metrics = font.measure(font, 'bar', fontSize);
   metrics.advanceWidth;
   metrics.ascender;
   metrics.descender;
 
 })();
-
-</script>
 ```
 
 
@@ -57,7 +56,7 @@ import { Compiler, Font } from './babylon.font.mjs';
 
 ## Compiler
 
-### Compiler.Build
+Build a compiler:
 
 ```js
 const compiler = await Compiler.Build(
@@ -67,23 +66,23 @@ const compiler = await Compiler.Build(
 
 ## Font
 
-### Font.Install
+Install a font from url:
 
 ```js
 const font = await Font.Install(
-  fontUrl,   // font (.otf/.ttf) url
-  compiler   // Compiler{}
-);           //-> Font{}
+  fontUrl,    // font (.otf/.ttf) url
+  compiler,   // Compiler{}
+  opentype    // the opentype.js lib
+);            //-> Font{}
 
 font.raw;    // opentype.Font{}
 ```
 
-### Font.Measure
+Measure text:
 
 ```js
-const metrics = Font.Measure(
-  font,   // Font{}
-  name,   // char name, e.g. 'B'
+const metrics = font.measure(
+  text,   // string
   size    // font size
 );        //-> Font.Metrics{}
 
@@ -92,36 +91,31 @@ metrics.ascender;
 metrics.descender;
 ```
 
-### Font.Compile
+
+
+## TextMeshBuilder
+
+Build extruded mesh using TextMeshBuilder:
 
 ```js
-const shapes = Font.Compile(
+const builder = new TextMeshBuilder(
+  BABYLON, // the babylonjs lib ( only Mesh, MeshBuilder & Vector3 are needed ) 
+  earcut // the earcut lib
+);
+const mesh = builder.create({
   font, // Font{}
-  name, // char name, e.g. 'B'
-  size, // font size
-  ppc,  // no. of intermediate points used to interp. a bezier curve [0, 255]
-  eps   // threshold of decimation, e.g. 0.001
-);      //-> Array<Font.Shape>
-```
-
-### Font.BuildMesh
-
-```js
-const mesh = Font.BuildMesh(
-  shapes, // Array<Font.Shape>
-  option, // options(excludes shape & holes[]) of MeshBuilder.CreatePolygon()
-  scene   // BABYLON.Scene{}
-);        //-> BABYLON.Mesh
-```
-
-### Font.Shape
-
-```ts
-// Font.Shape{} has 2 props, 'fill' and 'holes'
-type Shape = {
-    fill: BABYLON.Vector3[],
-    holes: BABYLON.Vector3[][]
-}
+  text, // string
+  size, // font size, def=100
+  ppc,  // points per curve, [0, 255], def=2
+  eps,  // decimation threshold, def=0.001
+  depth, // ( see babylonjs doc: `MeshBuilder.CreatePolygon()` option )
+  sideOrientation, // ditto
+  backUVs, // ditto
+  faceColors, // ditto
+  faceUV, // ditto
+  frontUVs, // ditto
+  updatable  // ditto
+});
 ```
 
 
