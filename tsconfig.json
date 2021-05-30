@@ -7,9 +7,10 @@
             "ES2018",
             "dom"
         ],
-        "declaration": false,
+        "declaration": true,
+        "declarationDir": "dist/dts/"
     },
     "include": [
-        "./*.ts"
+        "src/*.ts"
     ]
 }

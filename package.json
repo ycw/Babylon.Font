@@ -4,8 +4,8 @@
   "description": "",
   "main": "dist/babylon.font.js",
   "scripts": {
-    "dev": "rollup -c rollup.config.js --watch",
-    "build": "rollup -c rollup.config.js --environment mode:production"
+    "dev": "rollup -c rollup.config.dev.js --watch",
+    "build": "rollup -c rollup.config.build.js"
   },
   "repository": {
     "type": "git",
