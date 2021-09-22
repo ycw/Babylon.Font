@@ -1,67 +1,35 @@
 <!doctype html>
 
 <head>
-  <meta charset="utf8">
+  <meta charset="utf-8">
   <link rel="icon" href="data:,">
   <title>Bare Example</title>
   <style>
-    html, body {
+    html,
+    body {
       padding: 0;
       margin: 0;
     }
+
     canvas {
       display: block;
       width: 100vw;
       height: 100vh;
     }
   </style>
-  <script type='module' defer>
-
-    import BABYLON from 'https://cdn.skypack.dev/babylonjs@4.2.0';
-    import earcut from 'https://cdn.skypack.dev/earcut@2.2.2';
-    import opentype from 'https://cdn.skypack.dev/opentype.js@1.3.3';
-    import { Compiler, Font, TextMeshBuilder } from '../../dist/babylon.font.js';
-
-    const wasmUrl = '../../dist/compiler.wasm';
-    const fontUrl = '../../app/gen/font/NotoSansMono-Thin.ttf';
-
-    (async function main() {
-
-      const compiler = await Compiler.Build(wasmUrl);
-      const font = await Font.Install(fontUrl, compiler, opentype);
-
-      // Create BabylonJS Env
-      const canvas = document.querySelector('canvas');
-      const engine = new BABYLON.Engine(canvas, true, null, true);
-      const scene = new BABYLON.Scene(engine);
-      engine.runRenderLoop(() => scene.render());
-      window.addEventListener('resize', () => engine.resize());
-
-      // Setup Camera
-      const cam = new BABYLON.ArcRotateCamera('',
-        BABYLON.Tools.ToRadians(-90), BABYLON.Tools.ToRadians(15),
-        1200, new BABYLON.Vector3(), scene
-      );
-      cam.attachControl(scene.getEngine().getRenderingCanvas());
-
-      // Create Shadow Light 
-      new BABYLON.DirectionalLight('', new BABYLON.Vector3(-1, -1, 0), scene);
-
-      // Create TextMesh
-      const text = 'babylon.font';
-      const size = 200;
-      const ppc = 5;
-      const eps = 0.001;
-      const depth = 50;
-      const sideOrientation = BABYLON.Mesh.DOUBLESIDE;
-
-      const builder = new TextMeshBuilder(BABYLON, earcut);
-      const mesh = builder.create({ font, text, size, ppc, eps, depth, sideOrientation }, scene);
-
-      // Centering
-      const info = mesh.getBoundingInfo();
-      mesh.position.copyFrom(info.boundingBox.center.scale(-1));
-    })();
+  <script async src="https://ga.jspm.io/npm:es-module-shims@1.0.0/dist/es-module-shims.js"></script>
+  <script type="importmap-shim">
+    {
+      "imports": {
+        "babylonjs": "https://cdn.skypack.dev/babylonjs@4.2",
+        "earcut": "https://cdn.skypack.dev/earcut@2.2",
+        "opentype": "https://cdn.skypack.dev/opentype.js@1.3",
+        "@assemblyscript/loader": "https://cdn.skypack.dev/@assemblyscript/loader@0.19",
+        "babylon.font": "../../build/babylon.font.js",
+        "tweakpane": "https://cdn.skypack.dev/tweakpane@3.0"
+      }
+    }
   </script>
+  <script type="module-shim" src="./index.js"></script>
 </head>
 <canvas></canvas>
