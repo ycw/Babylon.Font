@@ -26,11 +26,9 @@ import earcut from "earcut"
 import { Compiler, Font, TextMeshBuilder } from "babylon.font";
 
 (async function() {
-  
   const compiler = await Compiler.Build();
   const font = await Font.Install("a.ttf", compiler, opentype);
   const builder = new TextMeshBuilder(BABYLON, earcut);
-  
   const scene = ..;
   const mesh = builder.create({ font, text: "foo" }, scene);
 })();
@@ -41,16 +39,25 @@ import { Compiler, Font, TextMeshBuilder } from "babylon.font";
 `Compiler`
 
 ```js
-// construct a Compiler
+// (1) auto-probe .wasm url
 await Compiler.Build();
+
+// (2) specify .wasm url
+await Compiler.Build(wasmUrl);
+```
+
+The signature(2) is useful when using bundler / dev server :
+
+```js
+// ex. obtain static asset url for ViteJS/Vite
+import wasmUrl from "babylon.font/build/optimized.wasm?url";
+const compiler = await Compiler.Build(wasmUrl);
 ```
 
 
 
 ---
 `Font`
-
-Load font from url
 
 ```js
 await Font.Install(fontUrl, compiler, opentype);
@@ -59,26 +66,28 @@ await Font.Install(fontUrl, compiler, opentype);
 // opentype: the 'opentype.js' lib
 ```
 
-- `.measure(text, fontSize)` : measure text, return a Metrics{}
+- `.measure(text, fontSize)` : measure text; return a `Metrics`.
 
-`Metrics` 
+`Metrics`
 
 - `.advanceWidth`
 - `.ascender`
 - `.descender`
 
 
+
 ---
 `TextMeshBuilder`
 
+Construct a text mesh builder
+
 ```js
-// construct a builder
 new TextMeshBuilder(BABYLON, earcut);
 // BABYLON: the 'babylonjs' lib
 // earcut: the 'earcut' lib
 ```
 
-- `.create(options, scene)` : create extruded mesh.
+- `.create(options, scene)` : create extruded text mesh.
 
 Ex.
 
@@ -91,10 +100,17 @@ builder.create({
   eps, // decimation threshold, default is 0.001
 
   // plus `BABYLON.MeshBuilder.CreatePolygon` options
-  depth, sideOrientation, faceColors,
-  faceUV, backUVs, frontUVs, updatable 
+  depth,
+  sideOrientation,
+  faceColors,
+  faceUV,
+  backUVs,
+  frontUVs,
+  updatable,
 }, scene);
 ```
+
+
 
 # Thanks
 
