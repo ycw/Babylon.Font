@@ -1,14 +1,10 @@
 {
     "compilerOptions": {
         "moduleResolution": "node",
-        "target": "ES2018",
-        "module": "ES2015",
-        "lib": [
-            "ES2018",
-            "dom"
-        ],
+        "target": "ESNext",
+        "module": "ESNext",
         "declaration": true,
-        "declarationDir": "dist/dts/"
+        "declarationDir": "typings/"
     },
     "include": [
         "src/*.ts"
