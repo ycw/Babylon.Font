@@ -2,6 +2,9 @@ import * as BABYLON from "babylonjs";
 import { Compiler, Shape } from "./compiler";
 
 
+// must match "memoryBase" configuration. See asconfig.json
+const MEMORY_BASE = 65536
+
 
 //
 // PolygonMeshOption ( subset of MeshBuilder.CreatePolygon params )
@@ -37,6 +40,15 @@ export class Font {
   ) {
     const raw = await opentype.load(fontUrl);
     return new Font(raw, compiler);
+  }
+
+  bytesRequired(text: string) {
+    let b = 0
+    const drawCommands = this.raw.getPath(text, 0, 0, 100).commands
+    for (const cmd of drawCommands) {
+      b += this.compiler.bytesForCommand(cmd)
+    }
+    return b
   }
 
   measure(
@@ -119,6 +131,29 @@ export class TextMeshBuilder {
   } & PolygonMeshOption, scene?: BABYLON.Scene) {
     const shapes = Font.Compile(font, text, size, ppc, eps);
     return this.createFromShapes(shapes, option, scene);
+  }
+
+  //
+  // Draw text only if it will fit in memory. Returns undefined otherwise.
+  //
+
+  safeCreate({
+    font,
+    text,
+    size = 100,
+    ppc = 2,
+    eps = 0.001,
+    ...option
+  }: {
+    font: Font,
+    text: string,
+    size: number,
+    ppc: number,
+    eps: number,
+  } & PolygonMeshOption, scene?: BABYLON.Scene) {
+    if (font.bytesRequired(text) < MEMORY_BASE) {
+      return this.create({ font, text, size, ppc, eps, ...option }, scene)
+    }
   }
 }
 

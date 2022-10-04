@@ -61,6 +61,23 @@ export class Compiler {
     return new Compiler(wasm);
   }
 
+  bytesForCommand(cmd: IPathCommand) {
+    let b = 1
+    switch (cmd.type) {
+      case 'M':
+      case 'L':
+        b += 16
+        break
+      case 'Q':
+        b += 48
+        break
+      case 'C':
+        b += 64
+        break
+    }
+    return b
+  }
+
   //
   // Encode OpentypeJS IPathCommand[], put into {buffer}
   //

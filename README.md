@@ -87,7 +87,10 @@ new TextMeshBuilder(BABYLON, earcut);
 // earcut: the 'earcut' lib
 ```
 
-- `.create(options, scene)` : create extruded text mesh.
+- `.create(options, scene)` : create extruded text mesh. Best for static text
+  that is guaranteed to fit into available memory.
+- `.safeCreate(options, scene)` : create extruded text mesh. Recommended when
+  drawing strings with arbitrary memory requirements.
 
 Ex.
 

@@ -42,7 +42,7 @@ const fontUrl = "../font/NotoSansMono-Thin.ttf";
   let mesh = createMesh(params);
 
   function createMesh(params) {
-    const mesh = builder.create({
+    const mesh = builder.safeCreate({
       font,
       text: params.text,
       size: params.size,
@@ -51,8 +51,10 @@ const fontUrl = "../font/NotoSansMono-Thin.ttf";
       depth: params.depth,
       sideOrientation: BABYLON.Mesh.DOUBLESIDE
     }, scene);
-    const info = mesh.getBoundingInfo();
-    mesh.position.copyFrom(info.boundingBox.center.scale(-1));
+    if (mesh !== undefined) {
+      const info = mesh.getBoundingInfo();
+      mesh.position.copyFrom(info.boundingBox.center.scale(-1));
+    }
     return mesh;
   }
 
