@@ -1,19 +1,34 @@
 import * as loader from '@assemblyscript/loader';
 import * as BABYLON from 'babylonjs';
 
-interface IPathCommand {
-    type: string;
-    x?: number;
-    y?: number;
-    x1?: number;
-    y1?: number;
-    x2?: number;
-    y2?: number;
-}
+declare type PathCommand = {
+    type: 'M' | 'L';
+    x: number;
+    y: number;
+} | {
+    type: 'Q';
+    x: number;
+    y: number;
+    x1: number;
+    y1: number;
+} | {
+    type: 'C';
+    x: number;
+    y: number;
+    x1: number;
+    y1: number;
+    x2: number;
+    y2: number;
+} | {
+    type: 'Z';
+};
 declare type Header = {
+    MEMORY_BASE: {
+        value: number;
+    };
     compile(bytesUsed: number, fmt: string, ppc: number, eps: number): number;
 };
-declare type Instaniated = loader.ResultObject & {
+declare type Wasm = loader.ResultObject & {
     exports: loader.ASUtil & Header;
 };
 declare type Vertex = [number, number];
@@ -24,48 +39,13 @@ declare type Shape = {
 };
 declare class Compiler {
     private wasm;
-    constructor(wasm: Instaniated);
+    constructor(wasm: Wasm);
     static Build(wasmUrl?: string): Promise<Compiler>;
-    encode(cmds: IPathCommand[], buffer: ArrayBuffer): number;
-    compileEncoded(buffer: ArrayBuffer, bytesUsed: number, fmt: string, ppc: number, eps: number): Shape[];
-    compile(cmds: IPathCommand[], fmt: string, ppc: number, eps: number): Shape[];
+    encode(cmds: PathCommand[]): number;
+    compile(cmds: PathCommand[], fmt: string, ppc: number, eps: number): Shape[] | null;
+    private bytesRequired;
 }
 
-declare type PolygonMeshOption = {
-    backUVs?: BABYLON.Vector4;
-    depth?: number;
-    faceColors?: BABYLON.Color4[];
-    faceUV?: BABYLON.Vector4[];
-    frontUVs?: BABYLON.Vector4;
-    sideOrientation?: number;
-    updatable?: boolean;
-};
-declare class Font {
-    raw: opentype.Font;
-    private compiler;
-    private constructor();
-    static Install(fontUrl: string, compiler: Compiler, opentype: any): Promise<Font>;
-    measure(name: string, size: number): Metrics;
-    static Compile(font: Font, name: string, size: number, ppc: number, eps: number): Shape[];
-}
-interface IBabylon {
-    Mesh: typeof BABYLON.Mesh;
-    MeshBuilder: typeof BABYLON.MeshBuilder;
-    Vector3: typeof BABYLON.Vector3;
-}
-declare class TextMeshBuilder {
-    private babylon;
-    private earcut;
-    constructor(babylon: IBabylon, earcut: any);
-    private createFromShapes;
-    create({ font, text, size, ppc, eps, ...option }: {
-        font: Font;
-        text: string;
-        size: number;
-        ppc: number;
-        eps: number;
-    } & PolygonMeshOption, scene?: BABYLON.Scene): BABYLON.Mesh;
-}
 declare class Metrics {
     private font;
     private name;
@@ -76,4 +56,37 @@ declare class Metrics {
     get advanceWidth(): number;
 }
 
-export { Compiler, Font, Metrics, Shape, TextMeshBuilder };
+declare class Font {
+    raw: opentype.Font;
+    private compiler;
+    private constructor();
+    static Install(fontUrl: string, compiler: Compiler, opentype: any): Promise<Font>;
+    measure(name: string, size: number): Metrics;
+    static Compile(font: Font, name: string, size: number, ppc: number, eps: number): Shape[] | null;
+}
+
+declare type CreatePolygonOptions = {
+    backUVs?: BABYLON.Vector4;
+    depth?: number;
+    faceColors?: BABYLON.Color4[];
+    faceUV?: BABYLON.Vector4[];
+    frontUVs?: BABYLON.Vector4;
+    sideOrientation?: number;
+    updatable?: boolean;
+};
+declare type TextBuilderCreateOptions = {
+    font: Font;
+    text: string;
+    size: number;
+    ppc: number;
+    eps: number;
+} & CreatePolygonOptions;
+declare class TextMeshBuilder {
+    private babylon;
+    private earcut;
+    constructor(babylon: typeof BABYLON, earcut: any);
+    private createFromShapes;
+    create({ font, text, size, ppc, eps, ...createPolygonOptions }: TextBuilderCreateOptions, scene?: BABYLON.Scene): BABYLON.Nullable<BABYLON.Mesh> | undefined;
+}
+
+export { Compiler, Font, Polygon, Shape, TextMeshBuilder, Vertex };

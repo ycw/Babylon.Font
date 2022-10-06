@@ -612,3 +612,11 @@ function isPolygonInsidePolygon(
   }
   return isPointInsidePolygon(A[0], B);
 }
+
+
+
+//
+// Export memoryBase
+//
+
+export const MEMORY_BASE = ASC_MEMORY_BASE

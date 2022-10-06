@@ -4,24 +4,21 @@ import * as loader from '@assemblyscript/loader'
 // Opentypejs PathCommand interface
 //
 
-interface IPathCommand {
-  type: string;
-  x?: number;
-  y?: number;
-  x1?: number;
-  y1?: number;
-  x2?: number;
-  y2?: number;
-}
+type PathCommand =
+  | { type: 'M' | 'L', x: number, y: number }
+  | { type: 'Q', x: number, y: number, x1: number, y1: number }
+  | { type: 'C', x: number, y: number, x1: number, y1: number, x2: number, y2: number }
+  | { type: 'Z' }
 
 //
 // API
 //
 
 type Header = {
+  MEMORY_BASE: { value: number };
   compile(bytesUsed: number, fmt: string, ppc: number, eps: number): number;
 };
-type Instaniated = loader.ResultObject & {
+type Wasm = loader.ResultObject & {
   exports: loader.ASUtil & Header
 };
 
@@ -29,8 +26,8 @@ type Instaniated = loader.ResultObject & {
 // Shape - Compiled result
 //
 
-type Vertex = [number, number];
-type Polygon = Vertex[];
+export type Vertex = [number, number];
+export type Polygon = Vertex[];
 export type Shape = {
   fill: Polygon;
   holes: Polygon[];
@@ -43,7 +40,7 @@ export type Shape = {
 export class Compiler {
 
   constructor(
-    private wasm: Instaniated
+    private wasm: Wasm
   ) { }
 
   static async Build(wasmUrl?: string) {
@@ -62,30 +59,25 @@ export class Compiler {
   }
 
   //
-  // Encode OpentypeJS IPathCommand[], put into {buffer}
+  // Encode OpentypeJS IPathCommand[] into {this.wasm.exports.memory}
   //
 
-  encode(cmds: IPathCommand[], buffer: ArrayBuffer) {
+  encode(cmds: PathCommand[]) {
 
-    const view = new DataView(buffer);
+    const view = new DataView(this.wasm.exports.memory!.buffer);
 
     let i = 0;
     let x = 0;
     let y = 0;
 
-    const M = 'M'.codePointAt(0);
-    const L = 'L'.codePointAt(0);
-    const Q = 'Q'.codePointAt(0);
-    const C = 'C'.codePointAt(0);
-
     for (const cmd of cmds) {
-      let code = cmd.type.codePointAt(0);
+      let code = cmd.type.codePointAt(0) as number;
       view.setUint8(i, code);
       i++;
 
-      switch (code) {
-        case M:
-        case L:
+      switch (cmd.type) {
+        case 'M':
+        case 'L':
           view.setFloat64(i, cmd.x, true);
           i += 8;
           view.setFloat64(i, cmd.y, true);
@@ -93,7 +85,7 @@ export class Compiler {
           x = cmd.x;
           y = cmd.y;
           break;
-        case Q:
+        case 'Q':
           view.setFloat64(i, x, true);
           i += 8;
           view.setFloat64(i, y, true);
@@ -109,7 +101,7 @@ export class Compiler {
           x = cmd.x;
           y = cmd.y;
           break;
-        case C:
+        case 'C':
           view.setFloat64(i, x, true);
           i += 8;
           view.setFloat64(i, y, true);
@@ -136,27 +128,21 @@ export class Compiler {
   }
 
   //
-  // Compile encoded IPathCommand[] in {buffer}
+  // Compile
   //
 
-  compileEncoded(
-    buffer: ArrayBuffer, bytesUsed: number,
-    fmt: string, ppc: number, eps: number
-  ) {
+  compile(cmds: PathCommand[], fmt: string, ppc: number, eps: number) {
+    const bytesRequired = this.bytesRequired(cmds);
+    const bytesMax = this.wasm.exports.MEMORY_BASE.value; 
+    if (bytesRequired > bytesMax) {
+      console.warn(`wasm out of mem: ${bytesRequired} > ${bytesMax}`);
+      return null;
+    }
+
+    const bytesUsed = this.encode(cmds);
 
     ppc = Math.max(0, Math.min(255, Math.round(ppc)));
     eps = Math.abs(eps);
-
-    //
-    // Load into memory if needed
-    //
-
-    if (buffer !== this.wasm.exports.memory.buffer) {
-      const heap = this.wasm.exports.memory.buffer;
-      for (let i = 0, L = buffer.byteLength; i < L; ++i) {
-        heap[i] = buffer[i];
-      }
-    }
 
     const shapesPtr = this.wasm.exports.compile(bytesUsed, fmt, ppc, eps);
 
@@ -164,7 +150,7 @@ export class Compiler {
     // Map to JS Objects
     //
 
-    const F64 = new Float64Array(this.wasm.exports.memory.buffer);
+    const F64 = new Float64Array(this.wasm.exports.memory!.buffer);
     const shapesIn = this.wasm.exports.__getUint32Array(shapesPtr);
     const shapesOut: Shape[] = [];
     for (let i = 0; i < shapesIn.length; i++) {
@@ -194,12 +180,20 @@ export class Compiler {
   }
 
   //
-  // Compile non-encoded IPathCommand[]
-  //
+  // Bytes required for encoded cmds
+  // 
 
-  compile(cmds: IPathCommand[], fmt: string, ppc: number, eps: number) {
-    const buffer = this.wasm.exports.memory.buffer;
-    const bytesUsed = this.encode(cmds, this.wasm.exports.memory.buffer);
-    return this.compileEncoded(buffer, bytesUsed, fmt, ppc, eps);
+  private bytesRequired(cmds: PathCommand[]) {
+    let b = 0
+    for (const cmd of cmds) {
+      switch (cmd.type) {
+        case 'M':
+        case 'L': b += 17; break;
+        case 'Q': b += 49; break;
+        case 'C': b += 65; break;
+        case 'Z': b += 1; break;
+      }
+    }
+    return b
   }
 }

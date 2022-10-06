@@ -1,6 +1,6 @@
 {
   "name": "babylon.font",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "Generate text mesh for babylonjs",
   "author": "ycw (https://github.com/ycw)",
   "contributors": [
@@ -22,7 +22,7 @@
   "types": "build/babylon.font.d.ts",
   "scripts": {
     "dev": "rollup -c rollup.config.dev.js --watch",
-    "build": "rollup -c rollup.config.build.js && asbuild:optimized",
+    "build": "rollup -c rollup.config.build.js",
     "asbuild:untouched": "asc assembly/index.ts --target debug",
     "asbuild:optimized": "asc assembly/index.ts --target release",
     "asbuild": "npm run asbuild:untouched && npm run asbuild:optimized"
@@ -39,7 +39,7 @@
     "rollup-plugin-dts": "^3.0.2",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-typescript2": "^0.30.0",
+    "rollup-plugin-typescript2": "^0.34.1",
     "tslib": "^2.3.1",
     "typescript": "^4.4.3"
   }

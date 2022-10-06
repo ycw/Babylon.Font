@@ -14,7 +14,7 @@ const fontUrl = "../font/NotoSansMono-Thin.ttf";
 
   // Env
   const canvas = document.querySelector("canvas");
-  const engine = new BABYLON.Engine(canvas, true, null, true);
+  const engine = new BABYLON.Engine(canvas, true, undefined, true);
   const scene = new BABYLON.Scene(engine);
   engine.runRenderLoop(() => scene.render());
   window.addEventListener("resize", () => engine.resize());
@@ -31,7 +31,7 @@ const fontUrl = "../font/NotoSansMono-Thin.ttf";
 
   // Params
   const params = {
-    text: "BF3.0",
+    text: "BF4.0",
     size: 100,
     ppc: 2,
     eps: 0.001,
@@ -51,6 +51,15 @@ const fontUrl = "../font/NotoSansMono-Thin.ttf";
       depth: params.depth,
       sideOrientation: BABYLON.Mesh.DOUBLESIDE
     }, scene);
+
+    if (mesh === undefined) { // wasm fails to process
+      return null
+    }
+
+    if (mesh === null) { // no mesh created, e.g. text are all whtiespaces
+      return null
+    }
+
     const info = mesh.getBoundingInfo();
     mesh.position.copyFrom(info.boundingBox.center.scale(-1));
     return mesh;

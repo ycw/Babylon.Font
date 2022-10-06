@@ -88,8 +88,9 @@ new TextMeshBuilder(BABYLON, earcut);
 ```
 
 - `.create(options, scene)` : create extruded text mesh.
-
-Ex.
+  - returns `Mesh` if a mesh is created.
+  - returns `null` if no mesh is created, e.g. text are all whitespaces.
+  - returns `undefined` if wasm failed to process (e.g. out of mem)   
 
 ```js
 builder.create({
@@ -108,6 +109,13 @@ builder.create({
   frontUVs,
   updatable,
 }, scene);
+```
+
+ex. fallback 
+
+```js
+var mesh = builder.create(opt1, scene)
+if (mesh === undefined) mesh = builder.create(opt2, scene) 
 ```
 
 

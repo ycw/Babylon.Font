@@ -4,7 +4,8 @@
         "target": "ESNext",
         "module": "ESNext",
         "declaration": true,
-        "declarationDir": "typings/"
+        "declarationDir": "typings/",
+        "strict": true
     },
     "include": [
         "src/*.ts"
